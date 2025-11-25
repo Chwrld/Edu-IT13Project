@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Student.ProfilePage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="White"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="#0891B2" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="S" 
+                               TextColor="White" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="StudentHub" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Profile Button (Active) -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Image Source="dotnet_bot.png" 
+                           WidthRequest="20" 
+                           HeightRequest="20"
+                           Aspect="AspectFit"/>
+                    <Label Text="Profile" 
+                           FontSize="14" 
+                           TextColor="#0891B2"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Home Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="Home" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Messages Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Announcements Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Logout at Bottom -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="25">
+                
+                <!-- Page Header with Edit Button -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Student Profile" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"/>
+                    <Button Grid.Column="1"
+                            Text="✏ Edit Profile"
+                            BackgroundColor="#0891B2"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            Padding="20,12"
+                            VerticalOptions="Center"
+                            Clicked="OnEditProfileClicked"/>
+                </Grid>
+
+                <!-- Profile Card -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="30">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="25">
+                        
+                        <!-- Profile Avatar -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="#0891B2"
+                                WidthRequest="120"
+                                HeightRequest="120"
+                                StrokeThickness="0"
+                                VerticalOptions="Start">
+                            <Border.StrokeShape>
+                                <Ellipse/>
+                            </Border.StrokeShape>
+                            <Label Text="SJ" 
+                                   TextColor="White"
+                                   FontSize="48"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Profile Info -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="12">
+                            <Label Text="Sarah Johnson" 
+                                   FontSize="28" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="Computer Science Major" 
+                                   FontSize="16" 
+                                   TextColor="#6B7280"/>
+                            
+                            <!-- Badges -->
+                            <HorizontalStackLayout Spacing="10" Margin="0,5,0,0">
+                                <Border BackgroundColor="#DBEAFE"
+                                        Padding="10,6"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Year 3" 
+                                           TextColor="#0891B2"
+                                           FontSize="12"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                                
+                                <Border BackgroundColor="#FEF3C7"
+                                        Padding="10,6"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Dean's List" 
+                                           TextColor="#D97706"
+                                           FontSize="12"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                                
+                                <Border BackgroundColor="#E0E7FF"
+                                        Padding="10,6"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Research Assistant" 
+                                           TextColor="#4F46E5"
+                                           FontSize="12"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Contact Information Card -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="25">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    
+                    <VerticalStackLayout Spacing="20">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Contact Information" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="Your contact details and location" 
+                                   FontSize="13" 
+                                   TextColor="#6B7280"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="15">
+                            <!-- Email -->
+                            <HorizontalStackLayout Spacing="15">
+                                <Border BackgroundColor="#DBEAFE"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📧" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                    <Label Text="Email" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="sarah.johnson@university.edu" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Phone -->
+                            <HorizontalStackLayout Spacing="15">
+                                <Border BackgroundColor="#DBEAFE"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📱" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                    <Label Text="Phone" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="+1 (555) 123-4567" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Campus Address -->
+                            <HorizontalStackLayout Spacing="15">
+                                <Border BackgroundColor="#DBEAFE"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📍" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                    <Label Text="Campus Address" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="Residence Hall A, Room 204" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Two Column Layout for Academic Details and Achievements -->
+                <Grid ColumnDefinitions="1.2*,*" ColumnSpacing="20">
+                    
+                    <!-- Academic Details Card -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="25">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        
+                        <VerticalStackLayout Spacing="18">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🎓" FontSize="18"/>
+                                <Label Text="Academic Details" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+                            </HorizontalStackLayout>
+
+                            <VerticalStackLayout Spacing="12">
+                                <!-- Student ID -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Student ID" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="STU-2021-0456" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <!-- Program -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Program" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="Bachelor of Science in Computer Science" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
+                                </VerticalStackLayout>
+
+                                <!-- Expected Graduation -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Expected Graduation" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="May 2025" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+
+                                <!-- Current GPA -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Current GPA" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="3.85 / 4.0" 
+                                           FontSize="14" 
+                                           TextColor="#10B981"
+                                           FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Achievements Card -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="25">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        
+                        <VerticalStackLayout Spacing="18">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🏆" FontSize="18"/>
+                                <Label Text="Achievements" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+                            </HorizontalStackLayout>
+
+                            <VerticalStackLayout Spacing="15">
+                                <!-- Achievement 1 -->
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Dean's List" 
+                                               FontSize="13" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="Fall 2023, Spring 2024" 
+                                               FontSize="11" 
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+
+                                <!-- Achievement 2 -->
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Research Grant Recipient" 
+                                               FontSize="13" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="AI &amp; Machine Learning Project" 
+                                               FontSize="11" 
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+
+                                <!-- Achievement 3 -->
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Hackathon Winner" 
+                                               FontSize="13" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="University Code Jam 2024" 
+                                               FontSize="11" 
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

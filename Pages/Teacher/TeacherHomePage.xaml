@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Teacher.TeacherHomePage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="#059669"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="White" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="T" 
+                               TextColor="#059669" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Teacher Portal" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Teacher Profile -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="👨‍🏫" 
+                           FontSize="16"
+                           VerticalOptions="Center"/>
+                    <Label Text="Faculty" 
+                           FontSize="14" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Dashboard -->
+                    <Border BackgroundColor="#059669" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="Dashboard" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- My Classes -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="My Classes" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Students -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="Students" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Assignments -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📝" FontSize="18"/>
+                            <Label Text="Assignments" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Grades -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="Grades" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Spacer -->
+                <BoxView Grid.Row="1" Color="Transparent"/>
+
+                <!-- Logout Button -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="20">
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Welcome Banner -->
+                <Border BackgroundColor="#059669"
+                        StrokeThickness="0"
+                        Padding="30,25">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Welcome, Professor!" 
+                               TextColor="White" 
+                               FontSize="24"
+                               FontAttributes="Bold"/>
+                        <Label Text="Manage your classes and student progress." 
+                               TextColor="White" 
+                               FontSize="14"
+                               Opacity="0.9"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Statistics Cards -->
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="15">
+                    <Border Grid.Column="0" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="My Classes" 
+                                   FontSize="13" 
+                                   TextColor="#6B7280"/>
+                            <Label Text="5" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#059669"/>
+                            <Label Text="This semester" 
+                                   FontSize="11" 
+                                   TextColor="#9CA3AF"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Total Students" 
+                                   FontSize="13" 
+                                   TextColor="#6B7280"/>
+                            <Label Text="142" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#059669"/>
+                            <Label Text="Across all classes" 
+                                   FontSize="11" 
+                                   TextColor="#9CA3AF"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="2" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Pending Grades" 
+                                   FontSize="13" 
+                                   TextColor="#6B7280"/>
+                            <Label Text="23" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#F59E0B"/>
+                            <Label Text="Awaiting review" 
+                                   FontSize="11" 
+                                   TextColor="#9CA3AF"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="3" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Upcoming Classes" 
+                                   FontSize="13" 
+                                   TextColor="#6B7280"/>
+                            <Label Text="3" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#059669"/>
+                            <Label Text="Today" 
+                                   FontSize="11" 
+                                   TextColor="#9CA3AF"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Label Text="Teacher Dashboard - Coming Soon" 
+                       FontSize="18" 
+                       TextColor="#6B7280"
+                       HorizontalOptions="Center"
+                       Margin="0,40,0,0"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Teacher.TeacherLoginPage"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="0"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+            
+            <!-- Teacher Login Card -->
+            <Frame 
+                BackgroundColor="White"
+                CornerRadius="12"
+                Padding="40,30"
+                HasShadow="True"
+                WidthRequest="400"
+                MaximumWidthRequest="500">
+                
+                <VerticalStackLayout Spacing="20">
+                    
+                    <!-- Logo and Title -->
+                    <VerticalStackLayout Spacing="5">
+                        <Border BackgroundColor="#059669" 
+                                WidthRequest="64" 
+                                HeightRequest="64"
+                                HorizontalOptions="Center"
+                                StrokeThickness="0"
+                                Margin="0,0,0,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Label Text="👨‍🏫" 
+                                   FontSize="32"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        <Label 
+                            Text="Teacher Portal"
+                            FontSize="28"
+                            FontAttributes="Bold"
+                            TextColor="#2C3E50"
+                            HorizontalOptions="Center"/>
+                        <Label 
+                            Text="Faculty &amp; Instructor Access"
+                            FontSize="12"
+                            TextColor="#7F8C8D"
+                            HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- Email Input -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label 
+                            Text="Teacher Email"
+                            FontSize="14"
+                            TextColor="#2C3E50"
+                            FontAttributes="Bold"/>
+                        <Border
+                            BackgroundColor="White"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1"
+                            Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Entry 
+                                x:Name="TeacherEmailEntry"
+                                Placeholder="teacher@university.edu"
+                                PlaceholderColor="#B0B0B0"
+                                TextColor="#2C3E50"
+                                Keyboard="Email"
+                                BackgroundColor="Transparent"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Password Input -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label 
+                            Text="Password"
+                            FontSize="14"
+                            TextColor="#2C3E50"
+                            FontAttributes="Bold"/>
+                        <Border
+                            BackgroundColor="White"
+                            Stroke="#E0E0E0"
+                            StrokeThickness="1"
+                            Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Entry 
+                                x:Name="TeacherPasswordEntry"
+                                Placeholder="••••••••"
+                                PlaceholderColor="#B0B0B0"
+                                TextColor="#2C3E50"
+                                IsPassword="True"
+                                BackgroundColor="Transparent"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Teacher Sign In Button -->
+                    <Button 
+                        x:Name="TeacherSignInBtn"
+                        Text="Sign In as Teacher"
+                        BackgroundColor="#059669"
+                        TextColor="White"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="6"
+                        HeightRequest="48"
+                        Margin="0,10,0,0"
+                        Clicked="OnTeacherSignInClicked"/>
+
+                    <!-- Back to Student Login -->
+                    <Label 
+                        Text="Not a teacher? Back to Student Login"
+                        FontSize="13"
+                        TextColor="#0891B2"
+                        HorizontalOptions="Center"
+                        Margin="0,10,0,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackToStudentLoginTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

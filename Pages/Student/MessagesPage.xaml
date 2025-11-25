@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Student.MessagesPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="White"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="#0891B2" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="S" 
+                               TextColor="White" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="StudentHub" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Profile Button -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Image Source="dotnet_bot.png" 
+                           WidthRequest="20" 
+                           HeightRequest="20"
+                           Aspect="AspectFit"/>
+                    <Label Text="Profile" 
+                           FontSize="14" 
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Home Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="Home" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Messages Menu Item (Active) -->
+                    <Border BackgroundColor="#0891B2" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Announcements Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Logout at Bottom -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="380,*">
+            
+            <!-- Conversations List Panel -->
+            <Border Grid.Column="0" 
+                    BackgroundColor="White"
+                    StrokeThickness="0"
+                    Padding="0">
+                <VerticalStackLayout Spacing="0">
+                    <!-- Messages Header -->
+                    <Border Padding="20,20,20,15" 
+                            BackgroundColor="White"
+                            StrokeThickness="0">
+                        <Label Text="Messages" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                    </Border>
+
+                    <!-- Search Bar -->
+                    <Border Padding="20,0,20,15" 
+                            BackgroundColor="White"
+                            StrokeThickness="0">
+                        <Border BackgroundColor="#F3F4F6"
+                                Padding="12,8"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🔍" FontSize="16" VerticalOptions="Center"/>
+                                <Entry Placeholder="Search conversations..."
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="FillAndExpand"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Border>
+
+                    <!-- Conversations ScrollView -->
+                    <ScrollView>
+                        <VerticalStackLayout Spacing="0">
+                            
+                            <!-- Conversation 1 - Dr. Johnson (Active) -->
+                            <Border BackgroundColor="#EFF6FF"
+                                    Padding="20,15"
+                                    StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnConversation1Tapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#0891B2"
+                                            WidthRequest="48"
+                                            HeightRequest="48"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="DJ" 
+                                               TextColor="White"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                        <Label Text="Dr. Johnson" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="Academic Advisor" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Your thesis draft looks great!..." 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"
+                                               LineBreakMode="TailTruncation"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Start">
+                                        <Label Text="10m" 
+                                               FontSize="11" 
+                                               TextColor="#6B7280"
+                                               HorizontalOptions="End"/>
+                                        <Border BackgroundColor="#0891B2"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                StrokeThickness="0"
+                                                HorizontalOptions="End">
+                                            <Border.StrokeShape>
+                                                <Ellipse/>
+                                            </Border.StrokeShape>
+                                            <Label Text="3" 
+                                                   TextColor="White"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+
+                            <!-- Conversation 2 - Academic Office -->
+                            <Border BackgroundColor="White"
+                                    Padding="20,15"
+                                    StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnConversation2Tapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#FEF3C7"
+                                            WidthRequest="48"
+                                            HeightRequest="48"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="AO" 
+                                               TextColor="#D97706"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                        <Label Text="Academic Office" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="Announcement" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Reminder: Registration deadli..." 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"
+                                               LineBreakMode="TailTruncation"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Start">
+                                        <Label Text="2h" 
+                                               FontSize="11" 
+                                               TextColor="#6B7280"
+                                               HorizontalOptions="End"/>
+                                        <Border BackgroundColor="#0891B2"
+                                                WidthRequest="24"
+                                                HeightRequest="24"
+                                                StrokeThickness="0"
+                                                HorizontalOptions="End">
+                                            <Border.StrokeShape>
+                                                <Ellipse/>
+                                            </Border.StrokeShape>
+                                            <Label Text="1" 
+                                                   TextColor="White"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+
+                            <!-- Conversation 3 - Prof. Martinez -->
+                            <Border BackgroundColor="White"
+                                    Padding="20,15"
+                                    StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnConversation3Tapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#E0E7FF"
+                                            WidthRequest="48"
+                                            HeightRequest="48"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="PM" 
+                                               TextColor="#4F46E5"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                        <Label Text="Prof. Martinez" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="Course Instructor" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Thanks for your presentation..." 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"
+                                               LineBreakMode="TailTruncation"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" 
+                                           Text="1d ago" 
+                                           FontSize="11" 
+                                           TextColor="#6B7280"
+                                           VerticalOptions="Start"
+                                           HorizontalOptions="End"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Conversation 4 - Student Services -->
+                            <Border BackgroundColor="White"
+                                    Padding="20,15"
+                                    StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnConversation4Tapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#DBEAFE"
+                                            WidthRequest="48"
+                                            HeightRequest="48"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="SS" 
+                                               TextColor="#0891B2"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                        <Label Text="Student Services" 
+                                               FontSize="14" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="Support" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Your request has been proce..." 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"
+                                               LineBreakMode="TailTruncation"/>
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" 
+                                           Text="2d ago" 
+                                           FontSize="11" 
+                                           TextColor="#6B7280"
+                                           VerticalOptions="Start"
+                                           HorizontalOptions="End"/>
+                                </Grid>
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Chat Area -->
+            <Border Grid.Column="1" 
+                    BackgroundColor="#F9FAFB"
+                    StrokeThickness="0">
+                <Grid RowDefinitions="70,*,80">
+                    
+                    <!-- Chat Header -->
+                    <Border Grid.Row="0" 
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            Padding="25,0">
+                        <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#0891B2"
+                                    WidthRequest="48"
+                                    HeightRequest="48"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <Ellipse/>
+                                </Border.StrokeShape>
+                                <Label Text="DJ" 
+                                       TextColor="White"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Label Text="Dr. Johnson" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+                                <Label Text="Academic Advisor" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" 
+                                   Text="⋮" 
+                                   FontSize="24" 
+                                   TextColor="#6B7280"
+                                   VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnChatMenuTapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                    </Border>
+
+                    <!-- Messages Area -->
+                    <ScrollView Grid.Row="1" Padding="25,20">
+                        <VerticalStackLayout Spacing="15">
+                            
+                            <!-- Received Message 1 -->
+                            <HorizontalStackLayout Spacing="12" HorizontalOptions="Start">
+                                <Border BackgroundColor="#0891B2"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <Ellipse/>
+                                    </Border.StrokeShape>
+                                    <Label Text="DJ" 
+                                           TextColor="White"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="6" MaximumWidthRequest="500">
+                                    <Border BackgroundColor="White"
+                                            Padding="15,12"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,12,12,4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Hi Sarah, I've reviewed your thesis draft." 
+                                               FontSize="14" 
+                                               TextColor="#2C3E50"
+                                               LineBreakMode="WordWrap"/>
+                                    </Border>
+                                    <Label Text="10:15 AM" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"
+                                           Margin="12,0,0,0"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Received Message 2 -->
+                            <HorizontalStackLayout Spacing="12" HorizontalOptions="Start">
+                                <BoxView WidthRequest="40" IsVisible="False"/>
+                                <VerticalStackLayout Spacing="6" MaximumWidthRequest="500">
+                                    <Border BackgroundColor="White"
+                                            Padding="15,12"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,12,12,4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Overall it's excellent work, just a few minor suggestions on the methodology section." 
+                                               FontSize="14" 
+                                               TextColor="#2C3E50"
+                                               LineBreakMode="WordWrap"/>
+                                    </Border>
+                                    <Label Text="10:16 AM" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"
+                                           Margin="12,0,0,0"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Sent Message 1 -->
+                            <HorizontalStackLayout Spacing="12" HorizontalOptions="End">
+                                <VerticalStackLayout Spacing="6" MaximumWidthRequest="500">
+                                    <Border BackgroundColor="#0891B2"
+                                            Padding="15,12"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,12,4,12"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Thank you! I'll love to hear your feedback." 
+                                               FontSize="14" 
+                                               TextColor="White"
+                                               LineBreakMode="WordWrap"/>
+                                    </Border>
+                                    <Label Text="10:20 AM" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"
+                                           Margin="0,0,12,0"
+                                           HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Sent Message 2 -->
+                            <HorizontalStackLayout Spacing="12" HorizontalOptions="End">
+                                <VerticalStackLayout Spacing="6" MaximumWidthRequest="500">
+                                    <Border BackgroundColor="#0891B2"
+                                            Padding="15,12"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,12,4,12"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Absolutely! Would Thursday afternoon work for you?" 
+                                               FontSize="14" 
+                                               TextColor="White"
+                                               LineBreakMode="WordWrap"/>
+                                    </Border>
+                                    <Label Text="10:21 AM" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"
+                                           Margin="0,0,12,0"
+                                           HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Received Message 3 -->
+                            <HorizontalStackLayout Spacing="12" HorizontalOptions="Start">
+                                <Border BackgroundColor="#0891B2"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <Ellipse/>
+                                    </Border.StrokeShape>
+                                    <Label Text="DJ" 
+                                           TextColor="White"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="6" MaximumWidthRequest="500">
+                                    <Border BackgroundColor="White"
+                                            Padding="15,12"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12,12,12,4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Could we schedule a meeting this week to discuss?" 
+                                               FontSize="14" 
+                                               TextColor="#2C3E50"
+                                               LineBreakMode="WordWrap"/>
+                                    </Border>
+                                    <Label Text="10:24 AM" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"
+                                           Margin="12,0,0,0"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Message Input Area -->
+                    <Border Grid.Row="2" 
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            Padding="25,15">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#F3F4F6"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Label Text="📎" 
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAttachFileTapped"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Border>
+
+                            <Border Grid.Column="1"
+                                    BackgroundColor="#F3F4F6"
+                                    Padding="15,8"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="MessageEntry"
+                                       Placeholder="Type your message..."
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"
+                                       VerticalOptions="Center"/>
+                            </Border>
+
+                            <Border Grid.Column="2"
+                                    BackgroundColor="#0891B2"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSendMessageTapped"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="➤" 
+                                       TextColor="White"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+</ContentPage>

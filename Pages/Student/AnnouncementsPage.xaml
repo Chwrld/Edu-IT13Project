@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Student.AnnouncementsPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="White"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="#0891B2" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="S" 
+                               TextColor="White" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="StudentHub" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Profile Button -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Image Source="dotnet_bot.png" 
+                           WidthRequest="20" 
+                           HeightRequest="20"
+                           Aspect="AspectFit"/>
+                    <Label Text="Profile" 
+                           FontSize="14" 
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Home Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="Home" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Messages Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Announcements Menu Item (Active) -->
+                    <Border BackgroundColor="#0891B2" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Tickets Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Logout at Bottom -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Page Header -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Announcements &amp; Reminders" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <Label Text="Stay updated with important information" 
+                           FontSize="13" 
+                           TextColor="#6B7280"/>
+                </VerticalStackLayout>
+
+                <!-- Filter Tabs -->
+                <HorizontalStackLayout Spacing="10" Margin="0,10,0,0">
+                    <Border x:Name="AllTab"
+                            BackgroundColor="#0891B2"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAllTabTapped"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="AllTabLabel"
+                               Text="All" 
+                               TextColor="White"
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                    </Border>
+
+                    <Border x:Name="AnnouncementsTab"
+                            BackgroundColor="Transparent"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTabTapped"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="AnnouncementsTabLabel"
+                               Text="Announcements" 
+                               TextColor="#0891B2"
+                               FontSize="14"/>
+                    </Border>
+
+                    <Border x:Name="RemindersTab"
+                            BackgroundColor="Transparent"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRemindersTabTapped"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="RemindersTabLabel"
+                               Text="Reminders" 
+                               TextColor="#0891B2"
+                               FontSize="14"/>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Search Bar -->
+                <Border BackgroundColor="White"
+                        Padding="15,10"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="🔍" FontSize="16" VerticalOptions="Center"/>
+                        <Entry Placeholder="Search announcements..."
+                               PlaceholderColor="#9CA3AF"
+                               TextColor="#2C3E50"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"
+                               HorizontalOptions="FillAndExpand"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Announcements List -->
+                <VerticalStackLayout x:Name="AnnouncementsList" Spacing="15">
+                    
+                    <!-- Reminder 1 - Registration Period Extended -->
+                    <Border x:Name="Reminder1"
+                            BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#FEE2E2"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="⚠️" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Registration Period Extended" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="Academic" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Today, 9:00 AM" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#EF4444"
+                                        Padding="10,6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Important" 
+                                           TextColor="White"
+                                           FontSize="11"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Content -->
+                            <Label Grid.Row="1"
+                                   Text="The registration period for next semester has been extended until Friday, May 15th. Please ensure all course selections are completed by the deadline."
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Announcement 1 - Career Fair Next Week -->
+                    <Border x:Name="Announcement1"
+                            BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#FEF3C7"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="💼" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Career Fair Next Week" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="Events" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Yesterday, 3:30 PM" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Content -->
+                            <Label Grid.Row="1"
+                                   Text="Join us for the annual Career Fair on Wednesday, May 20th. Over 50 companies will be present. Professional attire recommended."
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Announcement 2 - Library Hours Update -->
+                    <Border x:Name="Announcement2"
+                            BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#DBEAFE"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📚" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Library Hours Update" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="Facilities" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="2 days ago" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Content -->
+                            <Label Grid.Row="1"
+                                   Text="The library will extend hours during exam week (May 25-30). Open 24/7 with study rooms available for booking."
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Reminder 2 - Scholarship Applications Open -->
+                    <Border x:Name="Reminder2"
+                            BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#D1FAE5"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="🎓" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Scholarship Applications Open" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="Financial Aid" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="5 days ago" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#EF4444"
+                                        Padding="10,6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Important" 
+                                           TextColor="White"
+                                           FontSize="11"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Content -->
+                            <Label Grid.Row="1"
+                                   Text="Merit-based scholarship applications for next academic year are now open. Deadline: June 1st. Visit the financial aid office for details."
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+                        </Grid>
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

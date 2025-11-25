@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Student.TicketsPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="White"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="#0891B2" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="S" 
+                               TextColor="White" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="StudentHub" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Profile Button -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Image Source="dotnet_bot.png" 
+                           WidthRequest="20" 
+                           HeightRequest="20"
+                           Aspect="AspectFit"/>
+                    <Label Text="Profile" 
+                           FontSize="14" 
+                           TextColor="#2C3E50"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Home Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="Home" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Messages Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Announcements Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets Menu Item (Active) -->
+                    <Border BackgroundColor="#0891B2" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Logout at Bottom -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Page Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Support Tickets" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Label Text="Track and manage your support requests" 
+                               FontSize="13" 
+                               TextColor="#6B7280"/>
+                    </VerticalStackLayout>
+
+                    <!-- New Ticket Button -->
+                    <Button Grid.Column="1"
+                            Text="+ New Ticket"
+                            BackgroundColor="#0891B2"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            Padding="20,12"
+                            VerticalOptions="Center"
+                            Clicked="OnNewTicketClicked"/>
+                </Grid>
+
+                <!-- Statistics Cards -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                    <!-- Open Tickets -->
+                    <Border Grid.Column="0" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="Open Tickets" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Column="1"
+                                       Text="❌" FontSize="16"/>
+                            </Grid>
+                            <Label Text="1" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#EF4444"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- In Progress -->
+                    <Border Grid.Column="1" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="In Progress" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Column="1"
+                                       Text="⏳" FontSize="16"/>
+                            </Grid>
+                            <Label Text="1" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#0891B2"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Resolved -->
+                    <Border Grid.Column="2" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="Resolved" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Column="1"
+                                       Text="✅" FontSize="16"/>
+                            </Grid>
+                            <Label Text="1" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold"
+                                   TextColor="#10B981"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Tickets List -->
+                <VerticalStackLayout Spacing="15">
+                    
+                    <!-- Ticket 1 - Course Registration Issue -->
+                    <Border BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#DBEAFE"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="🎓" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Course Registration Issue" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="TKT-2024-001" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Academic" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="high priority" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="2 hours ago" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#FEE2E2"
+                                        Padding="10,6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="Urgent" 
+                                           TextColor="#EF4444"
+                                           FontSize="11"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Description -->
+                            <Label Grid.Row="1"
+                                   Text="Unable to register for CS301 - System shows course as full but spots should be available"
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+
+                            <!-- Actions -->
+                            <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                                <Button Text="View Details"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#0891B2"
+                                        FontSize="13"
+                                        Padding="0"
+                                        Clicked="OnViewDetailsClicked"/>
+                                <Button Text="Add Comment"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#0891B2"
+                                        FontSize="13"
+                                        Padding="0"
+                                        Clicked="OnAddCommentClicked"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Ticket 2 - Library Card Not Working -->
+                    <Border BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#FEF3C7"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📚" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Library Card Not Working" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="TKT-2024-002" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Facilities" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="medium priority" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Yesterday" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#DBEAFE"
+                                        Padding="10,6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="In progress" 
+                                           TextColor="#0891B2"
+                                           FontSize="11"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Description -->
+                            <Label Grid.Row="1"
+                                   Text="My student library card is not scanning at the entrance gates"
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+
+                            <!-- Actions -->
+                            <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                                <Button Text="View Details"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#0891B2"
+                                        FontSize="13"
+                                        Padding="0"
+                                        Clicked="OnViewDetailsClicked"/>
+                                <Button Text="Add Comment"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#0891B2"
+                                        FontSize="13"
+                                        Padding="0"
+                                        Clicked="OnAddCommentClicked"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Ticket 3 - Transcript Request -->
+                    <Border BackgroundColor="White"
+                            Padding="20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                            <!-- Header -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#D1FAE5"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="📄" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="Transcript Request" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="TKT-2024-003" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="Administration" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="low priority" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="•" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                        <Label Text="3 days ago" 
+                                               FontSize="12" 
+                                               TextColor="#6B7280"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#D1FAE5"
+                                        Padding="10,6"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="✓ resolved" 
+                                           TextColor="#10B981"
+                                           FontSize="11"
+                                           FontAttributes="Bold"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- Description -->
+                            <Label Grid.Row="1"
+                                   Text="Request for official transcript for job application"
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   LineBreakMode="WordWrap"/>
+
+                            <!-- Actions -->
+                            <HorizontalStackLayout Grid.Row="2" Spacing="10">
+                                <Button Text="View Details"
+                                        BackgroundColor="Transparent"
+                                        TextColor="#0891B2"
+                                        FontSize="13"
+                                        Padding="0"
+                                        Clicked="OnViewDetailsClicked"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Modal Overlay (Hidden by default) -->
+        <Border x:Name="ModalOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False"
+                Padding="0">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOverlayTapped"/>
+            </Border.GestureRecognizers>
+            
+            <!-- Create Ticket Modal -->
+            <Border BackgroundColor="White"
+                    WidthRequest="450"
+                    Padding="25"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="20">
+                    <!-- Modal Header -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="5">
+                            <Label Text="Create Support Ticket" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="Submit a new support request as soon as possible." 
+                                   FontSize="12" 
+                                   TextColor="#6B7280"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1"
+                               Text="✕"
+                               FontSize="24"
+                               TextColor="#6B7280"
+                               VerticalOptions="Start">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCloseModalTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <!-- Title Field -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Title" 
+                               FontSize="14" 
+                               TextColor="#2C3E50"
+                               FontAttributes="Bold"/>
+                        <Border BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="TitleEntry"
+                                   Placeholder="Brief description of your issue"
+                                   PlaceholderColor="#9CA3AF"
+                                   TextColor="#2C3E50"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Category Picker -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Category" 
+                               FontSize="14" 
+                               TextColor="#2C3E50"
+                               FontAttributes="Bold"/>
+                        <Border BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="CategoryPicker"
+                                    TextColor="#2C3E50"
+                                    BackgroundColor="Transparent">
+                                <Picker.Items>
+                                    <x:String>Select category</x:String>
+                                    <x:String>Academic</x:String>
+                                    <x:String>Facilities</x:String>
+                                    <x:String>Administration</x:String>
+                                    <x:String>Technical</x:String>
+                                    <x:String>Financial</x:String>
+                                    <x:String>Other</x:String>
+                                </Picker.Items>
+                                <Picker.SelectedIndex>0</Picker.SelectedIndex>
+                            </Picker>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Priority Picker -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Priority" 
+                               FontSize="14" 
+                               TextColor="#2C3E50"
+                               FontAttributes="Bold"/>
+                        <Border BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="PriorityPicker"
+                                    TextColor="#2C3E50"
+                                    BackgroundColor="Transparent">
+                                <Picker.Items>
+                                    <x:String>Select priority</x:String>
+                                    <x:String>Low</x:String>
+                                    <x:String>Medium</x:String>
+                                    <x:String>High</x:String>
+                                    <x:String>Urgent</x:String>
+                                </Picker.Items>
+                                <Picker.SelectedIndex>0</Picker.SelectedIndex>
+                            </Picker>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Description Field -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Description" 
+                               FontSize="14" 
+                               TextColor="#2C3E50"
+                               FontAttributes="Bold"/>
+                        <Border BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="6"/>
+                            </Border.StrokeShape>
+                            <Editor x:Name="DescriptionEditor"
+                                    Placeholder="Provide detailed information about your issue..."
+                                    PlaceholderColor="#9CA3AF"
+                                    TextColor="#2C3E50"
+                                    BackgroundColor="Transparent"
+                                    HeightRequest="100"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Action Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#6B7280"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="6"
+                                HeightRequest="45"
+                                Clicked="OnCancelTicketClicked"/>
+                        <Button Grid.Column="1"
+                                Text="Submit Ticket"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="6"
+                                HeightRequest="45"
+                                Clicked="OnSubmitTicketClicked"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+    </Grid>
+</ContentPage>
