@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Admin.AdminAnnouncementsPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="#005BA5"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="White" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="A" 
+                               TextColor="#005BA5" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Admin Portal" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Admin Profile Button -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="🔒" 
+                           FontSize="16"
+                           VerticalOptions="Center"/>
+                    <Label Text="Administrator" 
+                           FontSize="14" 
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Dashboard Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="Dashboard" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDashboardTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- User Management Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="Users" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUsersTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Announcements Menu Item (Active) -->
+                    <Border BackgroundColor="#005BA5" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Tickets Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Reports Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="Reports" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnReportsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Settings Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="⚙️" FontSize="18"/>
+                            <Label Text="Settings" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSettingsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Spacer -->
+                <BoxView Grid.Row="1" Color="Transparent"/>
+
+                <!-- Logout Button -->
+                <Border Grid.Row="2"
+                        BackgroundColor="Transparent" 
+                        Padding="15,12"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="Logout" 
+                               TextColor="#EF4444" 
+                               FontSize="14"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Page Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Messaging &amp; Announcements" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Label Text="Send institution-wide messages to students and advisers" 
+                               FontSize="13" 
+                               TextColor="#6B7280"/>
+                    </VerticalStackLayout>
+                    
+                    <Button Grid.Column="1"
+                            Text="📢 New Announcement"
+                            BackgroundColor="#005BA5"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            Padding="20,12"
+                            VerticalOptions="Center"
+                            Clicked="OnNewAnnouncementClicked"/>
+                </Grid>
+
+                <!-- Message Target Selection -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Select Recipients" 
+                               FontSize="16" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                            <CheckBox Grid.Column="0" 
+                                      x:Name="StudentsCheckBox"
+                                      IsChecked="True"/>
+                            <Label Grid.Column="0" 
+                                   Text="  All Students"
+                                   FontSize="14"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"
+                                   Margin="30,0,0,0"/>
+                            
+                            <CheckBox Grid.Column="1" 
+                                      x:Name="AdvisersCheckBox"
+                                      IsChecked="True"/>
+                            <Label Grid.Column="1" 
+                                   Text="  All Advisers"
+                                   FontSize="14"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"
+                                   Margin="30,0,0,0"/>
+                            
+                            <CheckBox Grid.Column="2" 
+                                      x:Name="TeachersCheckBox"/>
+                            <Label Grid.Column="2" 
+                                   Text="  All Teachers"
+                                   FontSize="14"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"
+                                   Margin="30,0,0,0"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Recent Announcements -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Recent Announcements" 
+                               FontSize="16" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <!-- Announcement 1 -->
+                        <Border BackgroundColor="#F0F9FF"
+                                Padding="15"
+                                StrokeThickness="1"
+                                Stroke="#BFDBFE">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="Semester Schedule Update"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="#1E40AF"/>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="#DBEAFE"
+                                            Padding="8,4"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Published"
+                                               FontSize="11"
+                                               TextColor="#1E40AF"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+                                
+                                <Label Grid.Row="1"
+                                       Text="Important changes to final exam schedule. Please review the updated timetable."
+                                       FontSize="13"
+                                       TextColor="#4B5563"
+                                       LineBreakMode="WordWrap"/>
+                                
+                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
+                                    <Label Text="📌 To: Students, Advisers"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="📅 Today, 10:30 AM"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="👁️ 1,245 views"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </HorizontalStackLayout>
+                                
+                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
+                                    <Button Text="Edit"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#005BA5"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnEditAnnouncementClicked"/>
+                                    <Button Text="Delete"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#EF4444"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnDeleteAnnouncementClicked"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <!-- Announcement 2 -->
+                        <Border BackgroundColor="#F0FDF4"
+                                Padding="15"
+                                StrokeThickness="1"
+                                Stroke="#BBF7D0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="Library Extended Hours"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="#15803D"/>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="#D1FAE5"
+                                            Padding="8,4"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Published"
+                                               FontSize="11"
+                                               TextColor="#15803D"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+                                
+                                <Label Grid.Row="1"
+                                       Text="Library will be open 24/7 during finals week starting December 1st."
+                                       FontSize="13"
+                                       TextColor="#4B5563"
+                                       LineBreakMode="WordWrap"/>
+                                
+                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
+                                    <Label Text="📌 To: Students"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="📅 Yesterday, 2:15 PM"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="👁️ 892 views"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </HorizontalStackLayout>
+                                
+                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
+                                    <Button Text="Edit"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#005BA5"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnEditAnnouncementClicked"/>
+                                    <Button Text="Delete"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#EF4444"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnDeleteAnnouncementClicked"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <!-- Announcement 3 -->
+                        <Border BackgroundColor="#FEF3C7"
+                                Padding="15"
+                                StrokeThickness="1"
+                                Stroke="#FDE68A">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="Campus Safety Advisory"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="#D97706"/>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="#FEF3C7"
+                                            Padding="8,4"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="Published"
+                                               FontSize="11"
+                                               TextColor="#D97706"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+                                </Grid>
+                                
+                                <Label Grid.Row="1"
+                                       Text="Please be aware of construction work in Building A. Use alternate entrances."
+                                       FontSize="13"
+                                       TextColor="#4B5563"
+                                       LineBreakMode="WordWrap"/>
+                                
+                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
+                                    <Label Text="📌 To: Students, Advisers, Teachers"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="📅 Nov 24, 9:00 AM"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="•"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                    <Label Text="👁️ 1,534 views"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </HorizontalStackLayout>
+                                
+                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
+                                    <Button Text="Edit"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#005BA5"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnEditAnnouncementClicked"/>
+                                    <Button Text="Delete"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#EF4444"
+                                            FontSize="12"
+                                            Padding="0"
+                                            Clicked="OnDeleteAnnouncementClicked"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

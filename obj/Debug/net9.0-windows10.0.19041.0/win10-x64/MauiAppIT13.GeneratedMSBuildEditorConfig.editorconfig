@@ -34,6 +34,12 @@ build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.AppShell.xaml
 build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
 
+[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminAnnouncementsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminAnnouncementsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminAnnouncementsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminAnnouncementsPage.xaml
+
 [C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminHomePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminHomePage.xaml
@@ -45,6 +51,24 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminLoginPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminLoginPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminLoginPage.xaml
+
+[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminReportsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminReportsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminReportsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminReportsPage.xaml
+
+[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminTicketsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminTicketsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminTicketsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminTicketsPage.xaml
+
+[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminUsersPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminUsersPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminUsersPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminUsersPage.xaml
 
 [C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/AnnouncementsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml

@@ -180,6 +180,7 @@
                         <Label Text="Messages" 
                                FontSize="20" 
                                FontAttributes="Bold"
+                                 FontFamily="MontserratBold"
                                TextColor="#2C3E50"/>
                     </Border>
 

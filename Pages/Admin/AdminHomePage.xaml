@@ -219,7 +219,8 @@
                         <Label Text="Admin Dashboard" 
                                TextColor="White" 
                                FontSize="24"
-                               FontAttributes="Bold"/>
+                               FontAttributes="Bold"
+                               FontFamily="MontserratBold"/>
                         <Label Text="Manage your university system effectively." 
                                TextColor="White" 
                                FontSize="14"
@@ -360,6 +361,7 @@
                                 <Label Text=" Recent Activity" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
+                                         FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
@@ -542,6 +544,7 @@
                                 <Label Text=" Quick Actions" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
+                                         FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>

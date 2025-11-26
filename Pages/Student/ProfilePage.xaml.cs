@@ -32,9 +32,12 @@ public partial class ProfilePage : ContentPage
             await DisplayAlert("Edit Profile", "Profile editing functionality - Coming soon!", "OK");
         }
 
-        private async void OnLogoutTapped(object? sender, EventArgs e)
+    private async void OnLogoutTapped(object? sender, EventArgs e)
+    {
+        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
+        if (confirm)
         {
-            // Navigate back to login page by popping to root
-            await Navigation.PopToRootAsync();
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
+}

@@ -14,22 +14,22 @@ public partial class AdminHomePage : ContentPage
 
     private async void OnUsersTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Users", "User management interface coming soon", "OK");
+        await Shell.Current.GoToAsync("AdminUsersPage");
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Announcements", "Announcements management interface coming soon", "OK");
+        await Shell.Current.GoToAsync("AdminAnnouncementsPage");
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Tickets", "Ticket management interface coming soon", "OK");
+        await Shell.Current.GoToAsync("AdminTicketsPage");
     }
 
     private async void OnReportsTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Reports", "Reports interface coming soon", "OK");
+        await Shell.Current.GoToAsync("AdminReportsPage");
     }
 
     private async void OnSettingsTapped(object sender, EventArgs e)

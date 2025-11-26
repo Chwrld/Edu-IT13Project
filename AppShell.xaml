@@ -27,6 +27,30 @@
         ContentTemplate="{DataTemplate admin:AdminHomePage}"
         Route="AdminHomePage" />
 
+    <!-- Admin Users -->
+    <ShellContent
+        Title="Admin Users"
+        ContentTemplate="{DataTemplate admin:AdminUsersPage}"
+        Route="AdminUsersPage" />
+
+    <!-- Admin Tickets -->
+    <ShellContent
+        Title="Admin Tickets"
+        ContentTemplate="{DataTemplate admin:AdminTicketsPage}"
+        Route="AdminTicketsPage" />
+
+    <!-- Admin Announcements -->
+    <ShellContent
+        Title="Admin Announcements"
+        ContentTemplate="{DataTemplate admin:AdminAnnouncementsPage}"
+        Route="AdminAnnouncementsPage" />
+
+    <!-- Admin Reports -->
+    <ShellContent
+        Title="Admin Reports"
+        ContentTemplate="{DataTemplate admin:AdminReportsPage}"
+        Route="AdminReportsPage" />
+
     <!-- Teacher Login -->
     <ShellContent
         Title="Teacher Login"

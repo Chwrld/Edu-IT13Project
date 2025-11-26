@@ -182,7 +182,8 @@
                         <Label Text="Welcome back, Student!" 
                                TextColor="White" 
                                FontSize="24"
-                               FontAttributes="Bold"/>
+                               FontAttributes="Bold"
+                               FontFamily="MontserratBold"/>
                         <Label Text="Here's what's happening with your studies today." 
                                TextColor="White" 
                                FontSize="14"
@@ -295,6 +296,7 @@
                                 <Label Text=" Recent Messages" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
+                                         FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
@@ -479,6 +481,7 @@
                                 <Label Text=" Upcoming Events" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
+                                         FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>

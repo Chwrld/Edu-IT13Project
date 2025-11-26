@@ -12,13 +12,16 @@
             HorizontalOptions="Center">
             
             <!-- Admin Login Card -->
-            <Frame 
+            <Border 
                 BackgroundColor="White"
-                CornerRadius="12"
+                StrokeThickness="0"
                 Padding="40,30"
-                HasShadow="True"
+                Shadow="{Shadow Brush=Black, Offset='0,2', Radius=8, Opacity=0.1}"
                 WidthRequest="400"
                 MaximumWidthRequest="500">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
                 
                 <VerticalStackLayout Spacing="20">
                     
@@ -127,7 +130,7 @@
                     </Label>
 
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

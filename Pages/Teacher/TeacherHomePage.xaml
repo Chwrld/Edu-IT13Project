@@ -184,7 +184,8 @@
                         <Label Text="Welcome, Professor!" 
                                TextColor="White" 
                                FontSize="24"
-                               FontAttributes="Bold"/>
+                               FontAttributes="Bold"
+                               FontFamily="MontserratBold"/>
                         <Label Text="Manage your classes and student progress." 
                                TextColor="White" 
                                FontSize="14"

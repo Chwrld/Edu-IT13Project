@@ -14,6 +14,10 @@ namespace MauiAppIT13
             Routing.RegisterRoute("HomePage", typeof(HomePage));
             Routing.RegisterRoute("AdminLoginPage", typeof(AdminLoginPage));
             Routing.RegisterRoute("AdminHomePage", typeof(AdminHomePage));
+            Routing.RegisterRoute("AdminUsersPage", typeof(AdminUsersPage));
+            Routing.RegisterRoute("AdminTicketsPage", typeof(AdminTicketsPage));
+            Routing.RegisterRoute("AdminAnnouncementsPage", typeof(AdminAnnouncementsPage));
+            Routing.RegisterRoute("AdminReportsPage", typeof(AdminReportsPage));
             Routing.RegisterRoute("TeacherLoginPage", typeof(TeacherLoginPage));
             Routing.RegisterRoute("TeacherHomePage", typeof(TeacherHomePage));
             Routing.RegisterRoute("MainPage", typeof(MainPage));
