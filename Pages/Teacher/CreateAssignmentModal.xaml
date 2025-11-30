@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Teacher.CreateAssignmentModal"
+             BackgroundColor="#80000000">
+
+    <!-- Semi-transparent overlay -->
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnBackgroundTapped"/>
+        </Grid.GestureRecognizers>
+
+        <!-- Modal Container -->
+        <Border BackgroundColor="White"
+                WidthRequest="600"
+                HeightRequest="550"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                StrokeThickness="0"
+                Padding="30">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.2"/>
+            </Border.Shadow>
+
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="20">
+                <!-- Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Create Assignment" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Label Text="Fill in the details below to create a new assignment" 
+                               FontSize="13" 
+                               TextColor="#6B7280"/>
+                    </VerticalStackLayout>
+
+                    <!-- Close Button -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="#F3F4F6"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            StrokeThickness="0"
+                            VerticalOptions="Start">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Label Text="✕" 
+                               FontSize="18"
+                               TextColor="#6B7280"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCloseTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+
+                <!-- Form -->
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout Spacing="20">
+                        
+                        <!-- Title Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Assignment Title*" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="TitleEntry"
+                                       Placeholder="e.g., Assignment 1: Variables and Data Types"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Description Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Description*" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Editor x:Name="DescriptionEditor"
+                                        Placeholder="Enter assignment instructions and requirements..."
+                                        PlaceholderColor="#9CA3AF"
+                                        TextColor="#2C3E50"
+                                        BackgroundColor="Transparent"
+                                        HeightRequest="120"
+                                        AutoSize="TextChanges"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Deadline Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Deadline*" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <!-- Date Picker -->
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#F9FAFB"
+                                        StrokeThickness="1"
+                                        Stroke="#E5E7EB"
+                                        Padding="12">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6"/>
+                                    </Border.StrokeShape>
+                                    <DatePicker x:Name="DeadlineDatePicker"
+                                                TextColor="#2C3E50"
+                                                BackgroundColor="Transparent"
+                                                Format="MMM dd, yyyy"
+                                                MinimumDate="{x:Static x:DateTime.Now}"/>
+                                </Border>
+
+                                <!-- Time Picker -->
+                                <Border Grid.Column="1"
+                                        BackgroundColor="#F9FAFB"
+                                        StrokeThickness="1"
+                                        Stroke="#E5E7EB"
+                                        Padding="12">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="6"/>
+                                    </Border.StrokeShape>
+                                    <TimePicker x:Name="DeadlineTimePicker"
+                                                TextColor="#2C3E50"
+                                                BackgroundColor="Transparent"
+                                                Format="hh:mm tt"/>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <!-- Points Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Total Points" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="PointsEntry"
+                                       Placeholder="e.g., 100"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Numeric"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <!-- Footer Buttons -->
+                <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="15">
+                    <Button Grid.Column="0"
+                            Text="Cancel"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#6B7280"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            Clicked="OnCancelClicked"/>
+                    
+                    <Button Grid.Column="1"
+                            Text="Create Assignment"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            Clicked="OnCreateClicked"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

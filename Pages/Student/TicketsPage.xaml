@@ -41,22 +41,6 @@
                            TextColor="#2C3E50"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
-
-                <!-- Profile Button -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Image Source="dotnet_bot.png" 
-                           WidthRequest="20" 
-                           HeightRequest="20"
-                           Aspect="AspectFit"/>
-                    <Label Text="Profile" 
-                           FontSize="14" 
-                           TextColor="#2C3E50"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </HorizontalStackLayout>
             </Grid>
         </Border>
 
@@ -142,25 +126,46 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- Logout at Bottom -->
-                <Border Grid.Row="2"
-                        BackgroundColor="Transparent" 
-                        Padding="15,12"
-                        StrokeThickness="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8"/>
-                    </Border.StrokeShape>
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
-                        <Label Text="Logout" 
-                               TextColor="#EF4444" 
-                               FontSize="14"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                <!-- Bottom Menu Items -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <!-- Profile Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="Profile" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Logout Button -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 

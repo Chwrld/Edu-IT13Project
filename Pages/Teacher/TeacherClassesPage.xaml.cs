@@ -3,21 +3,26 @@ using System.Runtime.Versioning;
 namespace MauiAppIT13.Pages.Teacher;
 
 [SupportedOSPlatform("windows10.0.17763.0")]
-public partial class TeacherHomePage : ContentPage
+public partial class TeacherClassesPage : ContentPage
 {
-    public TeacherHomePage()
+    public TeacherClassesPage()
     {
         InitializeComponent();
     }
 
-    private async void OnClassesTapped(object sender, EventArgs e)
+    private async void OnDashboardTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherHomePage");
     }
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+        await DisplayAlert("Messages", "Messages feature coming soon!", "OK");
+    }
+
+    private async void OnViewClassClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherClassDetailsPage");
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)

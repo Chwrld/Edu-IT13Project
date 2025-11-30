@@ -41,17 +41,6 @@
                            TextColor="White"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
-
-                <!-- Admin Profile Button -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="🔒" 
-                           FontSize="16"
-                           VerticalOptions="Center"/>
-                    <Label Text="Administrator" 
-                           FontSize="14" 
-                           TextColor="White"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
             </Grid>
         </Border>
 
@@ -178,25 +167,42 @@
                 <!-- Spacer -->
                 <BoxView Grid.Row="1" Color="Transparent"/>
 
-                <!-- Logout Button -->
-                <Border Grid.Row="2"
-                        BackgroundColor="Transparent" 
-                        Padding="15,12"
-                        StrokeThickness="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8"/>
-                    </Border.StrokeShape>
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
-                        <Label Text="Logout" 
-                               TextColor="#EF4444" 
-                               FontSize="14"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                <!-- Administrator Profile (Above Logout) -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🔒" FontSize="18"/>
+                            <Label Text="Administrator" 
+                                   TextColor="#2C3E50" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Logout Button -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 

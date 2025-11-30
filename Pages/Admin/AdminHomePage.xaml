@@ -41,21 +41,6 @@
                            TextColor="White"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
-
-                <!-- Admin Profile Button -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="🔒" 
-                           FontSize="16"
-                           VerticalOptions="Center"/>
-                    <Label Text="Administrator" 
-                           FontSize="14" 
-                           TextColor="White"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </HorizontalStackLayout>
             </Grid>
         </Border>
 
@@ -182,25 +167,45 @@
                 <!-- Spacer to push logout to bottom -->
                 <BoxView Grid.Row="1" Color="Transparent"/>
 
-                <!-- Logout Button at Bottom -->
-                <Border Grid.Row="2"
-                        BackgroundColor="Transparent" 
-                        Padding="15,12"
-                        StrokeThickness="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8"/>
-                    </Border.StrokeShape>
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
-                        <Label Text="Logout" 
-                               TextColor="#EF4444" 
-                               FontSize="14"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                <!-- Administrator Profile (Above Logout) -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🔒" FontSize="18"/>
+                            <Label Text="Administrator" 
+                                   TextColor="#2C3E50" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Logout Button at Bottom -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 
@@ -211,7 +216,8 @@
                 <!-- Welcome Banner -->
                 <Border BackgroundColor="#005BA5"
                         StrokeThickness="0"
-                        Padding="30,25">
+                        Padding="30,25"
+                        Margin="0,15,0,0">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="12"/>
                     </Border.StrokeShape>

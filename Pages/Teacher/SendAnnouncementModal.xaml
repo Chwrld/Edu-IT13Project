@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Teacher.SendAnnouncementModal"
+             BackgroundColor="#80000000">
+
+    <!-- Semi-transparent overlay -->
+    <Grid>
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnBackgroundTapped"/>
+        </Grid.GestureRecognizers>
+
+        <!-- Modal Container -->
+        <Border BackgroundColor="White"
+                WidthRequest="600"
+                HeightRequest="500"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                StrokeThickness="0"
+                Padding="30">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Radius="20" Opacity="0.2"/>
+            </Border.Shadow>
+
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="20">
+                <!-- Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                        <Label Text="Send Announcement" 
+                               FontSize="24" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+                        <Label Text="Send an announcement to all students in this class" 
+                               FontSize="13" 
+                               TextColor="#6B7280"/>
+                    </VerticalStackLayout>
+
+                    <!-- Close Button -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="#F3F4F6"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            StrokeThickness="0"
+                            VerticalOptions="Start">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Label Text="✕" 
+                               FontSize="18"
+                               TextColor="#6B7280"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCloseTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+
+                <!-- Form -->
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout Spacing="20">
+                        
+                        <!-- Subject Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Subject*" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="SubjectEntry"
+                                       Placeholder="e.g., Reminder: Assignment 1 Deadline"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Message Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Message*" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Editor x:Name="MessageEditor"
+                                        Placeholder="Type your announcement message here..."
+                                        PlaceholderColor="#9CA3AF"
+                                        TextColor="#2C3E50"
+                                        BackgroundColor="Transparent"
+                                        HeightRequest="200"
+                                        AutoSize="TextChanges"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Priority Field -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Priority" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="12">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="6"/>
+                                </Border.StrokeShape>
+                                <Picker x:Name="PriorityPicker"
+                                        TextColor="#2C3E50"
+                                        BackgroundColor="Transparent"
+                                        SelectedIndex="0">
+                                    <Picker.Items>
+                                        <x:String>Normal</x:String>
+                                        <x:String>Important</x:String>
+                                        <x:String>Urgent</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Border>
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <!-- Footer Buttons -->
+                <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="15">
+                    <Button Grid.Column="0"
+                            Text="Cancel"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#6B7280"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            Clicked="OnCancelClicked"/>
+                    
+                    <Button Grid.Column="1"
+                            Text="Send Announcement"
+                            BackgroundColor="#059669"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            CornerRadius="6"
+                            HeightRequest="44"
+                            Clicked="OnSendClicked"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

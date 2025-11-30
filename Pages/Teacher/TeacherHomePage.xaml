@@ -43,15 +43,7 @@
                 </HorizontalStackLayout>
 
                 <!-- Teacher Profile -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="👨‍🏫" 
-                           FontSize="16"
-                           VerticalOptions="Center"/>
-                    <Label Text="Faculty" 
-                           FontSize="14" 
-                           TextColor="White"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <BoxView Grid.Column="2" Color="Transparent"/>
             </Grid>
         </Border>
 
@@ -79,7 +71,7 @@
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!-- My Classes -->
+                    <!-- Classes -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -88,14 +80,17 @@
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
                             <Label Text="📚" FontSize="18"/>
-                            <Label Text="My Classes" 
+                            <Label Text="Classes" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnClassesTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
-                    <!-- Students -->
+                    <!-- Messages (Optional) -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -103,69 +98,57 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
-                            <Label Text="Students" 
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
-                    </Border>
-
-                    <!-- Assignments -->
-                    <Border BackgroundColor="Transparent" 
-                            Padding="15,12"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8"/>
-                        </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
-                            <Label Text="📝" FontSize="18"/>
-                            <Label Text="Assignments" 
-                                   TextColor="#6B7280" 
-                                   FontSize="14"
-                                   VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
-
-                    <!-- Grades -->
-                    <Border BackgroundColor="Transparent" 
-                            Padding="15,12"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8"/>
-                        </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
-                            <Label Text="Grades" 
-                                   TextColor="#6B7280" 
-                                   FontSize="14"
-                                   VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
                 </VerticalStackLayout>
 
                 <!-- Spacer -->
                 <BoxView Grid.Row="1" Color="Transparent"/>
 
-                <!-- Logout Button -->
-                <Border Grid.Row="2"
-                        BackgroundColor="Transparent" 
-                        Padding="15,12"
-                        StrokeThickness="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8"/>
-                    </Border.StrokeShape>
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
-                        <Label Text="Logout" 
-                               TextColor="#EF4444" 
-                               FontSize="14"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                <!-- Teacher Profile & Logout -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="Faculty" 
+                                   TextColor="#2C3E50" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Logout Button -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 

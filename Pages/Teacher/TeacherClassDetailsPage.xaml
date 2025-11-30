@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppIT13.Pages.Teacher.TeacherClassDetailsPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="#059669"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="White" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="T" 
+                               TextColor="#059669" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="Teacher Portal" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Back to Classes -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="← Back to Classes" 
+                           FontSize="14" 
+                           TextColor="White"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackToClassesTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Dashboard -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="Dashboard" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnDashboardTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Classes -->
+                    <Border BackgroundColor="#059669" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="Classes" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Messages -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Spacer -->
+                <BoxView Grid.Row="1" Color="Transparent"/>
+
+                <!-- Teacher Profile & Logout -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="Faculty" 
+                                   TextColor="#2C3E50" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="25">
+                
+                <!-- Class Header -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Introduction to Computer Science" 
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <HorizontalStackLayout Spacing="15">
+                        <Label Text="CS-101" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#059669"/>
+                        <Label Text="•" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                        <Label Text="35 Students" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                        <Label Text="•" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                        <Label Text="AY 2024-2025 • 1st Sem" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Tab Navigation -->
+                <HorizontalStackLayout Spacing="10" x:Name="TabBar">
+                    <Border x:Name="StudentsTab"
+                            BackgroundColor="#059669"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Students" 
+                               TextColor="White" 
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStudentsTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="AssignmentsTab"
+                            BackgroundColor="#E5E7EB"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Assignments" 
+                               TextColor="#6B7280" 
+                               FontSize="14"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAssignmentsTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="GradesTab"
+                            BackgroundColor="#E5E7EB"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Grades" 
+                               TextColor="#6B7280" 
+                               FontSize="14"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGradesTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="AnnouncementsTab"
+                            BackgroundColor="#E5E7EB"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Announcements" 
+                               TextColor="#6B7280" 
+                               FontSize="14"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Tab Content Container -->
+                <VerticalStackLayout x:Name="TabContent" Spacing="15">
+                    
+                    <!-- Students Tab Content (Default) -->
+                    <VerticalStackLayout x:Name="StudentsContent" Spacing="15">
+                        
+                        <!-- Student List Header -->
+                        <Label Text="Enrolled Students" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <!-- Student Cards -->
+                        <VerticalStackLayout Spacing="10">
+                            
+                            <!-- Student 1 -->
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="20">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                                    <!-- Avatar -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#059669"
+                                            WidthRequest="50"
+                                            HeightRequest="50"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="JS" 
+                                               TextColor="White" 
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Student Info -->
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                        <Label Text="Jane Student" 
+                                               FontSize="16" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="STU-2024-0001" 
+                                               FontSize="13" 
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Action Buttons -->
+                                    <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
+                                        <Button Text="💬 Message"
+                                                BackgroundColor="#3B82F6"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnMessageStudentClicked"/>
+                                        <Button Text="📝 View Concerns"
+                                                BackgroundColor="#F59E0B"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnViewConcernsClicked"/>
+                                        <Button Text="📊 View Details"
+                                                BackgroundColor="#059669"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnViewStudentDetailsClicked"/>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+
+                            <!-- Student 2 -->
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="20">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="15">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="#059669"
+                                            WidthRequest="50"
+                                            HeightRequest="50"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <Ellipse/>
+                                        </Border.StrokeShape>
+                                        <Label Text="JD" 
+                                               TextColor="White" 
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                        <Label Text="John Doe" 
+                                               FontSize="16" 
+                                               FontAttributes="Bold"
+                                               TextColor="#2C3E50"/>
+                                        <Label Text="STU-2024-0002" 
+                                               FontSize="13" 
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
+                                        <Button Text="💬 Message"
+                                                BackgroundColor="#3B82F6"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnMessageStudentClicked"/>
+                                        <Button Text="📝 View Concerns"
+                                                BackgroundColor="#F59E0B"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnViewConcernsClicked"/>
+                                        <Button Text="📊 View Details"
+                                                BackgroundColor="#059669"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                Padding="10,5"
+                                                CornerRadius="5"
+                                                Clicked="OnViewStudentDetailsClicked"/>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Assignments Tab Content (Hidden by default) -->
+                    <VerticalStackLayout x:Name="AssignmentsContent" IsVisible="False" Spacing="15">
+                        <HorizontalStackLayout Spacing="15">
+                            <Label Text="Assignments" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"/>
+                            <Button Text="+ Create Assignment"
+                                    BackgroundColor="#059669"
+                                    TextColor="White"
+                                    FontSize="13"
+                                    Padding="15,8"
+                                    CornerRadius="6"
+                                    Clicked="OnCreateAssignmentClicked"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Assignment List -->
+                        <VerticalStackLayout Spacing="10">
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="20">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="10">
+                                    <Label Text="Assignment 1: Basic Programming Concepts" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <Label Text="Write a program that demonstrates variables, loops, and conditionals." 
+                                           FontSize="13" 
+                                           TextColor="#6B7280"/>
+                                    <HorizontalStackLayout Spacing="15">
+                                        <Label Text="📅 Deadline: Dec 15, 2025" 
+                                               FontSize="12" 
+                                               TextColor="#F59E0B"/>
+                                        <Label Text="📝 28/35 Submitted" 
+                                               FontSize="12" 
+                                               TextColor="#059669"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Grades Tab Content (Hidden by default) -->
+                    <VerticalStackLayout x:Name="GradesContent" IsVisible="False" Spacing="15">
+                        <Label Text="Student Grades" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <!-- Grades Table -->
+                        <Border BackgroundColor="White"
+                                StrokeThickness="1"
+                                Stroke="#E5E7EB"
+                                Padding="15">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="10">
+                                <!-- Table Header -->
+                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10"
+                                      BackgroundColor="#F9FAFB">
+                                    <Label Grid.Column="0" Text="Student" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="1" Text="Assignments" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="2" Text="Activities" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="3" Text="Exams" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="4" Text="Projects" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                </Grid>
+
+                                <!-- Student Rows -->
+                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10">
+                                    <Label Grid.Column="0" Text="Jane Student" FontSize="13" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="1" Text="95%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="2" Text="88%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="3" Text="92%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="4" Text="90%" FontSize="13" TextColor="#059669"/>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10"
+                                      BackgroundColor="#F9FAFB">
+                                    <Label Grid.Column="0" Text="John Doe" FontSize="13" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="1" Text="85%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="2" Text="90%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="3" Text="87%" FontSize="13" TextColor="#059669"/>
+                                    <Label Grid.Column="4" Text="88%" FontSize="13" TextColor="#059669"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Announcements Tab Content (Hidden by default) -->
+                    <VerticalStackLayout x:Name="AnnouncementsContent" IsVisible="False" Spacing="15">
+                        <HorizontalStackLayout Spacing="15">
+                            <Label Text="Class Announcements" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"/>
+                            <Button Text="+ Send Announcement"
+                                    BackgroundColor="#059669"
+                                    TextColor="White"
+                                    FontSize="13"
+                                    Padding="15,8"
+                                    CornerRadius="6"
+                                    Clicked="OnSendAnnouncementClicked"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Announcement History -->
+                        <VerticalStackLayout Spacing="10">
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="20">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="8">
+                                    <Label Text="Midterm Exam Schedule" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"/>
+                                    <Label Text="The midterm exam will be held on December 10, 2025, at 9:00 AM in Room 301." 
+                                           FontSize="13" 
+                                           TextColor="#6B7280"/>
+                                    <Label Text="Posted on Nov 25, 2025" 
+                                           FontSize="11" 
+                                           TextColor="#9CA3AF"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

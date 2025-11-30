@@ -11,81 +11,87 @@
 
     <!-- Student Login -->
     <ShellContent
-        Title="Login"
         ContentTemplate="{DataTemplate student:MainPage}"
         Route="MainPage" />
 
     <!-- Admin Login -->
     <ShellContent
-        Title="Admin Login"
         ContentTemplate="{DataTemplate admin:AdminLoginPage}"
         Route="AdminLoginPage" />
 
     <!-- Admin Home -->
     <ShellContent
-        Title="Admin Dashboard"
         ContentTemplate="{DataTemplate admin:AdminHomePage}"
         Route="AdminHomePage" />
 
     <!-- Admin Users -->
     <ShellContent
-        Title="Admin Users"
         ContentTemplate="{DataTemplate admin:AdminUsersPage}"
         Route="AdminUsersPage" />
 
     <!-- Admin Tickets -->
     <ShellContent
-        Title="Admin Tickets"
         ContentTemplate="{DataTemplate admin:AdminTicketsPage}"
         Route="AdminTicketsPage" />
 
     <!-- Admin Announcements -->
     <ShellContent
-        Title="Admin Announcements"
         ContentTemplate="{DataTemplate admin:AdminAnnouncementsPage}"
         Route="AdminAnnouncementsPage" />
 
     <!-- Admin Reports -->
     <ShellContent
-        Title="Admin Reports"
         ContentTemplate="{DataTemplate admin:AdminReportsPage}"
         Route="AdminReportsPage" />
 
     <!-- Teacher Login -->
     <ShellContent
-        Title="Teacher Login"
         ContentTemplate="{DataTemplate teacher:TeacherLoginPage}"
         Route="TeacherLoginPage" />
 
     <!-- Teacher Home -->
     <ShellContent
-        Title="Teacher Dashboard"
         ContentTemplate="{DataTemplate teacher:TeacherHomePage}"
         Route="TeacherHomePage" />
 
+    <!-- Teacher Classes -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherClassesPage}"
+        Route="TeacherClassesPage" />
+
+    <!-- Teacher Class Details -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherClassDetailsPage}"
+        Route="TeacherClassDetailsPage" />
+
+    <!-- Teacher Student Details -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherStudentDetailsPage}"
+        Route="TeacherStudentDetailsPage" />
+
+    <!-- Teacher Messages -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherMessagesPage}"
+        Route="TeacherMessagesPage" />
+
     <!-- Student Pages -->
     <ShellContent
-        Title="Home"
         ContentTemplate="{DataTemplate student:HomePage}"
         Route="HomePage" />
     
     <ShellContent
-        Title="Messages"
         ContentTemplate="{DataTemplate student:MessagesPage}"
         Route="MessagesPage" />
     
     <ShellContent
-        Title="Announcements"
         ContentTemplate="{DataTemplate student:AnnouncementsPage}"
         Route="AnnouncementsPage" />
     
     <ShellContent
-        Title="Tickets"
         ContentTemplate="{DataTemplate student:TicketsPage}"
         Route="TicketsPage" />
     
     <ShellContent
-        Title="Profile"
         ContentTemplate="{DataTemplate student:ProfilePage}"
         Route="ProfilePage" />
 

@@ -41,17 +41,6 @@
                            TextColor="White"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
-
-                <!-- Admin Profile Button -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="🔒" 
-                           FontSize="16"
-                           VerticalOptions="Center"/>
-                    <Label Text="Administrator" 
-                           FontSize="14" 
-                           TextColor="White"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
             </Grid>
         </Border>
 
