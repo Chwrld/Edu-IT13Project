@@ -1,10 +1,17 @@
-﻿namespace MauiAppIT13.Pages.Student
+﻿using MauiAppIT13.Controllers;
+using MauiAppIT13.Models;
+using MauiAppIT13.Utils;
+
+namespace MauiAppIT13.Pages.Student
 {
     public partial class MainPage : ContentPage
     {
+        private AuthController? _authController;
+
         public MainPage()
         {
             InitializeComponent();
+            _authController = AppServiceProvider.GetService<AuthController>();
         }
 
         private void OnSignInTabTapped(object? sender, EventArgs e)
@@ -46,22 +53,22 @@
             string email = EmailEntry.Text?.Trim() ?? string.Empty;
             string password = PasswordEntry.Text ?? string.Empty;
 
-            // Basic validation
-            if (string.IsNullOrEmpty(email))
+            if (_authController is null)
             {
-                await DisplayAlert("Error", "Please enter your email address.", "OK");
+                await DisplayAlert("Error", "Authentication service unavailable.", "OK");
                 return;
             }
 
-            if (string.IsNullOrEmpty(password))
+            var result = await _authController.LoginAsync(email, password);
+            if (result.Success)
             {
-                await DisplayAlert("Error", "Please enter your password.", "OK");
-                return;
+                // Navigate to HomePage on successful login
+                await Shell.Current.GoToAsync("//HomePage");
             }
-
-            // TODO: Implement actual authentication logic here
-            // For now, navigate to HomePage on successful login
-            await Shell.Current.GoToAsync("//HomePage");
+            else
+            {
+                await DisplayAlert("Login Failed", result.ErrorMessage ?? "Invalid credentials.", "OK");
+            }
         }
 
         private async void OnAdminLoginTapped(object? sender, EventArgs e)

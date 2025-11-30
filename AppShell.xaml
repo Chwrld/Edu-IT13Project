@@ -63,10 +63,30 @@
         ContentTemplate="{DataTemplate teacher:TeacherHomePage}"
         Route="TeacherHomePage" />
 
-    <!-- Student Home -->
+    <!-- Student Pages -->
     <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate student:HomePage}"
         Route="HomePage" />
+    
+    <ShellContent
+        Title="Messages"
+        ContentTemplate="{DataTemplate student:MessagesPage}"
+        Route="MessagesPage" />
+    
+    <ShellContent
+        Title="Announcements"
+        ContentTemplate="{DataTemplate student:AnnouncementsPage}"
+        Route="AnnouncementsPage" />
+    
+    <ShellContent
+        Title="Tickets"
+        ContentTemplate="{DataTemplate student:TicketsPage}"
+        Route="TicketsPage" />
+    
+    <ShellContent
+        Title="Profile"
+        ContentTemplate="{DataTemplate student:ProfilePage}"
+        Route="ProfilePage" />
 
 </Shell>

@@ -8,7 +8,7 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MauiAppIT13
-build_property.ProjectDir = C:\Users\LENOVO\source\repos\MauiAppIT13\
+build_property.ProjectDir = c:\Users\Era\source\repos\EduCRM\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTAotOptimizerEnabled = true
@@ -22,109 +22,109 @@ build_property.CsWinRTUseWindowsUIXamlProjections = false
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/App.xaml]
+[c:/Users/Era/source/repos/EduCRM/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.App.xaml
 build_metadata.AdditionalFiles.TargetPath = App.xaml
 build_metadata.AdditionalFiles.RelativePath = App.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/AppShell.xaml]
+[c:/Users/Era/source/repos/EduCRM/AppShell.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.AppShell.xaml
 build_metadata.AdditionalFiles.TargetPath = AppShell.xaml
 build_metadata.AdditionalFiles.RelativePath = AppShell.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminAnnouncementsPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminAnnouncementsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminAnnouncementsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminAnnouncementsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminAnnouncementsPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminHomePage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminHomePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminHomePage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminHomePage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminHomePage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminLoginPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminLoginPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminLoginPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminLoginPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminLoginPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminReportsPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminReportsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminReportsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminReportsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminReportsPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminTicketsPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminTicketsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminTicketsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminTicketsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminTicketsPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Admin/AdminUsersPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Admin/AdminUsersPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Admin.AdminUsersPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Admin\AdminUsersPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Admin\AdminUsersPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/AnnouncementsPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/AnnouncementsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.AnnouncementsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\AnnouncementsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\AnnouncementsPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/HomePage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/HomePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.HomePage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\HomePage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\HomePage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/MainPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/MainPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.MainPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\MainPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\MainPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/MessagesPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/MessagesPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.MessagesPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\MessagesPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\MessagesPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/ProfilePage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/ProfilePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.ProfilePage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\ProfilePage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\ProfilePage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Student/TicketsPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Student/TicketsPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Student.TicketsPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Student\TicketsPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Student\TicketsPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Teacher/TeacherHomePage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Teacher/TeacherHomePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Teacher.TeacherHomePage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Teacher\TeacherHomePage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Teacher\TeacherHomePage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Pages/Teacher/TeacherLoginPage.xaml]
+[c:/Users/Era/source/repos/EduCRM/Pages/Teacher/TeacherLoginPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Pages.Teacher.TeacherLoginPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Pages\Teacher\TeacherLoginPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Pages\Teacher\TeacherLoginPage.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Resources/Styles/Colors.xaml]
+[c:/Users/Era/source/repos/EduCRM/Resources/Styles/Colors.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Resources.Styles.Colors.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
 
-[C:/Users/LENOVO/source/repos/MauiAppIT13/Resources/Styles/Styles.xaml]
+[c:/Users/Era/source/repos/EduCRM/Resources/Styles/Styles.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = MauiAppIT13.Resources.Styles.Styles.xaml
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml

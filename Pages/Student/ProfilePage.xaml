@@ -209,7 +209,8 @@
                             <Border.StrokeShape>
                                 <Ellipse/>
                             </Border.StrokeShape>
-                            <Label Text="SJ" 
+                            <Label x:Name="AvatarLabel"
+                                   Text="SJ" 
                                    TextColor="White"
                                    FontSize="48"
                                    FontAttributes="Bold"
@@ -219,11 +220,13 @@
 
                         <!-- Profile Info -->
                         <VerticalStackLayout Grid.Column="1" Spacing="12">
-                            <Label Text="Sarah Johnson" 
+                            <Label x:Name="NameLabel"
+                                   Text="Student Name" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#2C3E50"/>
-                            <Label Text="Computer Science Major" 
+                            <Label x:Name="ProgramLabel"
+                                   Text="Program" 
                                    FontSize="16" 
                                    TextColor="#6B7280"/>
                             
@@ -308,7 +311,8 @@
                                     <Label Text="Email" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="sarah.johnson@university.edu" 
+                                    <Label x:Name="EmailLabel"
+                                           Text="student@university.edu" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
@@ -333,7 +337,8 @@
                                     <Label Text="Phone" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="+1 (555) 123-4567" 
+                                    <Label x:Name="PhoneLabel"
+                                           Text="+1 (555) 000-0000" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
@@ -349,19 +354,46 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📍" 
+                                    <Label Text="🏢" 
                                            FontSize="20"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
                                 <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                    <Label Text="Campus Address" 
+                                    <Label Text="Campus Location" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="Residence Hall A, Room 204" 
+                                    <Label Text="Davao City" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Home Address -->
+                            <HorizontalStackLayout Spacing="15">
+                                <Border BackgroundColor="#FEE2E2"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="🏠" 
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                    <Label Text="Address" 
+                                           FontSize="12" 
+                                           TextColor="#6B7280"/>
+                                    <Label x:Name="AddressLabel"
+                                           Text="Building A, Room 205, Campus" 
+                                           FontSize="14" 
+                                           TextColor="#2C3E50"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
@@ -396,7 +428,8 @@
                                     <Label Text="Student ID" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="STU-2021-0456" 
+                                    <Label x:Name="StudentIdLabel"
+                                           Text="STU-2021-0456" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
@@ -407,19 +440,21 @@
                                     <Label Text="Program" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="Bachelor of Science in Computer Science" 
+                                    <Label x:Name="ProgramDetailLabel"
+                                           Text="Bachelor of Science in Computer Science" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"
                                            LineBreakMode="WordWrap"/>
                                 </VerticalStackLayout>
 
-                                <!-- Expected Graduation -->
+                                <!-- Year Level -->
                                 <VerticalStackLayout Spacing="4">
-                                    <Label Text="Expected Graduation" 
+                                    <Label Text="Year Level" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="May 2025" 
+                                    <Label x:Name="YearLevelLabel"
+                                           Text="Year 3" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
@@ -430,7 +465,8 @@
                                     <Label Text="Current GPA" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="3.85 / 4.0" 
+                                    <Label x:Name="GPALabel"
+                                           Text="3.85 / 4.0" 
                                            FontSize="14" 
                                            TextColor="#10B981"
                                            FontAttributes="Bold"/>
@@ -458,54 +494,161 @@
                                        TextColor="#2C3E50"/>
                             </HorizontalStackLayout>
 
-                            <VerticalStackLayout Spacing="15">
-                                <!-- Achievement 1 -->
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
-                                    <VerticalStackLayout Spacing="4">
-                                        <Label Text="Dean's List" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Fall 2023, Spring 2024" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-
-                                <!-- Achievement 2 -->
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
-                                    <VerticalStackLayout Spacing="4">
-                                        <Label Text="Research Grant Recipient" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="AI &amp; Machine Learning Project" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-
-                                <!-- Achievement 3 -->
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
-                                    <VerticalStackLayout Spacing="4">
-                                        <Label Text="Hackathon Winner" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="University Code Jam 2024" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+                            <!-- Dynamic Achievements CollectionView -->
+                            <CollectionView x:Name="AchievementsCollectionView"
+                                          SelectionMode="None">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
+                                            <VerticalStackLayout Spacing="4">
+                                                <Label Text="{Binding AchievementName}" 
+                                                       FontSize="13" 
+                                                       FontAttributes="Bold"
+                                                       TextColor="#2C3E50"/>
+                                                <Label Text="{Binding Description}" 
+                                                       FontSize="11" 
+                                                       TextColor="#6B7280"
+                                                       LineBreakMode="WordWrap"/>
+                                            </VerticalStackLayout>
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Edit Profile Modal Overlay (Hidden by default) -->
+        <Border x:Name="EditProfileModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False"
+                Padding="0">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnEditProfileModalBackgroundTapped"/>
+            </Border.GestureRecognizers>
+
+            <!-- Edit Profile Modal -->
+            <Border BackgroundColor="White"
+                    WidthRequest="420"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.25" Radius="25" Offset="0,12"/>
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="0">
+                    <!-- Modal Header with Background -->
+                    <Border BackgroundColor="#0891B2" Padding="25,20" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14,14,0,0"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Edit Profile" 
+                                       FontSize="18" 
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label Text="Update your information" 
+                                       FontSize="12" 
+                                       TextColor="#E0F2FE"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="✕"
+                                   FontSize="24"
+                                   TextColor="White"
+                                   VerticalOptions="Start"
+                                   Margin="0,-3,0,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseEditProfileModalTapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                    </Border>
+
+                    <!-- Form Content -->
+                    <VerticalStackLayout Spacing="14" Padding="25,20">
+                        <!-- Phone Section -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Phone Number" 
+                                   FontSize="13" 
+                                   TextColor="#2C3E50"
+                                   FontAttributes="Bold"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    Stroke="#E5E7EB"
+                                    StrokeThickness="1"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="EditPhoneEntry"
+                                       Placeholder="+1 (555) 000-0000"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"
+                                       FontSize="13"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Address Section -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Address" 
+                                   FontSize="13" 
+                                   TextColor="#2C3E50"
+                                   FontAttributes="Bold"/>
+                            <Border BackgroundColor="#F9FAFB"
+                                    Stroke="#E5E7EB"
+                                    StrokeThickness="1"
+                                    Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Editor x:Name="EditAddressEditor"
+                                        Placeholder="Enter your address"
+                                        PlaceholderColor="#9CA3AF"
+                                        TextColor="#2C3E50"
+                                        BackgroundColor="Transparent"
+                                        FontSize="13"
+                                        HeightRequest="70"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Action Buttons -->
+                        <HorizontalStackLayout Spacing="12" Padding="0,8,0,0">
+                            <Button Text="Cancel"
+                                    Clicked="OnCancelEditProfileClicked"
+                                    BackgroundColor="#F3F4F6"
+                                    TextColor="#2C3E50"
+                                    Padding="12,10"
+                                    CornerRadius="8"
+                                    FontSize="13"
+                                    HorizontalOptions="FillAndExpand"/>
+                            
+                            <Button Text="Save"
+                                    Clicked="OnSaveEditProfileClicked"
+                                    BackgroundColor="#0891B2"
+                                    TextColor="White"
+                                    Padding="12,10"
+                                    CornerRadius="8"
+                                    FontSize="13"
+                                    HorizontalOptions="FillAndExpand"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
     </Grid>
 </ContentPage>

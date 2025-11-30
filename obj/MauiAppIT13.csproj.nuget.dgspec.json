@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LENOVO\\source\\repos\\MauiAppIT13\\MauiAppIT13.csproj": {}
+    "C:\\Users\\Era\\source\\repos\\EduCRM\\MauiAppIT13.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LENOVO\\source\\repos\\MauiAppIT13\\MauiAppIT13.csproj": {
+    "C:\\Users\\Era\\source\\repos\\EduCRM\\MauiAppIT13.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LENOVO\\source\\repos\\MauiAppIT13\\MauiAppIT13.csproj",
+        "projectUniqueName": "C:\\Users\\Era\\source\\repos\\EduCRM\\MauiAppIT13.csproj",
         "projectName": "MauiAppIT13",
-        "projectPath": "C:\\Users\\LENOVO\\source\\repos\\MauiAppIT13\\MauiAppIT13.csproj",
-        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LENOVO\\source\\repos\\MauiAppIT13\\obj\\",
+        "projectPath": "C:\\Users\\Era\\source\\repos\\EduCRM\\MauiAppIT13.csproj",
+        "packagesPath": "C:\\Users\\Era\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Era\\source\\repos\\EduCRM\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Era\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -67,6 +67,18 @@
         "net9.0-android35.0": {
           "targetAlias": "net9.0-android",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.5, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -106,6 +118,18 @@
         "net9.0-ios26.0": {
           "targetAlias": "net9.0-ios",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.5, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -145,6 +169,18 @@
         "net9.0-maccatalyst26.0": {
           "targetAlias": "net9.0-maccatalyst",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.5, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -185,6 +221,18 @@
         "net9.0-windows10.0.19041": {
           "targetAlias": "net9.0-windows10.0.19041.0",
           "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.1.5, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[9.0.8, )"

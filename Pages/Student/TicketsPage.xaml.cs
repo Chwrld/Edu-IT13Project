@@ -1,64 +1,143 @@
+using MauiAppIT13.Services;
+using MauiAppIT13.Utils;
+
 namespace MauiAppIT13.Pages.Student;
 
 public partial class TicketsPage : ContentPage
+{
+    private readonly TicketService _ticketService;
+    private readonly AuthManager _authManager;
+    private Guid _currentUserId;
+
+    public TicketsPage()
     {
-        public TicketsPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        
+        var dbConnection = AppServiceProvider.GetService<MauiAppIT13.Database.DbConnection>();
+        _ticketService = AppServiceProvider.GetService<TicketService>() ?? new TicketService(dbConnection ?? throw new InvalidOperationException("DbConnection not found"));
+        _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
+    }
 
-        private async void OnProfileTapped(object? sender, EventArgs e)
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        System.Diagnostics.Debug.WriteLine("TicketsPage: OnAppearing called");
+        var currentUser = _authManager.CurrentUser;
+        if (currentUser != null)
         {
-            await Navigation.PushAsync(new ProfilePage());
+            _currentUserId = currentUser.Id;
+            _ = LoadTickets();
         }
+    }
 
-        private async void OnHomeTapped(object? sender, EventArgs e)
+    private async Task LoadTickets()
+    {
+        try
         {
-            await Navigation.PopAsync();
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Loading tickets for student {_currentUserId}");
+            var tickets = await _ticketService.GetStudentTicketsAsync(_currentUserId);
+            
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                TicketsCollectionView.ItemsSource = tickets;
+                System.Diagnostics.Debug.WriteLine($"TicketsPage: Loaded {tickets.Count} tickets");
+                
+                // Update status counts
+                int openCount = tickets.Count(t => t.Status?.ToLower() == "open");
+                int inProgressCount = tickets.Count(t => t.Status?.ToLower() == "in_progress");
+                int resolvedCount = tickets.Count(t => t.Status?.ToLower() == "resolved");
+                
+                OpenCountLabel.Text = openCount.ToString();
+                InProgressCountLabel.Text = inProgressCount.ToString();
+                ResolvedCountLabel.Text = resolvedCount.ToString();
+                
+                System.Diagnostics.Debug.WriteLine($"TicketsPage: Open={openCount}, InProgress={inProgressCount}, Resolved={resolvedCount}");
+            });
         }
-
-        private async void OnMessagesTapped(object? sender, EventArgs e)
+        catch (Exception ex)
         {
-            await Navigation.PushAsync(new MessagesPage());
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error loading tickets - {ex.Message}");
         }
+    }
 
-        private async void OnAnnouncementsTapped(object? sender, EventArgs e)
+    private async void OnProfileTapped(object? sender, EventArgs e)
+    {
+        try
         {
-            await Navigation.PushAsync(new AnnouncementsPage());
+            await Shell.Current.GoToAsync("//ProfilePage");
         }
-
-        private void OnNewTicketClicked(object? sender, EventArgs e)
+        catch (Exception ex)
         {
-            // Show modal
-            ModalOverlay.IsVisible = true;
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error navigating to profile - {ex.Message}");
         }
+    }
 
-        private void OnCloseModalTapped(object? sender, EventArgs e)
+    private async void OnHomeTapped(object? sender, EventArgs e)
+    {
+        try
         {
-            // Hide modal
-            ModalOverlay.IsVisible = false;
-            ClearForm();
+            await Shell.Current.GoToAsync("//HomePage");
         }
-
-        private void OnOverlayTapped(object? sender, EventArgs e)
+        catch (Exception ex)
         {
-            // Close modal when clicking outside
-            ModalOverlay.IsVisible = false;
-            ClearForm();
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error navigating home - {ex.Message}");
         }
+    }
 
-        private void OnCancelTicketClicked(object? sender, EventArgs e)
+    private async void OnMessagesTapped(object? sender, EventArgs e)
+    {
+        try
         {
-            // Hide modal and clear form
-            ModalOverlay.IsVisible = false;
-            ClearForm();
+            await Shell.Current.GoToAsync("//MessagesPage");
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error navigating to messages - {ex.Message}");
+        }
+    }
 
-        private async void OnSubmitTicketClicked(object? sender, EventArgs e)
+    private async void OnAnnouncementsTapped(object? sender, EventArgs e)
+    {
+        try
+        {
+            await Shell.Current.GoToAsync("//AnnouncementsPage");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error navigating to announcements - {ex.Message}");
+        }
+    }
+
+    private void OnNewTicketClicked(object? sender, EventArgs e)
+    {
+        ModalOverlay.IsVisible = true;
+    }
+
+    private void OnCloseModalTapped(object? sender, EventArgs e)
+    {
+        ModalOverlay.IsVisible = false;
+        ClearForm();
+    }
+
+    private void OnOverlayTapped(object? sender, EventArgs e)
+    {
+        ModalOverlay.IsVisible = false;
+        ClearForm();
+    }
+
+    private void OnCancelTicketClicked(object? sender, EventArgs e)
+    {
+        ModalOverlay.IsVisible = false;
+        ClearForm();
+    }
+
+    private async void OnSubmitTicketClicked(object? sender, EventArgs e)
+    {
+        try
         {
             string title = TitleEntry.Text?.Trim() ?? string.Empty;
             string category = CategoryPicker.SelectedIndex > 0 ? CategoryPicker.Items[CategoryPicker.SelectedIndex] : string.Empty;
-            string priority = PriorityPicker.SelectedIndex > 0 ? PriorityPicker.Items[PriorityPicker.SelectedIndex] : string.Empty;
+            string priority = PriorityPicker.SelectedIndex > 0 ? PriorityPicker.Items[PriorityPicker.SelectedIndex].ToLower() : string.Empty;
             string description = DescriptionEditor.Text?.Trim() ?? string.Empty;
 
             // Validation
@@ -86,31 +165,47 @@ public partial class TicketsPage : ContentPage
                 return;
             }
 
-            // TODO: Implement actual ticket submission logic
-            await DisplayAlert("Success", $"Ticket submitted successfully!\n\nTitle: {title}\nCategory: {category}\nPriority: {priority}", "OK");
+            // Submit ticket to database
+            bool success = await _ticketService.CreateTicketAsync(_currentUserId, title, description, priority);
             
-            // Hide modal and clear form
-            ModalOverlay.IsVisible = false;
-            ClearForm();
+            if (success)
+            {
+                await DisplayAlert("Success", "Ticket submitted successfully!", "OK");
+                ModalOverlay.IsVisible = false;
+                ClearForm();
+                
+                // Reload tickets to show the new ticket immediately
+                await LoadTickets();
+            }
+            else
+            {
+                await DisplayAlert("Error", "Failed to submit ticket. Please try again.", "OK");
+            }
         }
-
-        private void ClearForm()
+        catch (Exception ex)
         {
-            TitleEntry.Text = string.Empty;
-            CategoryPicker.SelectedIndex = 0;
-            PriorityPicker.SelectedIndex = 0;
-            DescriptionEditor.Text = string.Empty;
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error submitting ticket - {ex.Message}");
+            await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
         }
+    }
 
-        private async void OnViewDetailsClicked(object? sender, EventArgs e)
-        {
-            await DisplayAlert("View Details", "Ticket details view - Coming soon!", "OK");
-        }
+    private void ClearForm()
+    {
+        TitleEntry.Text = string.Empty;
+        CategoryPicker.SelectedIndex = 0;
+        PriorityPicker.SelectedIndex = 0;
+        DescriptionEditor.Text = string.Empty;
+    }
 
-        private async void OnAddCommentClicked(object? sender, EventArgs e)
-        {
-            await DisplayAlert("Add Comment", "Add comment functionality - Coming soon!", "OK");
-        }
+    private async void OnViewDetailsClicked(object? sender, EventArgs e)
+    {
+        await DisplayAlert("View Details", "Ticket details view - Coming soon!", "OK");
+    }
+
+    private async void OnAddCommentClicked(object? sender, EventArgs e)
+    {
+        await DisplayAlert("Add Comment", "Add comment functionality - Coming soon!", "OK");
+    }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
