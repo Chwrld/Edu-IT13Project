@@ -122,11 +122,13 @@ public sealed class SqlServerDbConnection : DbConnection
                     password_salt = @PasswordSalt,
                     role = @Role,
                     display_name = @DisplayName,
+                    phone_number = @PhoneNumber,
+                    address = @Address,
                     is_active = @IsActive
                 WHERE user_id = @UserId
             ELSE
-                INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, is_active, created_at)
-                VALUES (@UserId, @Email, @PasswordHash, @PasswordSalt, @Role, @DisplayName, @IsActive, @CreatedAt)";
+                INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, phone_number, address, is_active, created_at)
+                VALUES (@UserId, @Email, @PasswordHash, @PasswordSalt, @Role, @DisplayName, @PhoneNumber, @Address, @IsActive, @CreatedAt)";
 
         try
         {
@@ -141,6 +143,8 @@ public sealed class SqlServerDbConnection : DbConnection
             command.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
             command.Parameters.AddWithValue("@Role", user.Role.ToString());
             command.Parameters.AddWithValue("@DisplayName", user.DisplayName);
+            command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@Address", user.Address ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@IsActive", user.IsActive);
             command.Parameters.AddWithValue("@CreatedAt", user.CreatedAtUtc);
 
