@@ -60,14 +60,14 @@ namespace MauiAppIT13.Pages.Student
             }
 
             var result = await _authController.LoginAsync(email, password);
-            if (result.Success)
+            if (result.Success && result.User?.Role == Role.Student)
             {
                 // Navigate to HomePage on successful login
                 await Shell.Current.GoToAsync("//HomePage");
             }
             else
             {
-                await DisplayAlert("Login Failed", result.ErrorMessage ?? "Invalid credentials.", "OK");
+                await DisplayAlert("Login Failed", result.ErrorMessage ?? "Invalid student credentials.", "OK");
             }
         }
 

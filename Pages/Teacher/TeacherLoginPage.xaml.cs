@@ -1,10 +1,17 @@
+using MauiAppIT13.Controllers;
+using MauiAppIT13.Models;
+using MauiAppIT13.Utils;
+
 namespace MauiAppIT13.Pages.Teacher;
 
 public partial class TeacherLoginPage : ContentPage
 {
+    private AuthController? _authController;
+
     public TeacherLoginPage()
     {
         InitializeComponent();
+        _authController = AppServiceProvider.GetService<AuthController>();
     }
 
     private async void OnTeacherSignInClicked(object sender, EventArgs e)
@@ -12,22 +19,21 @@ public partial class TeacherLoginPage : ContentPage
         string email = TeacherEmailEntry.Text?.Trim() ?? "";
         string password = TeacherPasswordEntry.Text ?? "";
 
-        // Simple validation for demo
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        if (_authController is null)
         {
-            await DisplayAlert("Error", "Please enter both email and password", "OK");
+            await DisplayAlert("Error", "Authentication service unavailable.", "OK");
             return;
         }
 
-        // Demo teacher credentials check
-        if (email.ToLower() == "teacher@university.edu" && password == "teacher123")
+        var result = await _authController.LoginAsync(email, password);
+        if (result.Success && result.User?.Role == Role.Teacher)
         {
             // Navigate to teacher home page
             await Shell.Current.GoToAsync("//TeacherHomePage");
         }
         else
         {
-            await DisplayAlert("Error", "Invalid teacher credentials", "OK");
+            await DisplayAlert("Error", result.ErrorMessage ?? "Invalid teacher credentials", "OK");
         }
     }
 

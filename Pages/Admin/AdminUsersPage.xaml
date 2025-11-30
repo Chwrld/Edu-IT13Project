@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiAppIT13.Utils"
+             xmlns:models="clr-namespace:MauiAppIT13.Models"
              x:Class="MauiAppIT13.Pages.Admin.AdminUsersPage"
              BackgroundColor="#F5F7FA">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:RoleColorConverter x:Key="RoleColorConverter"/>
+            <local:RoleTextColorConverter x:Key="RoleTextColorConverter"/>
+            <local:StatusColorConverter x:Key="StatusColorConverter"/>
+            <local:StatusTextConverter x:Key="StatusTextConverter"/>
+            <local:StatusTextColorConverter x:Key="StatusTextColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -266,7 +277,8 @@
                                            PlaceholderColor="#9CA3AF"
                                            TextColor="#1F2937"
                                            BackgroundColor="Transparent"
-                                           VerticalOptions="Center"/>
+                                           VerticalOptions="Center"
+                                           TextChanged="OnSearchTextChanged"/>
                                 </Grid>
                             </Border>
                         </Border>
@@ -305,271 +317,265 @@
                         <!-- Divider -->
                         <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
 
-                        <!-- User Row 1 -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="2*,2*,1.2*,1*,1.2*"
-                              BackgroundColor="White">
-                            <Label Grid.Column="0" 
-                                   Text="John Doe" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="john@example.com" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    BackgroundColor="#DBEAFE"
-                                    Padding="8,4"
-                                    WidthRequest="80"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Student" 
-                                       FontSize="12" 
-                                       TextColor="#1E40AF"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       FontSize="12" 
-                                       TextColor="#065F46"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center">
-                                <Label Text="✏️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEditUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🔑" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🗑️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- User Row 2 -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="2*,2*,1.2*,1*,1.2*"
-                              BackgroundColor="#F9FAFB">
-                            <Label Grid.Column="0" 
-                                   Text="Jane Smith" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="jane@example.com" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    BackgroundColor="#DCFCE7"
-                                    Padding="8,4"
-                                    WidthRequest="80"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Advisor" 
-                                       FontSize="12" 
-                                       TextColor="#15803D"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       FontSize="12" 
-                                       TextColor="#065F46"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center">
-                                <Label Text="✏️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEditUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🔑" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🗑️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- User Row 3 -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="2*,2*,1.2*,1*,1.2*"
-                              BackgroundColor="White">
-                            <Label Grid.Column="0" 
-                                   Text="Mike Johnson" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="mike@example.com" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    BackgroundColor="#DBEAFE"
-                                    Padding="8,4"
-                                    WidthRequest="80"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Admin" 
-                                       FontSize="12" 
-                                       TextColor="#1E40AF"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       FontSize="12" 
-                                       TextColor="#065F46"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center">
-                                <Label Text="✏️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEditUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🔑" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🗑️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- User Row 4 -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="2*,2*,1.2*,1*,1.2*"
-                              BackgroundColor="#F9FAFB">
-                            <Label Grid.Column="0" 
-                                   Text="Sarah Williams" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="sarah@example.com" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="2"
-                                    BackgroundColor="#DBEAFE"
-                                    Padding="8,4"
-                                    WidthRequest="80"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Student" 
-                                       FontSize="12" 
-                                       TextColor="#1E40AF"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#FEE2E2"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Inactive" 
-                                       FontSize="12" 
-                                       TextColor="#991B1B"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center">
-                                <Label Text="✏️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnEditUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🔑" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="🗑️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
+                        <!-- Users Collection View -->
+                        <CollectionView x:Name="UsersCollectionView"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:User">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid Padding="20,16"
+                                              ColumnDefinitions="2*,2*,1.2*,1*,1.2*"
+                                              BackgroundColor="White">
+                                            <Label Grid.Column="0" 
+                                                   Text="{Binding DisplayName}" 
+                                                   FontSize="14" 
+                                                   TextColor="#1F2937"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1" 
+                                                   Text="{Binding Email}" 
+                                                   FontSize="14" 
+                                                   TextColor="#6B7280"
+                                                   VerticalOptions="Center"/>
+                                            <Border Grid.Column="2"
+                                                    BackgroundColor="{Binding Role, Converter={StaticResource RoleColorConverter}}"
+                                                    Padding="8,4"
+                                                    WidthRequest="80"
+                                                    StrokeThickness="0"
+                                                    VerticalOptions="Center"
+                                                    HorizontalOptions="Start">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="6"/>
+                                                </Border.StrokeShape>
+                                                <Label Text="{Binding Role}" 
+                                                       FontSize="12" 
+                                                       TextColor="{Binding Role, Converter={StaticResource RoleTextColorConverter}}"
+                                                       FontAttributes="Bold"
+                                                       HorizontalOptions="Center"/>
+                                            </Border>
+                                            <Border Grid.Column="3"
+                                                    BackgroundColor="{Binding IsActive, Converter={StaticResource StatusColorConverter}}"
+                                                    Padding="8,4"
+                                                    WidthRequest="70"
+                                                    StrokeThickness="0"
+                                                    VerticalOptions="Center"
+                                                    HorizontalOptions="Start">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="6"/>
+                                                </Border.StrokeShape>
+                                                <Label Text="{Binding IsActive, Converter={StaticResource StatusTextConverter}}" 
+                                                       FontSize="12" 
+                                                       TextColor="{Binding IsActive, Converter={StaticResource StatusTextColorConverter}}"
+                                                       FontAttributes="Bold"
+                                                       HorizontalOptions="Center"/>
+                                            </Border>
+                                            <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center" HorizontalOptions="Start">
+                                                <Label Text="✏️" FontSize="16">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnEditUserTapped"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                                <Label Text="🔑" FontSize="16">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                                <Label Text="🗑️" FontSize="16">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
 
                     </VerticalStackLayout>
                 </Border>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Add User Modal -->
+        <Grid x:Name="AddUserModal"
+              Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+              BackgroundColor="#000000CC"
+              IsVisible="False"
+              Padding="20"
+              ZIndex="1000">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnModalBackgroundTapped"/>
+            </Grid.GestureRecognizers>
+
+            <Border BackgroundColor="White"
+                    Padding="30"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    WidthRequest="500">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="20">
+                    <!-- Header -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0"
+                               x:Name="ModalHeaderLabel"
+                               Text="Add New User"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#1F2937"/>
+                        <Label Grid.Column="1"
+                               Text="✕"
+                               FontSize="24"
+                               TextColor="#6B7280">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCloseModalTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <!-- Form Fields -->
+                    <VerticalStackLayout Spacing="15">
+                        <!-- Display Name -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Full Name" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="DisplayNameEntry"
+                                       Placeholder="Enter full name"
+                                       PlaceholderColor="#D1D5DB"
+                                       TextColor="#1F2937"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Email -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Email Address" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="EmailEntry"
+                                       Placeholder="Enter email address"
+                                       PlaceholderColor="#D1D5DB"
+                                       TextColor="#1F2937"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Email"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Password -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Password" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="PasswordEntry"
+                                       Placeholder="Enter password"
+                                       PlaceholderColor="#D1D5DB"
+                                       TextColor="#1F2937"
+                                       BackgroundColor="Transparent"
+                                       IsPassword="True"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Role -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Role" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Picker x:Name="RolePicker"
+                                    BackgroundColor="#F3F4F6"
+                                    TextColor="#1F2937"
+                                    Title="Select role">
+                                <Picker.Items>
+                                    <x:String>Student</x:String>
+                                    <x:String>Teacher</x:String>
+                                    <x:String>Admin</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </VerticalStackLayout>
+
+                        <!-- Phone Number -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Phone Number (Optional)" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="PhoneEntry"
+                                       Placeholder="Enter phone number"
+                                       PlaceholderColor="#D1D5DB"
+                                       TextColor="#1F2937"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Telephone"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Address -->
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Address (Optional)" 
+                                   FontSize="12" 
+                                   FontAttributes="Bold"
+                                   TextColor="#374151"/>
+                            <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="AddressEntry"
+                                       Placeholder="Enter address"
+                                       PlaceholderColor="#D1D5DB"
+                                       TextColor="#1F2937"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                BackgroundColor="#E5E7EB"
+                                TextColor="#1F2937"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Padding="15,12"
+                                Clicked="OnCancelAddUserClicked"/>
+                        <Button Grid.Column="1"
+                                x:Name="ConfirmButton"
+                                Text="Add User"
+                                BackgroundColor="#005BA5"
+                                TextColor="White"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Padding="15,12"
+                                Clicked="OnConfirmAddUserClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>
