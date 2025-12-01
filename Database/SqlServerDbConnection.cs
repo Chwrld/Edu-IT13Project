@@ -22,6 +22,8 @@ public sealed class SqlServerDbConnection : DbConnection
 
     private SqlConnection CreateConnection() => new(_connectionString);
 
+    public override IDbConnection GetConnection() => CreateConnection();
+
     public override async Task<bool> HasAnyUsersAsync()
     {
         try

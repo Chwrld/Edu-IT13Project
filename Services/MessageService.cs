@@ -80,7 +80,10 @@ public class MessageService
         try
         {
             Debug.WriteLine($"MessageService: Loading conversations for user {userId}");
+            Debug.WriteLine($"MessageService: _dbConnection type = {_dbConnection?.GetType().Name}");
             var conversations = new ObservableCollection<Conversation>();
+            
+            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False";
             
             // Simple query to test if we can fetch any conversations
             const string sql = @"
@@ -99,7 +102,7 @@ public class MessageService
 
             Debug.WriteLine($"MessageService: Executing SQL query...");
             
-            await using var connection = new SqlConnection("Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;");
+            await using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
             Debug.WriteLine("MessageService: Connection opened");
             
@@ -154,6 +157,13 @@ public class MessageService
             Debug.WriteLine($"MessageService: Loading messages for conversation {conversationId}");
             var messages = new List<Message>();
             
+            // Cast to SqlServerDbConnection to get access to GetConnection()
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: ERROR - DbConnection is not SqlServerDbConnection");
+                return messages;
+            }
+
             const string sql = @"
                 SELECT 
                     m.message_id,
@@ -172,8 +182,13 @@ public class MessageService
                 WHERE c.conversation_id = @ConversationId
                 ORDER BY m.created_at ASC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: ERROR - Could not get SQL connection");
+                return messages;
+            }
+
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
@@ -220,8 +235,13 @@ public class MessageService
 
             Debug.WriteLine($"MessageService: Sending message from {senderId} to {receiverId}");
             
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
+            // Cast to SqlServerDbConnection to get access to GetConnection()
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: ERROR - DbConnection is not SqlServerDbConnection");
+                return false;
+            }
+
             const string sql = @"
                 INSERT INTO messages (message_id, sender_id, receiver_id, content, is_read, created_at)
                 VALUES (@MessageId, @SenderId, @ReceiverId, @Content, 0, GETUTCDATE());
@@ -233,7 +253,13 @@ public class MessageService
 
             var messageId = Guid.NewGuid();
             
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: ERROR - Could not get SQL connection");
+                return false;
+            }
+
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
