@@ -165,9 +165,9 @@ IF NOT EXISTS (SELECT 1 FROM users WHERE email = 'student@university.edu')
 BEGIN
     INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, phone_number, address, profile_picture_url, is_active, created_at)
     VALUES 
-        (NEWID(), 'student@university.edu', 'hashed_password_1', 'salt_1', 'Student', 'Sarah Student', '+1 (555) 123-4567', 'Building A, Room 205, Campus', NULL, 1, GETUTCDATE()),
-        (NEWID(), 'teacher@university.edu', 'hashed_password_2', 'salt_2', 'Teacher', 'John Teacher', '+1 (555) 234-5678', 'Faculty Building, Office 301', NULL, 1, GETUTCDATE()),
-        (NEWID(), 'admin@university.edu', 'hashed_password_3', 'salt_3', 'Admin', 'Admin User', '+1 (555) 345-6789', 'Administration Building, Room 100', NULL, 1, GETUTCDATE());
+        (NEWID(), 'student@university.edu', '2Dyfiau1pDwzyQxBQCpHWri9i7pmcQVJBLtnLW/g+ag=', 'sYCDlcmAoN56njDjs9uTag==', 'Student', 'Sarah Student', '+1 (555) 123-4567', 'Building A, Room 205, Campus', NULL, 1, GETUTCDATE()),
+        (NEWID(), 'teacher@university.edu', 'YM5TCtG/TtHZMmqP2YllL1IRlBw4m8ny01ESx3atldQ=', 'pMoH0ATf/TwF8GKJetrbyA==', 'Teacher', 'John Teacher', '+1 (555) 234-5678', 'Faculty Building, Office 301', NULL, 1, GETUTCDATE()),
+        (NEWID(), 'admin@university.edu', '+9/zNWABQWmUz7vYKwkG0wPfoZCxZ9g2OnnM6r1EvqI=', 'gvVIA8tmIqly64N8Zqt1zg==', 'Admin', 'Admin User', '+1 (555) 345-6789', 'Administration Building, Room 100', NULL, 1, GETUTCDATE());
 END
 
 -- Get user IDs for seeding
