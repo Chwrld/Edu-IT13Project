@@ -235,7 +235,7 @@
                 </Border>
 
                 <!-- Statistics Cards Row -->
-                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="15">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
                     <!-- Total Users Card -->
                     <Border Grid.Column="0" 
                             BackgroundColor="White"
@@ -252,7 +252,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="👥" FontSize="16"/>
+                                       Text="👥" FontSize="20"/>
                             </Grid>
                             <Label Text="1,248" 
                                    FontSize="32" 
@@ -260,7 +260,7 @@
                                    TextColor="#005BA5"/>
                             <Label Text="↑ 12% this month" 
                                    FontSize="11" 
-                                   TextColor="#10B981"/>
+                                   TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -273,14 +273,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="10">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
                                        Text="Active Tickets" 
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="🎫" FontSize="16"/>
+                                       Text="🎫" FontSize="20"/>
                             </Grid>
                             <Label Text="47" 
                                    FontSize="32" 
@@ -288,7 +288,7 @@
                                    TextColor="#005BA5"/>
                             <Label Text="23 pending review" 
                                    FontSize="11" 
-                                   TextColor="#F59E0B"/>
+                                   TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -301,14 +301,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="10">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
                                        Text="Announcements" 
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="📢" FontSize="16"/>
+                                       Text="📢" FontSize="20"/>
                             </Grid>
                             <Label Text="12" 
                                    FontSize="32" 
@@ -320,33 +320,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- System Health Card -->
-                    <Border Grid.Column="3" 
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Label Grid.Column="0"
-                                       Text="System Health" 
-                                       FontSize="13" 
-                                       TextColor="#6B7280"/>
-                                <Label Grid.Column="1"
-                                       Text="💚" FontSize="16"/>
-                            </Grid>
-                            <Label Text="98%" 
-                                   FontSize="32" 
-                                   FontAttributes="Bold"
-                                   TextColor="#10B981"/>
-                            <Label Text="All systems operational" 
-                                   FontSize="11" 
-                                   TextColor="#9CA3AF"/>
-                        </VerticalStackLayout>
-                    </Border>
+                    
                 </Grid>
 
                 <!-- Content Row: Recent Activity and Quick Actions -->
@@ -377,7 +351,7 @@
                                    Margin="0,-10,0,0"/>
 
                             <!-- Activity 1 -->
-                            <Border BackgroundColor="#FEF2F2"
+                            <Border BackgroundColor="#EFF6FF"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
@@ -385,7 +359,7 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                     <Border Grid.Column="0"
-                                            BackgroundColor="#005BA5"
+                                            BackgroundColor="#B7D6F0"
                                             WidthRequest="40"
                                             HeightRequest="40"
                                             StrokeThickness="0">
@@ -416,7 +390,7 @@
                             </Border>
 
                             <!-- Activity 2 -->
-                            <Border BackgroundColor="#F0FDF4"
+                            <Border BackgroundColor="#EFF6FF"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
@@ -424,7 +398,7 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                     <Border Grid.Column="0"
-                                            BackgroundColor="#10B981"
+                                            BackgroundColor="#FFC4E6DA"
                                             WidthRequest="40"
                                             HeightRequest="40"
                                             StrokeThickness="0">
@@ -463,7 +437,7 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                     <Border Grid.Column="0"
-                                            BackgroundColor="#3B82F6"
+                                            BackgroundColor="#FFBFD2F1"
                                             WidthRequest="40"
                                             HeightRequest="40"
                                             StrokeThickness="0">
@@ -494,7 +468,7 @@
                             </Border>
 
                             <!-- Activity 4 -->
-                            <Border BackgroundColor="#FEF3C7"
+                            <Border BackgroundColor="#EFF6FF"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
@@ -502,7 +476,7 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                                     <Border Grid.Column="0"
-                                            BackgroundColor="#F59E0B"
+                                            BackgroundColor="#FFF1E4CD"
                                             WidthRequest="40"
                                             HeightRequest="40"
                                             StrokeThickness="0">

@@ -222,7 +222,7 @@
                                    Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
-                                   TextColor="#EF4444"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -248,7 +248,7 @@
                                    Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
-                                   TextColor="#0891B2"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -274,7 +274,7 @@
                                    Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
-                                   TextColor="#10B981"/>
+                                   TextColor="#FF474747"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
