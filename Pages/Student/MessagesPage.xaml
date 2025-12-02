@@ -178,20 +178,22 @@
                     BackgroundColor="White"
                     StrokeThickness="0"
                     Padding="0">
-                <VerticalStackLayout Spacing="0">
+                <Grid RowDefinitions="Auto,Auto,*">
                     <!-- Messages Header -->
-                    <Border Padding="20,20,20,15" 
+                    <Border Grid.Row="0"
+                            Padding="20,20,20,15" 
                             BackgroundColor="White"
                             StrokeThickness="0">
                         <Label Text="Messages" 
                                FontSize="20" 
                                FontAttributes="Bold"
-                                 FontFamily="MontserratBold"
+                               FontFamily="MontserratBold"
                                TextColor="#2C3E50"/>
                     </Border>
 
                     <!-- Search Bar -->
-                    <Border Padding="20,0,20,15" 
+                    <Border Grid.Row="1"
+                            Padding="20,0,20,15" 
                             BackgroundColor="White"
                             StrokeThickness="0">
                         <Border BackgroundColor="#F3F4F6"
@@ -213,7 +215,8 @@
                     </Border>
 
                     <!-- Conversations CollectionView - Bound to data -->
-                    <CollectionView x:Name="ConversationsCollectionView"
+                    <CollectionView Grid.Row="2"
+                                    x:Name="ConversationsCollectionView"
                                     SelectionMode="Single"
                                     SelectionChanged="OnConversationsSelectionChanged"
                                     VerticalOptions="FillAndExpand"
@@ -261,7 +264,7 @@
                                         
                                         <!-- Time and Unread Badge -->
                                         <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Start">
-                                            <Label Text="{Binding LastMessageTime, StringFormat='{0:t}'}" 
+                                            <Label Text="{Binding LastMessageLocalTime, StringFormat='{0:t}'}" 
                                                    FontSize="11" 
                                                    TextColor="#6B7280"
                                                    HorizontalOptions="End"/>
@@ -287,7 +290,7 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                </VerticalStackLayout>
+                </Grid>
             </Border>
 
             <!-- Chat Area -->

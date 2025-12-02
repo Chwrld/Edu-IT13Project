@@ -22,7 +22,7 @@ public static class DbInitializer
             Debug.WriteLine("DbInitializer: No users found, seeding default users...");
 
             // Seed default users
-            var (adminHash, adminSalt) = passwordHasher.HashPassword("admin123");
+            var (adminHash, adminSalt) = passwordHasher.HashPassword("admin@123");
             var admin = new User
             {
                 Id = Guid.NewGuid(),
@@ -30,12 +30,12 @@ public static class DbInitializer
                 PasswordHash = adminHash,
                 PasswordSalt = adminSalt,
                 Role = Role.Admin,
-                DisplayName = "Administrator",
+                DisplayName = "Admin User",
                 IsActive = true,
                 CreatedAtUtc = DateTime.UtcNow
             };
 
-            var (teacherHash, teacherSalt) = passwordHasher.HashPassword("teacher123");
+            var (teacherHash, teacherSalt) = passwordHasher.HashPassword("teacher@123");
             var teacher = new User
             {
                 Id = Guid.NewGuid(),
@@ -48,7 +48,7 @@ public static class DbInitializer
                 CreatedAtUtc = DateTime.UtcNow
             };
 
-            var (studentHash, studentSalt) = passwordHasher.HashPassword("student123");
+            var (studentHash, studentSalt) = passwordHasher.HashPassword("student@123");
             var student = new User
             {
                 Id = Guid.NewGuid(),
@@ -56,7 +56,7 @@ public static class DbInitializer
                 PasswordHash = studentHash,
                 PasswordSalt = studentSalt,
                 Role = Role.Student,
-                DisplayName = "Jane Student",
+                DisplayName = "Sarah Student",
                 IsActive = true,
                 CreatedAtUtc = DateTime.UtcNow
             };

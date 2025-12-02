@@ -158,6 +158,7 @@ GO
 -- Declare variables for seeding
 DECLARE @StudentId UNIQUEIDENTIFIER;
 DECLARE @TeacherId UNIQUEIDENTIFIER;
+DECLARE @Teacher2Id UNIQUEIDENTIFIER;
 DECLARE @AdminId UNIQUEIDENTIFIER;
 
 -- Seed users if they don't exist
@@ -165,14 +166,16 @@ IF NOT EXISTS (SELECT 1 FROM users WHERE email = 'student@university.edu')
 BEGIN
     INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, phone_number, address, profile_picture_url, is_active, created_at)
     VALUES 
-        (NEWID(), 'student@university.edu', 'hashed_password_1', 'salt_1', 'Student', 'Sarah Student', '+1 (555) 123-4567', 'Building A, Room 205, Campus', NULL, 1, GETUTCDATE()),
-        (NEWID(), 'teacher@university.edu', 'hashed_password_2', 'salt_2', 'Teacher', 'John Teacher', '+1 (555) 234-5678', 'Faculty Building, Office 301', NULL, 1, GETUTCDATE()),
-        (NEWID(), 'admin@university.edu', 'hashed_password_3', 'salt_3', 'Admin', 'Admin User', '+1 (555) 345-6789', 'Administration Building, Room 100', NULL, 1, GETUTCDATE());
+        (NEWID(), 'student@university.edu', '2Dyfiau1pDwzyQxBQCpHWri9i7pmcQVJBLtnLW/g+ag=', 'sYCDlcmAoN56njDjs9uTag==', 'Student', 'Sarah Student', '+1 (555) 123-4567', 'Building A, Room 205, Campus', NULL, 1, GETUTCDATE()),
+        (NEWID(), 'teacher@university.edu', 'YM5TCtG/TtHZMmqP2YllL1IRlBw4m8ny01ESx3atldQ=', 'pMoH0ATf/TwF8GKJetrbyA==', 'Teacher', 'John Teacher', '+1 (555) 234-5678', 'Faculty Building, Office 301', NULL, 1, GETUTCDATE()),
+        (NEWID(), 'dr.smith@university.edu', 'YM5TCtG/TtHZMmqP2YllL1IRlBw4m8ny01ESx3atldQ=', 'pMoH0ATf/TwF8GKJetrbyA==', 'Teacher', 'Dr. Smith', '+1 (555) 456-7890', 'Faculty Building, Office 302', NULL, 1, GETUTCDATE()),
+        (NEWID(), 'admin@university.edu', '+9/zNWABQWmUz7vYKwkG0wPfoZCxZ9g2OnnM6r1EvqI=', 'gvVIA8tmIqly64N8Zqt1zg==', 'Admin', 'Admin User', '+1 (555) 345-6789', 'Administration Building, Room 100', NULL, 1, GETUTCDATE());
 END
 
 -- Get user IDs for seeding
 SELECT @StudentId = user_id FROM users WHERE email = 'student@university.edu';
 SELECT @TeacherId = user_id FROM users WHERE email = 'teacher@university.edu';
+SELECT @Teacher2Id = user_id FROM users WHERE email = 'dr.smith@university.edu';
 SELECT @AdminId = user_id FROM users WHERE email = 'admin@university.edu';
 
 -- Insert student record if not exists
@@ -204,21 +207,23 @@ BEGIN
     DECLARE @Msg2Id UNIQUEIDENTIFIER = NEWID();
     DECLARE @Msg3Id UNIQUEIDENTIFIER = NEWID();
     DECLARE @Msg4Id UNIQUEIDENTIFIER = NEWID();
+    DECLARE @Msg5Id UNIQUEIDENTIFIER = NEWID();
+    DECLARE @Msg6Id UNIQUEIDENTIFIER = NEWID();
     
-    -- Insert sample messages between student and teacher
+    -- Insert sample messages between student and teacher (John Teacher)
     INSERT INTO messages (message_id, sender_id, receiver_id, content, is_read, created_at)
     VALUES
         (@Msg1Id, @TeacherId, @StudentId, 'Hi Sarah, I''ve reviewed your thesis draft.', 0, DATEADD(MINUTE, -30, GETUTCDATE())),
         (@Msg2Id, @TeacherId, @StudentId, 'Overall it''s excellent work, just a few minor suggestions on the methodology section.', 0, DATEADD(MINUTE, -28, GETUTCDATE())),
         (@Msg3Id, @StudentId, @TeacherId, 'Thank you! I''ll love to hear your feedback.', 1, DATEADD(MINUTE, -20, GETUTCDATE())),
-        (@Msg4Id, @StudentId, @TeacherId, 'Absolutely! Would Thursday afternoon work for you?', 1, DATEADD(MINUTE, -15, GETUTCDATE()));
+        (@Msg4Id, @StudentId, @TeacherId, 'Absolutely! Would Thursday afternoon work for you?', 1, DATEADD(MINUTE, -15, GETUTCDATE())),
+        (@Msg5Id, @Teacher2Id, @StudentId, 'Hello Sarah, welcome to my office hours!', 0, DATEADD(MINUTE, -45, GETUTCDATE())),
+        (@Msg6Id, @StudentId, @Teacher2Id, 'Thank you Dr. Smith, I look forward to discussing my project.', 1, DATEADD(MINUTE, -40, GETUTCDATE()));
     
-    -- The last message is @Msg4Id (most recent)
-    SET @LastMessageId = @Msg4Id;
-    
-    -- Insert conversation between student and teacher with last message reference
+    -- Insert conversation between student and teacher (John Teacher) with last message reference
     INSERT INTO conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
     VALUES
-        (NEWID(), @StudentId, @TeacherId, @LastMessageId, DATEADD(MINUTE, -15, GETUTCDATE()), DATEADD(DAY, -5, GETUTCDATE()));
+        (NEWID(), @StudentId, @TeacherId, @Msg4Id, DATEADD(MINUTE, -15, GETUTCDATE()), DATEADD(DAY, -5, GETUTCDATE())),
+        (NEWID(), @StudentId, @Teacher2Id, @Msg6Id, DATEADD(MINUTE, -40, GETUTCDATE()), DATEADD(DAY, -2, GETUTCDATE()));
 END
 GO

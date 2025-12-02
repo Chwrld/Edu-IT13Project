@@ -8,6 +8,7 @@ public class Message
     public string Content { get; set; } = string.Empty;
     public DateTime CreatedAtUtc { get; set; }
     public bool IsRead { get; set; }
+    public DateTime CreatedAtLocal => DateTimeHelper.ToLocal(CreatedAtUtc);
     
     // For display purposes
     public string SenderName { get; set; } = string.Empty;
@@ -26,7 +27,21 @@ public class Conversation
     public string ParticipantRole { get; set; } = string.Empty;
     public string LastMessage { get; set; } = string.Empty;
     public DateTime LastMessageTime { get; set; }
+    public DateTime LastMessageLocalTime => DateTimeHelper.ToLocal(LastMessageTime);
     public int UnreadCount { get; set; }
     public string AvatarColor { get; set; } = "#0891B2";
     public string Initials { get; set; } = string.Empty;
+}
+
+internal static class DateTimeHelper
+{
+    public static DateTime ToLocal(DateTime value)
+    {
+        return value.Kind switch
+        {
+            DateTimeKind.Local => value,
+            DateTimeKind.Utc => value.ToLocalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc).ToLocalTime()
+        };
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using MauiAppIT13.Database;
 using MauiAppIT13.Models;
@@ -10,6 +11,14 @@ public class MessageService
 {
     private readonly DbConnection _dbConnection;
     private static readonly ObservableCollection<Conversation> Conversations = new();
+    private static readonly Dictionary<Guid, string> AvatarColorAssignments = new();
+    private static readonly string[] AvatarPalette =
+    {
+        "#0891B2", "#059669", "#7C3AED", "#F59E0B", "#F87171", "#EC4899",
+        "#6366F1", "#10B981", "#14B8A6", "#84CC16", "#F97316", "#1D4ED8"
+    };
+    private static readonly Random AvatarRandom = new();
+    private static readonly object AvatarColorLock = new();
 
     public MessageService(DbConnection dbConnection)
     {
@@ -79,8 +88,19 @@ public class MessageService
     {
         try
         {
-            Debug.WriteLine($"MessageService: Loading conversations for user {userId}");
+            Debug.WriteLine($"[MessageService] ========== GetConversationsAsync START ==========");
+            Debug.WriteLine($"[MessageService] User ID: {userId}");
+            Debug.WriteLine($"[MessageService] DbConnection type: {_dbConnection?.GetType().Name}");
             var conversations = new ObservableCollection<Conversation>();
+            
+            // Cast to SqlServerDbConnection to get access to GetConnection()
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("[MessageService] ❌ ERROR: DbConnection is not SqlServerDbConnection");
+                return conversations;
+            }
+            
+            Debug.WriteLine("[MessageService] ✅ DbConnection is SqlServerDbConnection");
             
             // Simple query to test if we can fetch any conversations
             const string sql = @"
@@ -97,11 +117,18 @@ public class MessageService
                 LEFT JOIN messages m ON c.last_message_id = m.message_id
                 WHERE c.participant1_id = @UserId OR c.participant2_id = @UserId";
 
-            Debug.WriteLine($"MessageService: Executing SQL query...");
+            Debug.WriteLine($"[MessageService] Attempting to get SQL connection...");
             
-            await using var connection = new SqlConnection("Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;");
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("[MessageService] ❌ ERROR: Could not get SQL connection");
+                return conversations;
+            }
+            
+            Debug.WriteLine("[MessageService] ✅ Got SQL connection, opening...");
             await connection.OpenAsync();
-            Debug.WriteLine("MessageService: Connection opened");
+            Debug.WriteLine("[MessageService] ✅ Connection opened successfully");
             
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 10;
@@ -114,23 +141,41 @@ public class MessageService
             while (await reader.ReadAsync())
             {
                 rowCount++;
-                var participantId = reader.GetGuid(2); // participant2_id if participant1 is current user
-                var participantName = reader.IsDBNull(3) ? "Unknown" : reader.GetString(3);
-                
-                var conversation = new Conversation
+                Debug.WriteLine($"MessageService: Row {rowCount} - Reading data...");
+                try
                 {
-                    Id = reader.GetGuid(0),
-                    ParticipantId = participantId,
-                    ParticipantName = participantName,
-                    ParticipantRole = reader.IsDBNull(4) ? "User" : reader.GetString(4),
-                    LastMessage = reader.GetString(5),
-                    LastMessageTime = reader.GetDateTime(6),
-                    UnreadCount = 0,
-                    Initials = GetInitials(participantName),
-                    AvatarColor = GetAvatarColor(participantId)
-                };
-                conversations.Add(conversation);
-                Debug.WriteLine($"MessageService: Added conversation {rowCount}: {participantName}");
+                    var conversationId = reader.GetGuid(0);
+                    var participant1Id = reader.GetGuid(1);
+                    var participant2Id = reader.GetGuid(2);
+                    var displayName = reader.IsDBNull(3) ? "Unknown" : reader.GetString(3);
+                    var role = reader.IsDBNull(4) ? "User" : reader.GetString(4);
+                    var lastMessage = reader.GetString(5);
+                    var lastMessageTime = reader.GetDateTime(6);
+                    
+                    Debug.WriteLine($"MessageService: Row {rowCount} - ConvId: {conversationId}, P1: {participant1Id}, P2: {participant2Id}");
+                    
+                    // Get the OTHER participant (not the current user)
+                    var participantId = participant1Id == userId ? participant2Id : participant1Id;
+                    
+                    var conversation = new Conversation
+                    {
+                        Id = conversationId,
+                        ParticipantId = participantId,
+                        ParticipantName = displayName,
+                        ParticipantRole = role,
+                        LastMessage = lastMessage,
+                        LastMessageTime = lastMessageTime,
+                        UnreadCount = 0,
+                        Initials = GetInitials(displayName),
+                        AvatarColor = GetAvatarColor(participantId)
+                    };
+                    conversations.Add(conversation);
+                    Debug.WriteLine($"MessageService: Added conversation {rowCount}: {displayName} (ID: {participantId})");
+                }
+                catch (Exception rowEx)
+                {
+                    Debug.WriteLine($"MessageService: Error reading row {rowCount}: {rowEx.Message}");
+                }
             }
             
             Debug.WriteLine($"MessageService: Total conversations loaded: {conversations.Count}");
@@ -151,6 +196,13 @@ public class MessageService
             Debug.WriteLine($"MessageService: Loading messages for conversation {conversationId}");
             var messages = new List<Message>();
             
+            // Cast to SqlServerDbConnection to get access to GetConnection()
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: ERROR - DbConnection is not SqlServerDbConnection");
+                return messages;
+            }
+
             const string sql = @"
                 SELECT 
                     m.message_id,
@@ -169,8 +221,13 @@ public class MessageService
                 WHERE c.conversation_id = @ConversationId
                 ORDER BY m.created_at ASC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: ERROR - Could not get SQL connection");
+                return messages;
+            }
+
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
@@ -217,8 +274,13 @@ public class MessageService
 
             Debug.WriteLine($"MessageService: Sending message from {senderId} to {receiverId}");
             
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
+            // Cast to SqlServerDbConnection to get access to GetConnection()
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: ERROR - DbConnection is not SqlServerDbConnection");
+                return false;
+            }
+
             const string sql = @"
                 INSERT INTO messages (message_id, sender_id, receiver_id, content, is_read, created_at)
                 VALUES (@MessageId, @SenderId, @ReceiverId, @Content, 0, GETUTCDATE());
@@ -230,7 +292,13 @@ public class MessageService
 
             var messageId = Guid.NewGuid();
             
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: ERROR - Could not get SQL connection");
+                return false;
+            }
+
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
@@ -267,7 +335,21 @@ public class MessageService
 
     private static string GetAvatarColor(Guid id)
     {
-        var colors = new[] { "#0891B2", "#FEF3C7", "#E0E7FF", "#DBEAFE", "#10B981", "#F87171" };
-        return colors[id.GetHashCode() % colors.Length];
+        lock (AvatarColorLock)
+        {
+            if (AvatarColorAssignments.TryGetValue(id, out var color))
+            {
+                return color;
+            }
+
+            if (AvatarPalette.Length == 0)
+            {
+                return "#0891B2";
+            }
+
+            var assignedColor = AvatarPalette[AvatarRandom.Next(AvatarPalette.Length)];
+            AvatarColorAssignments[id] = assignedColor;
+            return assignedColor;
+        }
     }
 }

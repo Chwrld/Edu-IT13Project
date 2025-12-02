@@ -17,7 +17,7 @@ public partial class TeacherClassesPage : ContentPage
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Messages", "Messages feature coming soon!", "OK");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage");
     }
 
     private async void OnViewClassClicked(object sender, EventArgs e)

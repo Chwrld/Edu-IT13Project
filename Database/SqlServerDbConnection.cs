@@ -22,21 +22,27 @@ public sealed class SqlServerDbConnection : DbConnection
 
     private SqlConnection CreateConnection() => new(_connectionString);
 
+    public override IDbConnection GetConnection() => CreateConnection();
+
     public override async Task<bool> HasAnyUsersAsync()
     {
         try
         {
             const string sql = "SELECT COUNT(*) FROM users";
             await using var connection = CreateConnection();
+            Debug.WriteLine($"SqlServerDbConnection: Attempting to open connection to: {_connectionString}");
             await connection.OpenAsync();
+            Debug.WriteLine("SqlServerDbConnection: Connection opened successfully");
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
             var count = (int?)await command.ExecuteScalarAsync() ?? 0;
+            Debug.WriteLine($"SqlServerDbConnection: User count = {count}");
             return count > 0;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"HasAnyUsersAsync failed: {ex.Message}");
+            Debug.WriteLine($"SqlServerDbConnection: HasAnyUsersAsync FAILED - {ex.GetType().Name}: {ex.Message}");
+            Debug.WriteLine($"SqlServerDbConnection: Stack trace: {ex.StackTrace}");
             return false;
         }
     }
