@@ -9,6 +9,8 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+#pragma warning disable CA1416 // Validate platform compatibility
+
 namespace MauiAppIT13.Pages.Student;
 
 public partial class AnnouncementsPage : ContentPage

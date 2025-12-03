@@ -2,6 +2,8 @@
 using MauiAppIT13.Models;
 using MauiAppIT13.Utils;
 
+#pragma warning disable CA1416 // MAUI primitives are available on supported targets configured for the app
+
 namespace MauiAppIT13.Pages.Student
 {
     public partial class MainPage : ContentPage
@@ -43,3 +45,5 @@ namespace MauiAppIT13.Pages.Student
         }
     }
 }
+
+#pragma warning restore CA1416

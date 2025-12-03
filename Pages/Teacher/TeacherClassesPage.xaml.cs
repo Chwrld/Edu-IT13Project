@@ -1,5 +1,7 @@
 using System.Runtime.Versioning;
 
+#pragma warning disable CA1416 // MAUI elements are supported on configured targets
+
 namespace MauiAppIT13.Pages.Teacher;
 
 [SupportedOSPlatform("windows10.0.17763.0")]
