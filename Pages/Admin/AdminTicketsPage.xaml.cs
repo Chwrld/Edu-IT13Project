@@ -1,23 +1,217 @@
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using MauiAppIT13.Database;
+using MauiAppIT13.Models;
+using MauiAppIT13.Services;
+using MauiAppIT13.Utils;
+using Microsoft.Maui.Controls.Shapes;
+
 namespace MauiAppIT13.Pages.Admin;
 
 public partial class AdminTicketsPage : ContentPage
 {
+    private readonly TicketService _ticketService;
+    private readonly AuthManager _authManager;
+    private readonly ObservableCollection<Ticket> _allTickets = new();
+    private readonly ObservableCollection<Ticket> _filteredTickets = new();
+    private Ticket? _selectedTicket;
+    private bool _isLoading;
+    private string _currentSearchText = string.Empty;
+    private string _currentStatusFilter = "all";
+
     public AdminTicketsPage()
     {
         InitializeComponent();
+
+        var dbConnection = AppServiceProvider.GetService<DbConnection>();
+        _ticketService = AppServiceProvider.GetService<TicketService>() ??
+                         new TicketService(dbConnection ?? throw new InvalidOperationException("DbConnection not found"));
+        _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
+
+        TicketsCollectionView.ItemsSource = _filteredTickets;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadTicketsAsync();
+    }
+
+    private async Task LoadTicketsAsync()
+    {
+        if (_isLoading)
+            return;
+
+        _isLoading = true;
+        try
+        {
+            var tickets = await _ticketService.GetAllTicketsAsync();
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _allTickets.Clear();
+                foreach (var ticket in tickets)
+                {
+                    _allTickets.Add(ticket);
+                }
+
+                ApplyFilters();
+                UpdateTicketStats();
+            });
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to load tickets: {ex.Message}", "OK");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void UpdateTicketStats()
+    {
+        var openCount = _allTickets.Count(t => string.Equals(t.Status, "open", StringComparison.OrdinalIgnoreCase));
+        var inProgressCount = _allTickets.Count(t => string.Equals(t.Status, "in_progress", StringComparison.OrdinalIgnoreCase));
+        var resolvedCount = _allTickets.Count(t => string.Equals(t.Status, "resolved", StringComparison.OrdinalIgnoreCase));
+
+        AdminOpenCountLabel.Text = openCount.ToString(CultureInfo.InvariantCulture);
+        AdminInProgressCountLabel.Text = inProgressCount.ToString(CultureInfo.InvariantCulture);
+        AdminResolvedCountLabel.Text = resolvedCount.ToString(CultureInfo.InvariantCulture);
+    }
+
+    private void ApplyFilters()
+    {
+        var query = _allTickets.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(_currentSearchText))
+        {
+            var search = _currentSearchText.ToLowerInvariant();
+            query = query.Where(t =>
+                (t.Title?.ToLowerInvariant().Contains(search) ?? false) ||
+                (t.TicketNumber?.ToLowerInvariant().Contains(search) ?? false) ||
+                (t.CreatedByName?.ToLowerInvariant().Contains(search) ?? false));
+        }
+
+        if (!string.Equals(_currentStatusFilter, "all", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(t => string.Equals(t.Status, _currentStatusFilter, StringComparison.OrdinalIgnoreCase));
+        }
+
+        _filteredTickets.Clear();
+        foreach (var ticket in query)
+        {
+            _filteredTickets.Add(ticket);
+        }
+    }
+
+    private void SetStatusFilter(string status)
+    {
+        _currentStatusFilter = status;
+        ApplyFilters();
+    }
+
+    private string FormatDisplayValue(string? value, string fallback = "-")
+        => string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private static string FormatStatus(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return "-";
+
+        var normalized = status.Replace('_', ' ');
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
+    }
+
+    private async Task ShowTicketDetailsAsync(Ticket ticket)
+    {
+        _selectedTicket = ticket;
+
+        DetailTitleLabel.Text = ticket.Title;
+        DetailTicketNumberLabel.Text = ticket.TicketNumber;
+        DetailStudentLabel.Text = FormatDisplayValue(ticket.CreatedByName, "Unknown");
+        DetailAssignedLabel.Text = FormatDisplayValue(ticket.AssignedToName, "Unassigned");
+        DetailPriorityLabel.Text = FormatDisplayValue(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(ticket.Priority));
+        DetailStatusLabel.Text = FormatStatus(ticket.Status);
+        AdminCommentEditor.Text = string.Empty;
+
+        TicketDetailsOverlay.IsVisible = true;
+        await LoadCommentsAsync(ticket.Id);
+    }
+
+    private async Task LoadCommentsAsync(Guid ticketId)
+    {
+        try
+        {
+            var comments = await _ticketService.GetTicketCommentsAsync(ticketId);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                CommentsStackLayout.Children.Clear();
+                foreach (var comment in comments)
+                {
+                    CommentsStackLayout.Children.Add(CreateCommentView(comment));
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to load comments: {ex.Message}", "OK");
+        }
+    }
+
+    private static View CreateCommentView(TicketComment comment)
+    {
+        bool isAdmin = string.Equals(comment.UserRole, "Admin", StringComparison.OrdinalIgnoreCase);
+        var background = isAdmin ? Color.FromArgb("#EFF6FF") : Color.FromArgb("#F9FAFB");
+
+        var container = new Border
+        {
+            BackgroundColor = background,
+            Padding = new Thickness(16, 12),
+            StrokeThickness = 0,
+            StrokeShape = new RoundRectangle { CornerRadius = 10 }
+        };
+
+        var header = new Grid { ColumnDefinitions = new ColumnDefinitionCollection { new ColumnDefinition(), new ColumnDefinition { Width = GridLength.Auto } } };
+        header.Add(new Label
+        {
+            Text = $"{comment.UserName} • {comment.UserRole}",
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb("#1F2937"),
+            FontSize = 13
+        });
+
+        header.Add(new Label
+        {
+            Text = comment.CreatedAt.ToLocalTime().ToString("MMM d, h:mm tt"),
+            TextColor = Color.FromArgb("#6B7280"),
+            FontSize = 12
+        }, 1, 0);
+
+        var content = new Label
+        {
+            Text = comment.Content,
+            TextColor = Color.FromArgb("#374151"),
+            FontSize = 14,
+            LineBreakMode = LineBreakMode.WordWrap,
+            Margin = new Thickness(0, 8, 0, 0)
+        };
+
+        container.Content = new VerticalStackLayout
+        {
+            Spacing = 6,
+            Children = { header, content }
+        };
+
+        return container;
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
-        // Placeholder for search functionality
-        // In a real app, this would filter the ticket list based on the search text
-        string searchText = e.NewTextValue?.ToLower() ?? string.Empty;
-        
-        if (!string.IsNullOrWhiteSpace(searchText))
-        {
-            // Here you would filter your tickets collection
-            // Example: Filter by teacher name or ticket number
-        }
+        _currentSearchText = e.NewTextValue?.Trim() ?? string.Empty;
+        ApplyFilters();
     }
 
     private async void OnDashboardTapped(object? sender, EventArgs e)
@@ -50,94 +244,157 @@ public partial class AdminTicketsPage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//AdminLoginPage");
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 
-    private async void OnSendAnnouncementClicked(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("AdminAnnouncementsPage");
-    }
+    private void OnFilterAllClicked(object? sender, EventArgs e) => SetStatusFilter("all");
 
-    private async void OnFilterAllClicked(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Filter", "Showing all tickets", "OK");
-    }
+    private void OnFilterOpenClicked(object? sender, EventArgs e) => SetStatusFilter("open");
 
-    private async void OnFilterOpenClicked(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Filter", "Showing open tickets", "OK");
-    }
+    private void OnFilterPendingClicked(object? sender, EventArgs e) => SetStatusFilter("in_progress");
 
-    private async void OnFilterPendingClicked(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Filter", "Showing pending tickets", "OK");
-    }
+    private void OnFilterClosedClicked(object? sender, EventArgs e) => SetStatusFilter("resolved");
 
-    private async void OnFilterClosedClicked(object? sender, EventArgs e)
+    private async void OnViewTicketClicked(object? sender, EventArgs e)
     {
-        await DisplayAlert("Filter", "Showing closed tickets", "OK");
-    }
-
-    private async void OnViewTicketTapped(object? sender, EventArgs e)
-    {
-        await DisplayAlert("View Ticket", "Ticket details will be shown here.", "OK");
-    }
-
-    private async void OnAssignTicketTapped(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Assign Ticket", "Assign ticket to adviser functionality will be implemented here.", "OK");
-    }
-
-    private async void OnMoreActionsTapped(object? sender, EventArgs e)
-    {
-        string action = await DisplayActionSheet("More Actions", "Cancel", null, "Change Priority", "Change Status", "Add Note");
-        if (!string.IsNullOrEmpty(action) && action != "Cancel")
+        if (sender is Button button && button.CommandParameter is Ticket ticket)
         {
-            await DisplayAlert("Action", $"{action} will be implemented here.", "OK");
-        }
-    }
-
-    private async void OnCloseTicketTapped(object? sender, EventArgs e)
-    {
-        bool confirm = await DisplayAlert("Close Ticket", 
-            "Are you sure you want to close this ticket?", 
-            "Yes", "No");
-        
-        if (confirm)
-        {
-            await DisplayAlert("Success", "Ticket has been closed.", "OK");
-        }
-    }
-
-    private async void OnAssignTicketClicked(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Assign Ticket", "Technician assignment functionality will be implemented here.", "OK");
-    }
-
-    private async void OnViewDetailsClicked(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Ticket Details", "Detailed ticket view will be shown here.", "OK");
-    }
-
-    private async void OnAddCommentClicked(object? sender, EventArgs e)
-    {
-        string comment = await DisplayPromptAsync("Add Comment", "Enter your comment:", "Submit", "Cancel");
-        if (!string.IsNullOrWhiteSpace(comment))
-        {
-            await DisplayAlert("Success", "Comment added successfully.", "OK");
+            await ShowTicketDetailsAsync(ticket);
         }
     }
 
     private async void OnResolveTicketClicked(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Resolve Ticket", 
-            "Mark this ticket as resolved?", 
-            "Yes", "No");
-        
-        if (confirm)
+        Ticket? ticketToResolve = _selectedTicket;
+
+        if (sender is Button button && button.CommandParameter is Ticket ticket)
         {
-            await DisplayAlert("Success", "Ticket has been marked as resolved.", "OK");
+            ticketToResolve = ticket;
         }
+
+        if (ticketToResolve == null)
+        {
+            await DisplayAlert("Error", "Please select a ticket first.", "OK");
+            return;
+        }
+
+        var confirm = await DisplayAlert("Resolve Ticket", "Mark this ticket as resolved?", "Yes", "No");
+        if (!confirm)
+            return;
+
+        var currentUser = _authManager.CurrentUser;
+        var success = await _ticketService.UpdateTicketStatusAsync(ticketToResolve.Id, "resolved", currentUser?.Id);
+
+        if (!success)
+        {
+            await DisplayAlert("Error", "Failed to resolve ticket. Please try again.", "OK");
+            return;
+        }
+
+        await LoadTicketsAsync();
+
+        if (_selectedTicket?.Id == ticketToResolve.Id)
+        {
+            DetailStatusLabel.Text = FormatStatus("resolved");
+        }
+
+        await DisplayAlert("Success", "Ticket marked as resolved.", "OK");
+    }
+
+    private async void OnChangeStatusClicked(object? sender, EventArgs e)
+    {
+        Ticket? ticketToUpdate = null;
+
+        if (sender is Button button && button.CommandParameter is Ticket fromButton)
+        {
+            ticketToUpdate = fromButton;
+        }
+        else if (_selectedTicket != null)
+        {
+            ticketToUpdate = _selectedTicket;
+        }
+
+        if (ticketToUpdate == null)
+        {
+            await DisplayAlert("Error", "Please select a ticket first.", "OK");
+            return;
+        }
+
+        var statusOptions = new (string Label, string Value)[]
+        {
+            ("Open", "open"),
+            ("In Progress", "in_progress"),
+            ("Resolved", "resolved")
+        };
+
+        var selection = await DisplayActionSheet(
+            $"Status ({FormatStatus(ticketToUpdate.Status)})",
+            "Cancel",
+            null,
+            statusOptions.Select(s => s.Label).ToArray());
+
+        if (string.IsNullOrEmpty(selection) || selection == "Cancel")
+            return;
+
+        var selectedStatus = statusOptions.First(s => s.Label == selection).Value;
+        if (string.Equals(selectedStatus, ticketToUpdate.Status, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var currentUser = _authManager.CurrentUser;
+        var success = await _ticketService.UpdateTicketStatusAsync(ticketToUpdate.Id, selectedStatus, currentUser?.Id);
+
+        if (!success)
+        {
+            await DisplayAlert("Error", "Failed to update ticket. Please try again.", "OK");
+            return;
+        }
+
+        await LoadTicketsAsync();
+
+        if (_selectedTicket?.Id == ticketToUpdate.Id)
+        {
+            DetailStatusLabel.Text = FormatStatus(selectedStatus);
+        }
+
+        await DisplayAlert("Success", $"Ticket marked as {FormatStatus(selectedStatus)}.", "OK");
+    }
+
+    private void OnCloseDetailsClicked(object? sender, EventArgs e)
+    {
+        TicketDetailsOverlay.IsVisible = false;
+        CommentsStackLayout.Children.Clear();
+        AdminCommentEditor.Text = string.Empty;
+        _selectedTicket = null;
+    }
+
+    private async void OnSendCommentClicked(object? sender, EventArgs e)
+    {
+        if (_selectedTicket == null)
+        {
+            await DisplayAlert("Error", "Select a ticket to reply to.", "OK");
+            return;
+        }
+
+        string content = AdminCommentEditor.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(content))
+            return;
+
+        var currentUser = _authManager.CurrentUser;
+        if (currentUser == null)
+        {
+            await DisplayAlert("Error", "Admin user not authenticated.", "OK");
+            return;
+        }
+
+        var success = await _ticketService.AddCommentAsync(_selectedTicket.Id, currentUser.Id, content);
+        if (!success)
+        {
+            await DisplayAlert("Error", "Failed to send message. Try again.", "OK");
+            return;
+        }
+
+        AdminCommentEditor.Text = string.Empty;
+        await LoadCommentsAsync(_selectedTicket.Id);
     }
 }

@@ -14,11 +14,6 @@
         ContentTemplate="{DataTemplate student:MainPage}"
         Route="MainPage" />
 
-    <!-- Admin Login -->
-    <ShellContent
-        ContentTemplate="{DataTemplate admin:AdminLoginPage}"
-        Route="AdminLoginPage" />
-
     <!-- Admin Home -->
     <ShellContent
         ContentTemplate="{DataTemplate admin:AdminHomePage}"
@@ -43,11 +38,6 @@
     <ShellContent
         ContentTemplate="{DataTemplate admin:AdminReportsPage}"
         Route="AdminReportsPage" />
-
-    <!-- Teacher Login -->
-    <ShellContent
-        ContentTemplate="{DataTemplate teacher:TeacherLoginPage}"
-        Route="TeacherLoginPage" />
 
     <!-- Teacher Home -->
     <ShellContent

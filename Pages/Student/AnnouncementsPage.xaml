@@ -251,262 +251,111 @@
                                TextColor="#2C3E50"
                                BackgroundColor="Transparent"
                                VerticalOptions="Center"
-                               HorizontalOptions="FillAndExpand"/>
+                               HorizontalOptions="FillAndExpand"
+                               TextChanged="OnSearchTextChanged"/>
                     </HorizontalStackLayout>
                 </Border>
 
                 <!-- Announcements List -->
-                <VerticalStackLayout x:Name="AnnouncementsList" Spacing="15">
-                    
-                    <!-- Reminder 1 - Registration Period Extended -->
-                    <Border x:Name="Reminder1"
-                            BackgroundColor="White"
-                            Padding="20"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-                            <!-- Header -->
-                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                <Border Grid.Column="0"
-                                        BackgroundColor="#FEE2E2"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="⚠️" 
-                                           FontSize="20"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                
-                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="Registration Period Extended" 
-                                           FontSize="16" 
-                                           FontAttributes="Bold"
-                                           TextColor="#2C3E50"/>
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="Academic" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="•" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="Today, 9:00 AM" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-
-                                <Border Grid.Column="2"
-                                        BackgroundColor="#EF4444"
-                                        Padding="10,6"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="Important" 
-                                           TextColor="White"
-                                           FontSize="11"
-                                           FontAttributes="Bold"/>
-                                </Border>
-                            </Grid>
-
-                            <!-- Content -->
-                            <Label Grid.Row="1"
-                                   Text="The registration period for next semester has been extended until Friday, May 15th. Please ensure all course selections are completed by the deadline."
+                <CollectionView x:Name="AnnouncementsCollectionView"
+                                SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="20" Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="No announcements yet"
                                    FontSize="14"
-                                   TextColor="#4B5563"
-                                   LineBreakMode="WordWrap"/>
-                        </Grid>
-                    </Border>
+                                   TextColor="#6B7280"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Check back later for new updates"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="White"
+                                    Padding="20"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Margin="0,0,0,15">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnAnnouncementTapped"
+                                                          CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+                                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                        <Border WidthRequest="40"
+                                                HeightRequest="40"
+                                                StrokeThickness="0"
+                                                BackgroundColor="#F0F9FF"
+                                                VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Border.Triggers>
+                                                <DataTrigger TargetType="Border" Binding="{Binding Visibility}" Value="students">
+                                                    <Setter Property="BackgroundColor" Value="#D1FAE5"/>
+                                                </DataTrigger>
+                                            </Border.Triggers>
+                                            <Label Text="📢"
+                                                   FontSize="20"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Visibility}" Value="students">
+                                                        <Setter Property="Text" Value="🎓"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Border>
 
-                    <!-- Announcement 1 - Career Fair Next Week -->
-                    <Border x:Name="Announcement1"
-                            BackgroundColor="White"
-                            Padding="20"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-                            <!-- Header -->
-                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Border Grid.Column="0"
-                                        BackgroundColor="#FEF3C7"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="💼" 
-                                           FontSize="20"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                
-                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="Career Fair Next Week" 
-                                           FontSize="16" 
-                                           FontAttributes="Bold"
-                                           TextColor="#2C3E50"/>
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="Events" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="•" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="Yesterday, 3:30 PM" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                            </Grid>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#2C3E50"
+                                                   LineBreakMode="WordWrap"/>
+                                            <HorizontalStackLayout Spacing="8">
+                                                <Label Text="{Binding VisibilityLabel}"
+                                                       FontSize="12"
+                                                       TextColor="#6B7280"/>
+                                                <Label Text="•"
+                                                       FontSize="12"
+                                                       TextColor="#6B7280"/>
+                                                <Label Text="{Binding CreatedAt, StringFormat='{}{0:MMM d, h:mm tt}'}"
+                                                       FontSize="12"
+                                                       TextColor="#6B7280"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
 
-                            <!-- Content -->
-                            <Label Grid.Row="1"
-                                   Text="Join us for the annual Career Fair on Wednesday, May 20th. Over 50 companies will be present. Professional attire recommended."
-                                   FontSize="14"
-                                   TextColor="#4B5563"
-                                   LineBreakMode="WordWrap"/>
-                        </Grid>
-                    </Border>
+                                        <Border Grid.Column="2"
+                                                BackgroundColor="#F3F4F6"
+                                                Padding="10,6"
+                                                StrokeThickness="0"
+                                                VerticalOptions="Start">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding ViewCount, StringFormat='👁️ {0}'}"
+                                                   TextColor="#374151"
+                                                   FontSize="11"
+                                                   FontAttributes="Bold"/>
+                                        </Border>
+                                    </Grid>
 
-                    <!-- Announcement 2 - Library Hours Update -->
-                    <Border x:Name="Announcement2"
-                            BackgroundColor="White"
-                            Padding="20"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-                            <!-- Header -->
-                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                <Border Grid.Column="0"
-                                        BackgroundColor="#DBEAFE"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="📚" 
-                                           FontSize="20"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                
-                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="Library Hours Update" 
-                                           FontSize="16" 
-                                           FontAttributes="Bold"
-                                           TextColor="#2C3E50"/>
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="Facilities" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="•" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="2 days ago" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                            </Grid>
-
-                            <!-- Content -->
-                            <Label Grid.Row="1"
-                                   Text="The library will extend hours during exam week (May 25-30). Open 24/7 with study rooms available for booking."
-                                   FontSize="14"
-                                   TextColor="#4B5563"
-                                   LineBreakMode="WordWrap"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Reminder 2 - Scholarship Applications Open -->
-                    <Border x:Name="Reminder2"
-                            BackgroundColor="White"
-                            Padding="20"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-                            <!-- Header -->
-                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                <Border Grid.Column="0"
-                                        BackgroundColor="#D1FAE5"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="🎓" 
-                                           FontSize="20"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                
-                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="Scholarship Applications Open" 
-                                           FontSize="16" 
-                                           FontAttributes="Bold"
-                                           TextColor="#2C3E50"/>
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="Financial Aid" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="•" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                        <Label Text="5 days ago" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"/>
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-
-                                <Border Grid.Column="2"
-                                        BackgroundColor="#EF4444"
-                                        Padding="10,6"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Start">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="Important" 
-                                           TextColor="White"
-                                           FontSize="11"
-                                           FontAttributes="Bold"/>
-                                </Border>
-                            </Grid>
-
-                            <!-- Content -->
-                            <Label Grid.Row="1"
-                                   Text="Merit-based scholarship applications for next academic year are now open. Deadline: June 1st. Visit the financial aid office for details."
-                                   FontSize="14"
-                                   TextColor="#4B5563"
-                                   LineBreakMode="WordWrap"/>
-                        </Grid>
-                    </Border>
-
-                </VerticalStackLayout>
+                                    <Label Grid.Row="1"
+                                           Text="{Binding Content}"
+                                           FontSize="14"
+                                           TextColor="#4B5563"
+                                           LineBreakMode="WordWrap"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
             </VerticalStackLayout>
         </ScrollView>

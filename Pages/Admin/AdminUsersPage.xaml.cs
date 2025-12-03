@@ -263,7 +263,7 @@ public partial class AdminUsersPage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//AdminLoginPage");
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 }

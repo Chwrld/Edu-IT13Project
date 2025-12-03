@@ -1,121 +1,191 @@
+using System.Collections.ObjectModel;
+using System.Linq;
+using MauiAppIT13.Models;
+using MauiAppIT13.Services;
+using MauiAppIT13.Utils;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+#pragma warning disable CA1416 // Validate platform compatibility
+
 namespace MauiAppIT13.Pages.Student;
 
 public partial class AnnouncementsPage : ContentPage
+{
+    private readonly AnnouncementService _announcementService;
+    private readonly AuthManager _authManager;
+    private readonly ObservableCollection<Announcement> _allAnnouncements = new();
+    private readonly ObservableCollection<Announcement> _filteredAnnouncements = new();
+    private readonly HashSet<Guid> _viewedAnnouncements = new();
+    private string _currentFilter = "All";
+    private string _searchText = string.Empty;
+    private bool _isLoading;
+
+    public AnnouncementsPage()
     {
-        private string currentFilter = "All";
+        InitializeComponent();
 
-        public AnnouncementsPage()
+        _announcementService = AppServiceProvider.GetService<AnnouncementService>() ?? new AnnouncementService();
+        _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
+
+        AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
+        UpdateTabStyles();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadAnnouncementsAsync();
+    }
+
+    private async Task LoadAnnouncementsAsync()
+    {
+        if (_isLoading)
+            return;
+
+        _isLoading = true;
+        try
         {
-            InitializeComponent();
-        }
+            var announcements = await _announcementService.GetAnnouncementsAsync(150);
+            var visibleAnnouncements = announcements
+                .Where(a => a.IsPublished &&
+                    (a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase) ||
+                     a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase)))
+                .OrderByDescending(a => a.CreatedAt)
+                .ToList();
 
-        private async void OnProfileTapped(object? sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new ProfilePage());
-        }
-
-        private async void OnHomeTapped(object? sender, EventArgs e)
-        {
-            await Navigation.PopAsync();
-        }
-
-        private async void OnMessagesTapped(object? sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MessagesPage());
-        }
-
-        private async void OnTicketsTapped(object? sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new TicketsPage());
-        }
-
-        private void OnAllTabTapped(object? sender, EventArgs e)
-        {
-            currentFilter = "All";
-            UpdateTabStyles();
-            FilterAnnouncements();
-        }
-
-        private void OnAnnouncementsTabTapped(object? sender, EventArgs e)
-        {
-            currentFilter = "Announcements";
-            UpdateTabStyles();
-            FilterAnnouncements();
-        }
-
-        private void OnRemindersTabTapped(object? sender, EventArgs e)
-        {
-            currentFilter = "Reminders";
-            UpdateTabStyles();
-            FilterAnnouncements();
-        }
-
-        private void UpdateTabStyles()
-        {
-            // Reset all tabs to inactive state
-            AllTab.BackgroundColor = Colors.Transparent;
-            AllTabLabel.TextColor = Color.FromArgb("#0891B2");
-            AllTabLabel.FontAttributes = FontAttributes.None;
-
-            AnnouncementsTab.BackgroundColor = Colors.Transparent;
-            AnnouncementsTabLabel.TextColor = Color.FromArgb("#0891B2");
-            AnnouncementsTabLabel.FontAttributes = FontAttributes.None;
-
-            RemindersTab.BackgroundColor = Colors.Transparent;
-            RemindersTabLabel.TextColor = Color.FromArgb("#0891B2");
-            RemindersTabLabel.FontAttributes = FontAttributes.None;
-
-            // Set active tab
-            switch (currentFilter)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                case "All":
-                    AllTab.BackgroundColor = Color.FromArgb("#0891B2");
-                    AllTabLabel.TextColor = Colors.White;
-                    AllTabLabel.FontAttributes = FontAttributes.Bold;
-                    break;
-                case "Announcements":
-                    AnnouncementsTab.BackgroundColor = Color.FromArgb("#0891B2");
-                    AnnouncementsTabLabel.TextColor = Colors.White;
-                    AnnouncementsTabLabel.FontAttributes = FontAttributes.Bold;
-                    break;
-                case "Reminders":
-                    RemindersTab.BackgroundColor = Color.FromArgb("#0891B2");
-                    RemindersTabLabel.TextColor = Colors.White;
-                    RemindersTabLabel.FontAttributes = FontAttributes.Bold;
-                    break;
-            }
-        }
+                _allAnnouncements.Clear();
+                foreach (var announcement in visibleAnnouncements)
+                {
+                    _allAnnouncements.Add(announcement);
+                }
 
-        private void FilterAnnouncements()
+                ApplyFilters();
+            });
+        }
+        catch (Exception ex)
         {
-            // Show/hide items based on filter
-            switch (currentFilter)
-            {
-                case "All":
-                    // Show all items
-                    Reminder1.IsVisible = true;
-                    Announcement1.IsVisible = true;
-                    Announcement2.IsVisible = true;
-                    Reminder2.IsVisible = true;
-                    break;
-
-                case "Announcements":
-                    // Show only announcements
-                    Reminder1.IsVisible = false;
-                    Announcement1.IsVisible = true;
-                    Announcement2.IsVisible = true;
-                    Reminder2.IsVisible = false;
-                    break;
-
-                case "Reminders":
-                    // Show only reminders
-                    Reminder1.IsVisible = true;
-                    Announcement1.IsVisible = false;
-                    Announcement2.IsVisible = false;
-                    Reminder2.IsVisible = true;
-                    break;
-            }
+            await DisplayAlert("Error", $"Failed to load announcements: {ex.Message}", "OK");
         }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void ApplyFilters()
+    {
+        IEnumerable<Announcement> query = _allAnnouncements;
+
+        query = _currentFilter switch
+        {
+            "Announcements" => query.Where(a => a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase)),
+            "Reminders" => query.Where(a => a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase)),
+            _ => query
+        };
+
+        if (!string.IsNullOrWhiteSpace(_searchText))
+        {
+            var lowered = _searchText.ToLowerInvariant();
+            query = query.Where(a =>
+                (a.Title?.ToLowerInvariant().Contains(lowered) ?? false) ||
+                (a.Content?.ToLowerInvariant().Contains(lowered) ?? false));
+        }
+
+        var filtered = query.ToList();
+
+        _filteredAnnouncements.Clear();
+        foreach (var announcement in filtered)
+        {
+            _filteredAnnouncements.Add(announcement);
+        }
+    }
+
+    private void UpdateTabStyles()
+    {
+        static void SetTabVisuals(Border tab, Label label, bool isActive)
+        {
+            tab.BackgroundColor = isActive ? Color.FromArgb("#0891B2") : Colors.Transparent;
+            label.TextColor = isActive ? Colors.White : Color.FromArgb("#0891B2");
+            label.FontAttributes = isActive ? FontAttributes.Bold : FontAttributes.None;
+        }
+
+        SetTabVisuals(AllTab, AllTabLabel, _currentFilter == "All");
+        SetTabVisuals(AnnouncementsTab, AnnouncementsTabLabel, _currentFilter == "Announcements");
+        SetTabVisuals(RemindersTab, RemindersTabLabel, _currentFilter == "Reminders");
+    }
+
+    private void ChangeFilter(string filter)
+    {
+        if (_currentFilter == filter)
+            return;
+
+        _currentFilter = filter;
+        UpdateTabStyles();
+        ApplyFilters();
+    }
+
+    private void OnAllTabTapped(object? sender, EventArgs e) => ChangeFilter("All");
+
+    private void OnAnnouncementsTabTapped(object? sender, EventArgs e) => ChangeFilter("Announcements");
+
+    private void OnRemindersTabTapped(object? sender, EventArgs e) => ChangeFilter("Reminders");
+
+    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _searchText = e.NewTextValue ?? string.Empty;
+        ApplyFilters();
+    }
+
+    private async void OnAnnouncementTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not Announcement announcement)
+            return;
+
+        await RecordAnnouncementViewAsync(announcement);
+    }
+
+    private async Task RecordAnnouncementViewAsync(Announcement announcement)
+    {
+        var currentUser = _authManager.CurrentUser;
+        if (currentUser == null)
+            return;
+
+        if (!_viewedAnnouncements.Add(announcement.Id))
+            return;
+
+        var recorded = await _announcementService.RecordViewAsync(announcement.Id, currentUser.Id);
+        if (recorded)
+        {
+            announcement.ViewCount += 1;
+            ApplyFilters();
+        }
+    }
+
+    private async void OnProfileTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ProfilePage());
+    }
+
+    private async void OnHomeTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
+
+    private async void OnMessagesTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new MessagesPage());
+    }
+
+    private async void OnTicketsTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new TicketsPage());
+    }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {

@@ -217,7 +217,7 @@
                             Clicked="OnNewAnnouncementClicked"/>
                 </Grid>
 
-                <!-- Message Target Selection -->
+                <!-- Stats -->
                 <Border BackgroundColor="White"
                         StrokeThickness="1"
                         Stroke="#E5E7EB"
@@ -225,46 +225,72 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
-                    <VerticalStackLayout Spacing="15">
-                        <Label Text="Select Recipients" 
-                               FontSize="16" 
-                               FontAttributes="Bold"
-                               TextColor="#2C3E50"/>
-                        
-                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                            <CheckBox Grid.Column="0" 
-                                      x:Name="StudentsCheckBox"
-                                      IsChecked="True"/>
-                            <Label Grid.Column="0" 
-                                   Text="  All Students"
-                                   FontSize="14"
-                                   TextColor="#2C3E50"
-                                   VerticalOptions="Center"
-                                   Margin="30,0,0,0"/>
-                            
-                            <CheckBox Grid.Column="1" 
-                                      x:Name="AdvisersCheckBox"
-                                      IsChecked="True"/>
-                            <Label Grid.Column="1" 
-                                   Text="  All Advisers"
-                                   FontSize="14"
-                                   TextColor="#2C3E50"
-                                   VerticalOptions="Center"
-                                   Margin="30,0,0,0"/>
-                            
-                            <CheckBox Grid.Column="2" 
-                                      x:Name="TeachersCheckBox"/>
-                            <Label Grid.Column="2" 
-                                   Text="  All Teachers"
-                                   FontSize="14"
-                                   TextColor="#2C3E50"
-                                   VerticalOptions="Center"
-                                   Margin="30,0,0,0"/>
-                        </Grid>
-                    </VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="20">
+                        <VerticalStackLayout>
+                            <Label Text="Total Announcements"
+                                   FontSize="13"
+                                   TextColor="#6B7280"
+                                   FontAttributes="Bold"/>
+                            <Label x:Name="TotalAnnouncementsLabel"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#111827"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Published"
+                                   FontSize="13"
+                                   TextColor="#6B7280"
+                                   FontAttributes="Bold"/>
+                            <Label x:Name="PublishedCountLabel"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#059669"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Drafts"
+                                   FontSize="13"
+                                   TextColor="#6B7280"
+                                   FontAttributes="Bold"/>
+                            <Label x:Name="DraftCountLabel"
+                                   Text="0"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="#F97316"/>
+                        </VerticalStackLayout>
+                    </Grid>
                 </Border>
 
-                <!-- Recent Announcements -->
+                <!-- Search + Actions -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
+                        <Entry x:Name="AnnouncementSearchEntry"
+                               Placeholder="Search announcements..."
+                               TextColor="#1F2937"
+                               PlaceholderColor="#9CA3AF"
+                               BackgroundColor="#F9FAFB"
+                               TextChanged="OnSearchTextChanged"
+                               HeightRequest="44"
+                               Margin="0"/>
+                        <Button Grid.Column="1"
+                                Text="Refresh"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#1F2937"
+                                FontAttributes="Bold"
+                                Padding="18,10"
+                                CornerRadius="8"
+                                Clicked="OnRefreshAnnouncementsClicked"/>
+                    </Grid>
+                </Border>
+
+                <!-- Announcements List -->
                 <Border BackgroundColor="White"
                         StrokeThickness="1"
                         Stroke="#E5E7EB"
@@ -273,226 +299,211 @@
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Recent Announcements" 
-                               FontSize="16" 
+                        <Label Text="Announcements"
+                               FontSize="16"
                                FontAttributes="Bold"
                                TextColor="#2C3E50"/>
 
-                        <!-- Announcement 1 -->
-                        <Border BackgroundColor="#F0F9FF"
-                                Padding="15"
-                                StrokeThickness="1"
-                                Stroke="#BFDBFE">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="Semester Schedule Update"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="#1E40AF"/>
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="#DBEAFE"
-                                            Padding="8,4"
-                                            StrokeThickness="0">
+                        <CollectionView x:Name="AnnouncementsCollectionView"
+                                        SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <Label Text="No announcements yet"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       TextColor="#6B7280"/>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BackgroundColor="#F9FAFB"
+                                            Padding="16"
+                                            StrokeThickness="1"
+                                            Stroke="#E5E7EB"
+                                            Margin="0,0,0,12">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="4"/>
+                                            <RoundRectangle CornerRadius="10"/>
                                         </Border.StrokeShape>
-                                        <Label Text="Published"
-                                               FontSize="11"
-                                               TextColor="#1E40AF"
-                                               FontAttributes="Bold"/>
-                                    </Border>
-                                </Grid>
-                                
-                                <Label Grid.Row="1"
-                                       Text="Important changes to final exam schedule. Please review the updated timetable."
-                                       FontSize="13"
-                                       TextColor="#4B5563"
-                                       LineBreakMode="WordWrap"/>
-                                
-                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
-                                    <Label Text="📌 To: Students, Advisers"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="📅 Today, 10:30 AM"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="👁️ 1,245 views"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                
-                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
-                                    <Button Text="Edit"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#005BA5"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnEditAnnouncementClicked"/>
-                                    <Button Text="Delete"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#EF4444"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnDeleteAnnouncementClicked"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Border>
+                                        <VerticalStackLayout Spacing="10">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <Label Text="{Binding Title}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#111827"
+                                                       LineBreakMode="WordWrap"/>
+                                                <Border Grid.Column="1"
+                                                        BackgroundColor="#E5E7EB"
+                                                        Padding="8,4"
+                                                        StrokeThickness="0">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="12"/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding PublishedStatus}"
+                                                           FontSize="12"
+                                                           FontAttributes="Bold"
+                                                           TextColor="#374151"/>
+                                                </Border>
+                                            </Grid>
 
-                        <!-- Announcement 2 -->
-                        <Border BackgroundColor="#F0FDF4"
-                                Padding="15"
-                                StrokeThickness="1"
-                                Stroke="#BBF7D0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="Library Extended Hours"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="#15803D"/>
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="#D1FAE5"
-                                            Padding="8,4"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="4"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="Published"
-                                               FontSize="11"
-                                               TextColor="#15803D"
-                                               FontAttributes="Bold"/>
-                                    </Border>
-                                </Grid>
-                                
-                                <Label Grid.Row="1"
-                                       Text="Library will be open 24/7 during finals week starting December 1st."
-                                       FontSize="13"
-                                       TextColor="#4B5563"
-                                       LineBreakMode="WordWrap"/>
-                                
-                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
-                                    <Label Text="📌 To: Students"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="📅 Yesterday, 2:15 PM"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="👁️ 892 views"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                
-                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
-                                    <Button Text="Edit"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#005BA5"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnEditAnnouncementClicked"/>
-                                    <Button Text="Delete"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#EF4444"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnDeleteAnnouncementClicked"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Border>
+                                            <Label Text="{Binding Content}"
+                                                   FontSize="13"
+                                                   TextColor="#4B5563"
+                                                   LineBreakMode="WordWrap"/>
 
-                        <!-- Announcement 3 -->
-                        <Border BackgroundColor="#FEF3C7"
-                                Padding="15"
-                                StrokeThickness="1"
-                                Stroke="#FDE68A">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-                                    <Label Grid.Column="0"
-                                           Text="Campus Safety Advisory"
-                                           FontSize="15"
-                                           FontAttributes="Bold"
-                                           TextColor="#D97706"/>
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="#FEF3C7"
-                                            Padding="8,4"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="4"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="Published"
-                                               FontSize="11"
-                                               TextColor="#D97706"
-                                               FontAttributes="Bold"/>
-                                    </Border>
-                                </Grid>
-                                
-                                <Label Grid.Row="1"
-                                       Text="Please be aware of construction work in Building A. Use alternate entrances."
-                                       FontSize="13"
-                                       TextColor="#4B5563"
-                                       LineBreakMode="WordWrap"/>
-                                
-                                <HorizontalStackLayout Grid.Row="2" Spacing="15">
-                                    <Label Text="📌 To: Students, Advisers, Teachers"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="📅 Nov 24, 9:00 AM"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="•"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                    <Label Text="👁️ 1,534 views"
-                                           FontSize="12"
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                
-                                <HorizontalStackLayout Grid.Row="3" Spacing="10">
-                                    <Button Text="Edit"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#005BA5"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnEditAnnouncementClicked"/>
-                                    <Button Text="Delete"
-                                            BackgroundColor="Transparent"
-                                            TextColor="#EF4444"
-                                            FontSize="12"
-                                            Padding="0"
-                                            Clicked="OnDeleteAnnouncementClicked"/>
-                                </HorizontalStackLayout>
-                            </Grid>
-                        </Border>
+                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+                                                <HorizontalStackLayout Spacing="10"
+                                                                       VerticalOptions="Center">
+                                                    <Label Text="{Binding VisibilityLabel, StringFormat='To: {0}'}"
+                                                           FontSize="12"
+                                                           TextColor="#6B7280"/>
+                                                    <Label Text="•"
+                                                           FontSize="12"
+                                                           TextColor="#9CA3AF"/>
+                                                    <Label Text="{Binding CreatedAt, StringFormat='{}{0:MMM d, h:mm tt}'}"
+                                                           FontSize="12"
+                                                           TextColor="#6B7280"/>
+                                                    <Label Text="•"
+                                                           FontSize="12"
+                                                           TextColor="#9CA3AF"/>
+                                                    <Label Text="{Binding ViewCount, StringFormat='📈 {0} views'}"
+                                                           FontSize="12"
+                                                           TextColor="#6B7280"/>
+                                                </HorizontalStackLayout>
 
+                                                <HorizontalStackLayout Grid.Column="1" Spacing="10" HorizontalOptions="End">
+                                                    <Button Text="Edit"
+                                                            Padding="14,6"
+                                                            FontSize="12"
+                                                            BackgroundColor="#005BA5"
+                                                            TextColor="White"
+                                                            CornerRadius="6"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnEditAnnouncementClicked"/>
+                                                    <Button Text="Delete"
+                                                            Padding="14,6"
+                                                            FontSize="12"
+                                                            BackgroundColor="#F87171"
+                                                            TextColor="White"
+                                                            CornerRadius="6"
+                                                            CommandParameter="{Binding .}"
+                                                            Clicked="OnDeleteAnnouncementClicked"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </VerticalStackLayout>
                 </Border>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Announcement Modal -->
+        <Border x:Name="AnnouncementModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="600"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.25" Radius="25" Offset="0,12"/>
+                </Border.Shadow>
+
+                <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="20">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label x:Name="ModalTitleLabel"
+                               Text="New Announcement"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="#111827"/>
+                        <Button Grid.Column="1"
+                                Text="✕"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#6B7280"
+                                Clicked="OnCloseModalClicked"/>
+                    </Grid>
+
+                    <VerticalStackLayout Grid.Row="1" Spacing="12">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Title" FontAttributes="Bold" FontSize="14" TextColor="#374151"/>
+                            <Entry x:Name="AnnouncementTitleEntry"
+                                   Placeholder="Announcement title"
+                                   BackgroundColor="#F9FAFB"
+                                   TextColor="#111827"
+                                   PlaceholderColor="#9CA3AF"
+                                   HeightRequest="44"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Visibility" FontAttributes="Bold" FontSize="14" TextColor="#374151"/>
+                            <Picker x:Name="VisibilityPicker"
+                                    Title="Select audience"
+                                    SelectedIndex="0"
+                                    BackgroundColor="#F9FAFB"
+                                    TextColor="#111827">
+                                <Picker.Items>
+                                    <x:String>All Users</x:String>
+                                    <x:String>Students Only</x:String>
+                                    <x:String>Advisers Only</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Text="Published"
+                                   FontAttributes="Bold"
+                                   FontSize="14"
+                                   TextColor="#374151"
+                                   VerticalOptions="Center"/>
+                            <Switch Grid.Column="1"
+                                    x:Name="PublishedSwitch"
+                                    IsToggled="True"
+                                    HorizontalOptions="End"/>
+                        </Grid>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="2" Spacing="6">
+                        <Label Text="Content" FontAttributes="Bold" FontSize="14" TextColor="#374151"/>
+                        <Editor x:Name="AnnouncementContentEditor"
+                                Placeholder="Write the announcement details here..."
+                                AutoSize="TextChanges"
+                                HeightRequest="180"
+                                BackgroundColor="#F9FAFB"
+                                TextColor="#111827"
+                                PlaceholderColor="#9CA3AF"/>
+                    </VerticalStackLayout>
+
+                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="15">
+                        <Button Text="Cancel"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#6B7280"
+                                FontAttributes="Bold"
+                                Padding="20,12"
+                                CornerRadius="8"
+                                Clicked="OnCancelAnnouncementClicked"/>
+                        <Button Grid.Column="1"
+                                x:Name="SaveAnnouncementButton"
+                                Text="Save"
+                                BackgroundColor="#005BA5"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                Padding="20,12"
+                                CornerRadius="8"
+                                Clicked="OnSaveAnnouncementClicked"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Border>
 
     </Grid>
 </ContentPage>

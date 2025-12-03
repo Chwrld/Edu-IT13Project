@@ -28,7 +28,7 @@
                     <!-- Logo and Title -->
                     <VerticalStackLayout Spacing="5">
                         <Label 
-                            Text="StudentHub"
+                            Text="School Portal"
                             FontSize="28"
                             FontAttributes="Bold"
                             TextColor="#2C3E50"
@@ -40,53 +40,12 @@
                             HorizontalOptions="Center"/>
                     </VerticalStackLayout>
 
-                    <!-- Sign In / Sign Up Tabs -->
-                    <Grid ColumnDefinitions="*,*" 
-                          ColumnSpacing="0"
-                          Margin="0,10,0,0">
-                        <Border 
-                            Grid.Column="0"
-                            BackgroundColor="White"
-                            Padding="15,10"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8,0,0,0"/>
-                            </Border.StrokeShape>
-                            <Label 
-                                x:Name="SignInTab"
-                                Text="Sign In"
-                                FontSize="14"
-                                FontAttributes="Bold"
-                                TextColor="#2C3E50"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSignInTabTapped"/>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </Border>
-                        
-                        <Border 
-                            Grid.Column="1"
-                            BackgroundColor="#F8F9FA"
-                            Padding="15,10"
-                            StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="0,8,0,0"/>
-                            </Border.StrokeShape>
-                            <Label 
-                                x:Name="SignUpTab"
-                                Text="Sign Up"
-                                FontSize="14"
-                                TextColor="#95A5A6"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSignUpTabTapped"/>
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </Border>
-                    </Grid>
+                    <!-- Subtitle -->
+                    <Label
+                        Text="Sign in to manage your campus services"
+                        FontSize="14"
+                        TextColor="#6B7280"
+                        HorizontalTextAlignment="Center"/>
 
                     <!-- Email Input -->
                     <VerticalStackLayout Spacing="8">
@@ -151,35 +110,13 @@
                         Margin="0,10,0,0"
                         Clicked="OnSignInClicked"/>
 
-                    <!-- Role Selection Links -->
-                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,15,0,0">
-                        <!-- Admin Login Link -->
-                        <Label 
-                            Text="Admin? Login here"
-                            FontSize="13"
-                            TextColor="#005BA5"
-                            FontAttributes="Bold">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnAdminLoginTapped"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                        
-                        <!-- Separator -->
-                        <Label Text="|" 
-                               FontSize="13" 
-                               TextColor="#B0B0B0"/>
-                        
-                        <!-- Teacher Login Link -->
-                        <Label 
-                            Text="Teacher? Login here"
-                            FontSize="13"
-                            TextColor="#059669"
-                            FontAttributes="Bold">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTeacherLoginTapped"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </HorizontalStackLayout>
+                    <!-- Role-based note -->
+                    <Label 
+                        Text="Use your assigned credentials to access School Portal services."
+                        FontSize="13"
+                        TextColor="#6B7280"
+                        HorizontalTextAlignment="Center"
+                        Margin="0,15,0,0"/>
 
                 </VerticalStackLayout>
             </Border>

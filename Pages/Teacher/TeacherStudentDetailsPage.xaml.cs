@@ -50,7 +50,7 @@ public partial class TeacherStudentDetailsPage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//TeacherLoginPage");
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 }

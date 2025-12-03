@@ -222,16 +222,6 @@
                                TextColor="#6B7280"/>
                     </VerticalStackLayout>
                     
-                    <Button Grid.Column="1"
-                            Text="📢 Send Announcement"
-                            BackgroundColor="#005BA5"
-                            TextColor="White"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            CornerRadius="8"
-                            Padding="20,12"
-                            VerticalOptions="Center"
-                            Clicked="OnSendAnnouncementClicked"/>
                 </Grid>
 
                 <!-- Statistics Cards -->
@@ -254,7 +244,8 @@
                                 <Label Grid.Column="1"
                                        Text="❌" FontSize="16"/>
                             </Grid>
-                            <Label Text="2" 
+                            <Label x:Name="AdminOpenCountLabel"
+                                   Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#EF4444"/>
@@ -279,14 +270,15 @@
                                 <Label Grid.Column="1"
                                        Text="⏳" FontSize="16"/>
                             </Grid>
-                            <Label Text="3" 
+                            <Label x:Name="AdminInProgressCountLabel"
+                                   Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Resolved Today -->
+                    <!-- Resolved -->
                     <Border Grid.Column="2" 
                             BackgroundColor="White"
                             StrokeThickness="1"
@@ -298,13 +290,14 @@
                         <VerticalStackLayout Spacing="8">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
-                                       Text="Resolved Today" 
+                                       Text="Resolved" 
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
                                        Text="✅" FontSize="16"/>
                             </Grid>
-                            <Label Text="4" 
+                            <Label x:Name="AdminResolvedCountLabel"
+                                   Text="0" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#10B981"/>
@@ -389,363 +382,262 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
-                    
-                    <VerticalStackLayout Spacing="0">
-                        <!-- Table Header -->
-                        <Grid BackgroundColor="#F9FAFB" 
-                              Padding="20,12"
-                              ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*">
-                            <Label Grid.Column="0" 
-                                   Text="ID" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="1" 
-                                   Text="Title" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="2" 
-                                   Text="Student" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="3" 
-                                   Text="Status" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="4" 
-                                   Text="Priority" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="5" 
-                                   Text="Assigned To" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                            <Label Grid.Column="6" 
-                                   Text="Actions" 
-                                   FontSize="13" 
-                                   FontAttributes="Bold"
-                                   TextColor="#374151"/>
-                        </Grid>
 
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- Row 1 - Login Issues -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
-                              BackgroundColor="White">
-                            <Label Grid.Column="0" 
-                                   Text="#1234" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="Login Issues" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="2" 
-                                   Text="John Doe" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#FEE2E2"
-                                    Padding="8,4"
-                                    WidthRequest="65"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Open" 
-                                       FontSize="12" 
-                                       TextColor="#DC2626"
+                    <CollectionView x:Name="TicketsCollectionView"
+                                    SelectionMode="None">
+                        <CollectionView.Header>
+                            <Grid BackgroundColor="#F9FAFB" 
+                                  Padding="20,12"
+                                  ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*">
+                                <Label Grid.Column="0" 
+                                       Text="Ticket #" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="4"
-                                    BackgroundColor="#FEE2E2"
-                                    Padding="8,4"
-                                    WidthRequest="65"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="High" 
-                                       FontSize="12" 
-                                       TextColor="#DC2626"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="1" 
+                                       Text="Title" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Label Grid.Column="5" 
-                                   Text="Unassigned" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
-                                <Label Text="👁️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnViewTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="👤" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnAssignTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="⋮" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnMoreActionsTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="✕" FontSize="16" TextColor="#EF4444">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnCloseTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- Row 2 - Course Registration -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
-                              BackgroundColor="#F9FAFB">
-                            <Label Grid.Column="0" 
-                                   Text="#1233" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="Course Registration" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="2" 
-                                   Text="Emily Brown" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#FEF3C7"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Pending" 
-                                       FontSize="12" 
-                                       TextColor="#D97706"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="2" 
+                                       Text="Student" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="4"
-                                    BackgroundColor="#FEF3C7"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Medium" 
-                                       FontSize="12" 
-                                       TextColor="#D97706"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="3" 
+                                       Text="Status" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Label Grid.Column="5" 
-                                   Text="Jane Smith" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
-                                <Label Text="👁️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnViewTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="👤" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnAssignTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="⋮" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnMoreActionsTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="✕" FontSize="16" TextColor="#EF4444">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnCloseTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- Row 3 - Grade Query -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
-                              BackgroundColor="White">
-                            <Label Grid.Column="0" 
-                                   Text="#1232" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="Grade Query" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="2" 
-                                   Text="Alex Chen" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    WidthRequest="70"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Closed" 
-                                       FontSize="12" 
-                                       TextColor="#059669"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="4" 
+                                       Text="Priority" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="4"
-                                    BackgroundColor="#E5E7EB"
-                                    Padding="8,4"
-                                    WidthRequest="65"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Low" 
-                                       FontSize="12" 
-                                       TextColor="#6B7280"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="5" 
+                                       Text="Assigned To" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Label Grid.Column="5" 
-                                   Text="Mike Johnson" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
-                                <Label Text="👁️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnViewTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <!-- Divider -->
-                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
-
-                        <!-- Row 4 - Schedule Conflict -->
-                        <Grid Padding="20,16"
-                              ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
-                              BackgroundColor="#F9FAFB">
-                            <Label Grid.Column="0" 
-                                   Text="#1231" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="1" 
-                                   Text="Schedule Conflict" 
-                                   FontSize="14" 
-                                   TextColor="#1F2937"
-                                   VerticalOptions="Center"/>
-                            <Label Grid.Column="2" 
-                                   Text="Sarah Williams" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <Border Grid.Column="3"
-                                    BackgroundColor="#FEE2E2"
-                                    Padding="8,4"
-                                    WidthRequest="65"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="Open" 
-                                       FontSize="12" 
-                                       TextColor="#DC2626"
+                                       TextColor="#374151"/>
+                                <Label Grid.Column="6" 
+                                       Text="Actions" 
+                                       FontSize="13" 
                                        FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Border Grid.Column="4"
-                                    BackgroundColor="#FEE2E2"
-                                    Padding="8,4"
-                                    WidthRequest="65"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Center">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Label Text="High" 
-                                       FontSize="12" 
-                                       TextColor="#DC2626"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="Center"/>
-                            </Border>
-                            <Label Grid.Column="5" 
-                                   Text="Unassigned" 
-                                   FontSize="14" 
-                                   TextColor="#6B7280"
-                                   VerticalOptions="Center"/>
-                            <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
-                                <Label Text="👁️" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnViewTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="👤" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnAssignTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="⋮" FontSize="16">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnMoreActionsTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="✕" FontSize="16" TextColor="#EF4444">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnCloseTicketTapped"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </HorizontalStackLayout>
-                        </Grid>
+                                       TextColor="#374151"/>
+                            </Grid>
+                        </CollectionView.Header>
 
-                    </VerticalStackLayout>
+                        <CollectionView.EmptyView>
+                            <Label Text="No tickets found"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Margin="0,20"
+                                   TextColor="#6B7280"/>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="20,16"
+                                      ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
+                                      BackgroundColor="White">
+
+                                    <Label Grid.Column="0" 
+                                           Text="{Binding TicketNumber}" 
+                                           FontSize="14" 
+                                           TextColor="#1F2937"
+                                           VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding Title}" 
+                                           FontSize="14" 
+                                           TextColor="#1F2937"
+                                           VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" 
+                                           Text="{Binding CreatedByName}" 
+                                           FontSize="14" 
+                                           TextColor="#6B7280"
+                                           VerticalOptions="Center"/>
+
+                                    <Button Grid.Column="3"
+                                            Text="{Binding Status}"
+                                            Padding="12,8"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            BackgroundColor="{Binding StatusColor}"
+                                            TextColor="White"
+                                            CornerRadius="6"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            CommandParameter="{Binding .}"
+                                            Clicked="OnChangeStatusClicked"/>
+
+                                    <Border Grid.Column="4"
+                                            BackgroundColor="{Binding PriorityColor}"
+                                            Padding="8,4"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Priority}"
+                                               FontSize="12" 
+                                               TextColor="White"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </Border>
+
+                                    <Label Grid.Column="5" 
+                                           Text="{Binding AssignedToName}" 
+                                           FontSize="14" 
+                                           TextColor="#6B7280"
+                                           VerticalOptions="Center"/>
+
+                                    <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
+                                        <Button Text="View"
+                                                Padding="14,6"
+                                                FontSize="12"
+                                                BackgroundColor="#005BA5"
+                                                TextColor="White"
+                                                CornerRadius="6"
+                                                CommandParameter="{Binding .}"
+                                                Clicked="OnViewTicketClicked"/>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Border>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Ticket Details Overlay -->
+        <Border x:Name="TicketDetailsOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="700"
+                    Padding="0"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.25" Radius="25" Offset="0,12"/>
+                </Border.Shadow>
+
+                <Grid RowDefinitions="Auto,Auto,* ,Auto" Padding="30">
+                    <!-- Header -->
+                    <Grid Row="0" ColumnDefinitions="*,Auto" Padding="0,0,0,10">
+                        <VerticalStackLayout Spacing="2">
+                            <Label x:Name="DetailTitleLabel"
+                                   Text="Ticket Title"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="#1F2937"/>
+                            <Label x:Name="DetailTicketNumberLabel"
+                                   Text="Ticket Number"
+                                   FontSize="14"
+                                   TextColor="#6B7280"/>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1"
+                                Text="✕"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                BackgroundColor="Transparent"
+                                TextColor="#6B7280"
+                                FontSize="22"
+                                Clicked="OnCloseDetailsClicked"/>
+                    </Grid>
+
+                    <!-- Metadata -->
+                    <Grid Row="1" ColumnDefinitions="*,*" ColumnSpacing="20" Padding="0,0,0,20">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Student"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#6B7280"/>
+                            <Label x:Name="DetailStudentLabel"
+                                   Text="Student Name"
+                                   FontSize="15"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                            <Label Text="Assigned To"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#6B7280"/>
+                            <Label x:Name="DetailAssignedLabel"
+                                   Text="Assignee"
+                                   FontSize="15"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="0" Spacing="6" Margin="0,70,0,0">
+                            <Label Text="Priority"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#6B7280"/>
+                            <Label x:Name="DetailPriorityLabel"
+                                   Text="High"
+                                   FontSize="15"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="6" Margin="0,70,0,0">
+                            <Label Text="Status"
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   TextColor="#6B7280"/>
+                            <Label x:Name="DetailStatusLabel"
+                                   Text="Open"
+                                   FontSize="15"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Comments -->
+                    <Grid Row="2" RowDefinitions="Auto,*" ColumnDefinitions="*" Padding="0,0,0,20">
+                        <Label Text="Conversation"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#1F2937"/>
+                        <ScrollView Grid.Row="1">
+                            <VerticalStackLayout x:Name="CommentsStackLayout" Spacing="12"/>
+                        </ScrollView>
+                    </Grid>
+
+                    <!-- Reply box -->
+                    <Grid Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Editor x:Name="AdminCommentEditor"
+                                Placeholder="Type your response..."
+                                AutoSize="TextChanges"
+                                BackgroundColor="#F9FAFB"
+                                TextColor="#1F2937"
+                                PlaceholderColor="#9CA3AF"
+                                HeightRequest="80"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="10">
+                            <Button Text="Send Reply"
+                                    BackgroundColor="#005BA5"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Padding="20,12"
+                                    Clicked="OnSendCommentClicked"/>
+                            <Button Text="Close Ticket"
+                                    BackgroundColor="#10B981"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Padding="20,12"
+                                    Clicked="OnResolveTicketClicked"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Border>
 
     </Grid>
 </ContentPage>
