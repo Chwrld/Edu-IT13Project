@@ -1,10 +1,13 @@
 using System.Collections.ObjectModel;
+using System.Runtime.Versioning;
 using MauiAppIT13.Controllers;
 using MauiAppIT13.Models;
 using MauiAppIT13.Utils;
 
 namespace MauiAppIT13.Pages.Admin;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
+[SupportedOSPlatform("android21.0")]
 public partial class AdminUsersPage : ContentPage
 {
     private readonly UserController _userController;
@@ -90,11 +93,6 @@ public partial class AdminUsersPage : ContentPage
     private async void OnReportsTapped(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("AdminReportsPage");
-    }
-
-    private async void OnSettingsTapped(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Settings", "System settings interface coming soon", "OK");
     }
 
     private void OnAddUserClicked(object? sender, EventArgs e)
@@ -256,6 +254,11 @@ public partial class AdminUsersPage : ContentPage
         {
             await DisplayAlert("Success", "User has been deleted.", "OK");
         }
+    }
+
+    private async void OnAdminProfileTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//AdminProfilePage");
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

@@ -1,8 +1,11 @@
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
+using System.Runtime.Versioning;
 
 namespace MauiAppIT13.Pages.Student;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
+[SupportedOSPlatform("android21.0")]
 public partial class TicketsPage : ContentPage
 {
     private readonly TicketService _ticketService;

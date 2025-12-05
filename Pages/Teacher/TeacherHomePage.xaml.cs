@@ -20,6 +20,21 @@ public partial class TeacherHomePage : ContentPage
         await Shell.Current.GoToAsync("//TeacherMessagesPage");
     }
 
+    private async void OnAnnouncementsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+    }
+
+    private async void OnTicketsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+    }
+
+    private async void OnFacultyTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherProfilePage");
+    }
+
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");

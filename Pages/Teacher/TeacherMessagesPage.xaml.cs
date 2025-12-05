@@ -69,6 +69,16 @@ public partial class TeacherMessagesPage : ContentPage
         ShowComposeOverlay();
     }
 
+    private async void OnAnnouncementsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+    }
+
+    private async void OnTicketsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+    }
+
     private void OnAllTabTapped(object sender, EventArgs e)
     {
         // Update tab styles
@@ -428,4 +438,5 @@ public partial class TeacherMessagesPage : ContentPage
         layout.Add(messageStack);
         return layout;
     }
+    
 }

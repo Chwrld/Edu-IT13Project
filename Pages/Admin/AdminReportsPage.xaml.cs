@@ -27,9 +27,9 @@ public partial class AdminReportsPage : ContentPage
         await Shell.Current.GoToAsync("AdminTicketsPage");
     }
 
-    private async void OnSettingsTapped(object? sender, EventArgs e)
+    private async void OnAdminProfileTapped(object? sender, EventArgs e)
     {
-        await DisplayAlert("Settings", "System settings interface coming soon", "OK");
+        await Shell.Current.GoToAsync("//AdminProfilePage");
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

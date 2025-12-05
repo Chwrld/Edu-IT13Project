@@ -254,6 +254,23 @@
                     </Border>
                 </HorizontalStackLayout>
 
+                <!-- Search Bar -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="15,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8"/>
+                    </Border.StrokeShape>
+                    <Entry x:Name="SearchEntry"
+                           Placeholder="search..."
+                           TextColor="#1F2937"
+                           PlaceholderColor="#9CA3AF"
+                           BackgroundColor="Transparent"
+                           HeightRequest="44"
+                           TextChanged="OnSearchTextChanged"/>
+                </Border>
+
                 <!-- Tab Content Container -->
                 <VerticalStackLayout x:Name="TabContent" Spacing="15">
                     

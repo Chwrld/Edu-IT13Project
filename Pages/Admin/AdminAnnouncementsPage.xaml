@@ -143,25 +143,6 @@
                             <TapGestureRecognizer Tapped="OnReportsTapped"/>
                         </Border.GestureRecognizers>
                     </Border>
-
-                    <!-- Settings Menu Item -->
-                    <Border BackgroundColor="Transparent" 
-                            Padding="15,12"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8"/>
-                        </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
-                            <Label Text="⚙️" FontSize="18"/>
-                            <Label Text="Settings" 
-                                   TextColor="#6B7280" 
-                                   FontSize="14"
-                                   VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSettingsTapped"/>
-                        </Border.GestureRecognizers>
-                    </Border>
                 </VerticalStackLayout>
 
                 <!-- Spacer -->
@@ -218,49 +199,66 @@
                 </Grid>
 
                 <!-- Stats -->
-                <Border BackgroundColor="White"
-                        StrokeThickness="1"
-                        Stroke="#E5E7EB"
-                        Padding="20">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10"/>
-                    </Border.StrokeShape>
-                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="20">
-                        <VerticalStackLayout>
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                    <Border BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
                             <Label Text="Total Announcements"
-                                   FontSize="13"
-                                   TextColor="#6B7280"
-                                   FontAttributes="Bold"/>
+                                   FontSize="12"
+                                   TextColor="#6B7280"/>
                             <Label x:Name="TotalAnnouncementsLabel"
                                    Text="0"
                                    FontSize="28"
                                    FontAttributes="Bold"
                                    TextColor="#111827"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1">
+                    </Border>
+                    
+                    <Border Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
                             <Label Text="Published"
-                                   FontSize="13"
-                                   TextColor="#6B7280"
-                                   FontAttributes="Bold"/>
+                                   FontSize="12"
+                                   TextColor="#6B7280"/>
                             <Label x:Name="PublishedCountLabel"
                                    Text="0"
                                    FontSize="28"
                                    FontAttributes="Bold"
                                    TextColor="#059669"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="2">
+                    </Border>
+                    
+                    <Border Grid.Column="2"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
                             <Label Text="Drafts"
-                                   FontSize="13"
-                                   TextColor="#6B7280"
-                                   FontAttributes="Bold"/>
+                                   FontSize="12"
+                                   TextColor="#6B7280"/>
                             <Label x:Name="DraftCountLabel"
                                    Text="0"
                                    FontSize="28"
                                    FontAttributes="Bold"
                                    TextColor="#F97316"/>
                         </VerticalStackLayout>
-                    </Grid>
-                </Border>
+                    </Border>
+                </Grid>
 
                 <!-- Search + Actions -->
                 <Border BackgroundColor="White"

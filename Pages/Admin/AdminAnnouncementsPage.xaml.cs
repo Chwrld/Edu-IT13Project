@@ -275,11 +275,6 @@ public partial class AdminAnnouncementsPage : ContentPage
         await Shell.Current.GoToAsync("AdminReportsPage");
     }
 
-    private async void OnSettingsTapped(object? sender, EventArgs e)
-    {
-        await DisplayAlert("Settings", "System settings interface coming soon", "OK");
-    }
-
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiAppIT13.Pages.Student.ProfilePage"
+             x:Class="MauiAppIT13.Pages.Admin.AdminProfilePage"
              BackgroundColor="#F5F7FA">
 
     <Grid>
@@ -10,13 +10,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Top Navigation Bar -->
         <Border Grid.Row="0" Grid.ColumnSpan="2" 
-                BackgroundColor="#0891B2"
+                BackgroundColor="#005BA5"
                 StrokeThickness="0">
             <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
                 <!-- Logo -->
@@ -28,14 +28,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="S" 
-                               TextColor="#0891B2" 
+                        <Label Text="A" 
+                               TextColor="#005BA5" 
                                FontSize="20" 
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="StudentHub" 
+                    <Label Text="Admin Portal" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -52,7 +52,7 @@
             <Grid RowDefinitions="Auto,*,Auto">
                 <!-- Top Menu Items -->
                 <VerticalStackLayout Grid.Row="0" Spacing="5">
-                    <!-- Home Menu Item -->
+                    <!-- Dashboard -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -60,18 +60,18 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🏠" FontSize="18"/>
-                            <Label Text="Home" 
+                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                            <TapGestureRecognizer Tapped="OnDashboardTapped"/>
                         </Border.GestureRecognizers>
                     </Border>
 
-                    <!-- Messages Menu Item -->
+                    <!-- Users -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -79,18 +79,18 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
-                            <Label Text="Messages" 
+                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="Users" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                            <TapGestureRecognizer Tapped="OnUsersTapped"/>
                         </Border.GestureRecognizers>
                     </Border>
 
-                    <!-- Announcements Menu Item -->
+                    <!-- Announcements -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -109,7 +109,7 @@
                         </Border.GestureRecognizers>
                     </Border>
 
-                    <!-- Tickets Menu Item -->
+                    <!-- Tickets -->
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
@@ -127,27 +127,64 @@
                             <TapGestureRecognizer Tapped="OnTicketsTapped"/>
                         </Border.GestureRecognizers>
                     </Border>
+
+                    <!-- Reports -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="Reports" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnReportsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                 </VerticalStackLayout>
 
-                <!-- Logout at Bottom -->
-                <Border Grid.Row="2"
-                        BackgroundColor="Transparent" 
-                        Padding="15,12"
-                        StrokeThickness="0">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="8"/>
-                    </Border.StrokeShape>
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
-                        <Label Text="Logout" 
-                               TextColor="#EF4444" 
-                               FontSize="14"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoutTapped"/>
-                    </Border.GestureRecognizers>
-                </Border>
+                <!-- Bottom Menu Items -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <!-- Administrator Profile (Active) -->
+                    <Border BackgroundColor="#005BA5" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="Administrator" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Logout -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 
@@ -158,14 +195,14 @@
                 <!-- Page Header with Edit Button -->
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
-                           Text="Student Profile" 
+                           Text="Administrator Profile" 
                            FontSize="24" 
                            FontAttributes="Bold"
                            TextColor="#2C3E50"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
                             Text="✏ Edit Profile"
-                            BackgroundColor="#0891B2"
+                            BackgroundColor="#005BA5"
                             TextColor="White"
                             FontSize="14"
                             FontAttributes="Bold"
@@ -188,7 +225,7 @@
                         
                         <!-- Profile Avatar -->
                         <Border Grid.Column="0"
-                                BackgroundColor="#0891B2"
+                                BackgroundColor="#005BA5"
                                 WidthRequest="120"
                                 HeightRequest="120"
                                 StrokeThickness="0"
@@ -197,7 +234,7 @@
                                 <Ellipse/>
                             </Border.StrokeShape>
                             <Label x:Name="AvatarLabel"
-                                   Text="SJ" 
+                                   Text="AD" 
                                    TextColor="White"
                                    FontSize="48"
                                    FontAttributes="Bold"
@@ -208,12 +245,12 @@
                         <!-- Profile Info -->
                         <VerticalStackLayout Grid.Column="1" Spacing="12">
                             <Label x:Name="NameLabel"
-                                   Text="Student Name" 
+                                   Text="Administrator Name" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#2C3E50"/>
-                            <Label x:Name="ProgramLabel"
-                                   Text="Program" 
+                            <Label x:Name="RoleLabel"
+                                   Text="System Administrator" 
                                    FontSize="16" 
                                    TextColor="#6B7280"/>
                             
@@ -225,32 +262,20 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12"/>
                                     </Border.StrokeShape>
-                                    <Label Text="Year 3" 
-                                           TextColor="#0891B2"
+                                    <Label Text="Administrator" 
+                                           TextColor="#005BA5"
                                            FontSize="12"
                                            FontAttributes="Bold"/>
                                 </Border>
                                 
-                                <Border BackgroundColor="#FEF3C7"
+                                <Border BackgroundColor="#FEE2E2"
                                         Padding="10,6"
                                         StrokeThickness="0">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="12"/>
                                     </Border.StrokeShape>
-                                    <Label Text="Dean's List" 
-                                           TextColor="#D97706"
-                                           FontSize="12"
-                                           FontAttributes="Bold"/>
-                                </Border>
-                                
-                                <Border BackgroundColor="#E0E7FF"
-                                        Padding="10,6"
-                                        StrokeThickness="0">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="12"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="Research Assistant" 
-                                           TextColor="#4F46E5"
+                                    <Label Text="Full Access" 
+                                           TextColor="#DC2626"
                                            FontSize="12"
                                            FontAttributes="Bold"/>
                                 </Border>
@@ -299,7 +324,7 @@
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
                                     <Label x:Name="EmailLabel"
-                                           Text="student@university.edu" 
+                                           Text="admin@university.edu" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
@@ -332,7 +357,7 @@
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
 
-                            <!-- Campus Address -->
+                            <!-- Office Location -->
                             <HorizontalStackLayout Spacing="15">
                                 <Border BackgroundColor="#DBEAFE"
                                         WidthRequest="40"
@@ -347,36 +372,11 @@
                                            VerticalOptions="Center"/>
                                 </Border>
                                 <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                    <Label Text="Campus Location" 
+                                    <Label Text="Office Location" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="Davao City" 
-                                           FontSize="14" 
-                                           TextColor="#2C3E50"
-                                           FontAttributes="Bold"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <!-- Home Address -->
-                            <HorizontalStackLayout Spacing="15">
-                                <Border BackgroundColor="#FEE2E2"
-                                        WidthRequest="40"
-                                        HeightRequest="40"
-                                        StrokeThickness="0">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="🏠" 
-                                           FontSize="20"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                                <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                    <Label Text="Address" 
-                                           FontSize="12" 
-                                           TextColor="#6B7280"/>
-                                    <Label x:Name="AddressLabel"
-                                           Text="Building A, Room 205, Campus" 
+                                    <Label x:Name="OfficeLabel"
+                                           Text="Administration Building, Room 101" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"
@@ -387,132 +387,80 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Two Column Layout for Academic Details and Achievements -->
-                <Grid ColumnDefinitions="1.2*,*" ColumnSpacing="20">
+                <!-- System Information Card -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="1"
+                        Stroke="#E5E7EB"
+                        Padding="25">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
                     
-                    <!-- Academic Details Card -->
-                    <Border Grid.Column="0"
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="25">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="12"/>
-                        </Border.StrokeShape>
-                        
-                        <VerticalStackLayout Spacing="18">
-                            <HorizontalStackLayout Spacing="8">
-                                <Label Text="🎓" FontSize="18"/>
-                                <Label Text="Academic Details" 
-                                       FontSize="18" 
-                                       FontAttributes="Bold"
-                                       TextColor="#2C3E50"/>
-                            </HorizontalStackLayout>
+                    <VerticalStackLayout Spacing="18">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚙️" FontSize="18"/>
+                            <Label Text="System Information" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                        </HorizontalStackLayout>
 
-                            <VerticalStackLayout Spacing="12">
-                                <!-- Student ID -->
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="Student ID" 
-                                           FontSize="12" 
-                                           TextColor="#6B7280"/>
-                                    <Label x:Name="StudentIdLabel"
-                                           Text="STU-2021-0456" 
-                                           FontSize="14" 
-                                           TextColor="#2C3E50"
-                                           FontAttributes="Bold"/>
-                                </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="12">
+                            <!-- Employee ID -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Employee ID" 
+                                       FontSize="12" 
+                                       TextColor="#6B7280"/>
+                                <Label x:Name="EmployeeIdLabel"
+                                       Text="ADM-2019-0001" 
+                                       FontSize="14" 
+                                       TextColor="#2C3E50"
+                                       FontAttributes="Bold"/>
+                            </VerticalStackLayout>
 
-                                <!-- Program -->
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="Program" 
-                                           FontSize="12" 
-                                           TextColor="#6B7280"/>
-                                    <Label x:Name="ProgramDetailLabel"
-                                           Text="Bachelor of Science in Computer Science" 
-                                           FontSize="14" 
-                                           TextColor="#2C3E50"
-                                           FontAttributes="Bold"
-                                           LineBreakMode="WordWrap"/>
-                                </VerticalStackLayout>
+                            <!-- Role -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Role" 
+                                       FontSize="12" 
+                                       TextColor="#6B7280"/>
+                                <Label x:Name="RoleDetailLabel"
+                                       Text="System Administrator" 
+                                       FontSize="14" 
+                                       TextColor="#2C3E50"
+                                       FontAttributes="Bold"/>
+                            </VerticalStackLayout>
 
-                                <!-- Year Level -->
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="Year Level" 
-                                           FontSize="12" 
-                                           TextColor="#6B7280"/>
-                                    <Label x:Name="YearLevelLabel"
-                                           Text="Year 3" 
-                                           FontSize="14" 
-                                           TextColor="#2C3E50"
-                                           FontAttributes="Bold"/>
-                                </VerticalStackLayout>
+                            <!-- Access Level -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Access Level" 
+                                       FontSize="12" 
+                                       TextColor="#6B7280"/>
+                                <Label x:Name="AccessLevelLabel"
+                                       Text="Full System Access" 
+                                       FontSize="14" 
+                                       TextColor="#DC2626"
+                                       FontAttributes="Bold"/>
+                            </VerticalStackLayout>
 
-                                <!-- Current GPA -->
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="Current GPA" 
-                                           FontSize="12" 
-                                           TextColor="#6B7280"/>
-                                    <Label x:Name="GPALabel"
-                                           Text="3.85 / 4.0" 
-                                           FontSize="14" 
-                                           TextColor="#10B981"
-                                           FontAttributes="Bold"/>
-                                </VerticalStackLayout>
+                            <!-- Department -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Department" 
+                                       FontSize="12" 
+                                       TextColor="#6B7280"/>
+                                <Label x:Name="DepartmentLabel"
+                                       Text="Information Technology" 
+                                       FontSize="14" 
+                                       TextColor="#2C3E50"
+                                       FontAttributes="Bold"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </Border>
-
-                    <!-- Achievements Card -->
-                    <Border Grid.Column="1"
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="25">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="12"/>
-                        </Border.StrokeShape>
-                        
-                        <VerticalStackLayout Spacing="18">
-                            <HorizontalStackLayout Spacing="8">
-                                <Label Text="🏆" FontSize="18"/>
-                                <Label Text="Achievements" 
-                                       FontSize="18" 
-                                       FontAttributes="Bold"
-                                       TextColor="#2C3E50"/>
-                            </HorizontalStackLayout>
-
-                            <!-- Dynamic Achievements CollectionView -->
-                            <CollectionView x:Name="AchievementsCollectionView"
-                                          SelectionMode="None">
-                                <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
-                                </CollectionView.ItemsLayout>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <HorizontalStackLayout Spacing="10">
-                                            <Label Text="⭐" FontSize="18" VerticalOptions="Start"/>
-                                            <VerticalStackLayout Spacing="4">
-                                                <Label Text="{Binding AchievementName}" 
-                                                       FontSize="13" 
-                                                       FontAttributes="Bold"
-                                                       TextColor="#2C3E50"/>
-                                                <Label Text="{Binding Description}" 
-                                                       FontSize="11" 
-                                                       TextColor="#6B7280"
-                                                       LineBreakMode="WordWrap"/>
-                                            </VerticalStackLayout>
-                                        </HorizontalStackLayout>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
+                    </VerticalStackLayout>
+                </Border>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Edit Profile Modal Overlay (Hidden by default) -->
+        <!-- Edit Profile Modal Overlay -->
         <Border x:Name="EditProfileModal"
                 Grid.RowSpan="2"
                 Grid.ColumnSpan="2"
@@ -523,7 +471,6 @@
                 <TapGestureRecognizer Tapped="OnEditProfileModalBackgroundTapped"/>
             </Border.GestureRecognizers>
 
-            <!-- Edit Profile Modal -->
             <Border BackgroundColor="White"
                     WidthRequest="420"
                     Padding="0"
@@ -538,8 +485,7 @@
                 </Border.Shadow>
 
                 <VerticalStackLayout Spacing="0">
-                    <!-- Modal Header with Background -->
-                    <Border BackgroundColor="#0891B2" Padding="25,20" StrokeThickness="0">
+                    <Border BackgroundColor="#005BA5" Padding="25,20" StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="14,14,0,0"/>
                         </Border.StrokeShape>
@@ -551,7 +497,7 @@
                                        TextColor="White"/>
                                 <Label Text="Update your information" 
                                        FontSize="12" 
-                                       TextColor="#E0F2FE"/>
+                                       TextColor="#DBEAFE"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1"
                                    Text="✕"
@@ -566,9 +512,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Form Content -->
                     <VerticalStackLayout Spacing="14" Padding="25,20">
-                        <!-- Phone Section -->
                         <VerticalStackLayout Spacing="8">
                             <Label Text="Phone Number" 
                                    FontSize="13" 
@@ -590,9 +534,8 @@
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Address Section -->
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Address" 
+                            <Label Text="Office Location" 
                                    FontSize="13" 
                                    TextColor="#2C3E50"
                                    FontAttributes="Bold"/>
@@ -603,17 +546,15 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="8"/>
                                 </Border.StrokeShape>
-                                <Editor x:Name="EditAddressEditor"
-                                        Placeholder="Enter your address"
-                                        PlaceholderColor="#9CA3AF"
-                                        TextColor="#2C3E50"
-                                        BackgroundColor="Transparent"
-                                        FontSize="13"
-                                        HeightRequest="70"/>
+                                <Entry x:Name="EditOfficeEntry"
+                                       Placeholder="Administration Building, Room 101"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#2C3E50"
+                                       BackgroundColor="Transparent"
+                                       FontSize="13"/>
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Action Buttons -->
                         <HorizontalStackLayout Spacing="12" Padding="0,8,0,0">
                             <Button Text="Cancel"
                                     Clicked="OnCancelEditProfileClicked"
@@ -626,7 +567,7 @@
                             
                             <Button Text="Save"
                                     Clicked="OnSaveEditProfileClicked"
-                                    BackgroundColor="#0891B2"
+                                    BackgroundColor="#005BA5"
                                     TextColor="White"
                                     Padding="12,10"
                                     CornerRadius="8"

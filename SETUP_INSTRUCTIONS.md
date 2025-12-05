@@ -61,9 +61,9 @@ Use these credentials:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@university.edu | admin123 |
-| Teacher | teacher@university.edu | teacher123 |
-| Student | student@university.edu | student123 |
+| Admin | admin@university.edu | admin@123 |
+| Teacher | teacher@university.edu | teacher@123 |
+| Student | student@university.edu | student@123 |
 
 ---
 

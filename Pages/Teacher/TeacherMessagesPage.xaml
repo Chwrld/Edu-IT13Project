@@ -106,6 +106,44 @@
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                     </Border>
+
+                    <!-- Announcements -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                 </VerticalStackLayout>
 
                 <!-- Bottom Menu Items -->
@@ -118,7 +156,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="👨‍🏫" FontSize="18"/>
                             <Label Text="Teacher" 
                                    TextColor="#6B7280" 
                                    FontSize="14"

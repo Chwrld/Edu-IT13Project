@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Versioning;
 using MauiAppIT13.Database;
 using MauiAppIT13.Models;
 using MauiAppIT13.Services;
@@ -9,6 +10,8 @@ using Microsoft.Maui.Controls.Shapes;
 
 namespace MauiAppIT13.Pages.Admin;
 
+[SupportedOSPlatform("windows10.0.17763.0")]
+[SupportedOSPlatform("android21.0")]
 public partial class AdminTicketsPage : ContentPage
 {
     private readonly TicketService _ticketService;
@@ -234,9 +237,9 @@ public partial class AdminTicketsPage : ContentPage
         await Shell.Current.GoToAsync("AdminReportsPage");
     }
 
-    private async void OnSettingsTapped(object? sender, EventArgs e)
+    private async void OnAdminProfileTapped(object? sender, EventArgs e)
     {
-        await DisplayAlert("Settings", "System settings interface coming soon", "OK");
+        await Shell.Current.GoToAsync("//AdminProfilePage");
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
@@ -396,5 +399,101 @@ public partial class AdminTicketsPage : ContentPage
 
         AdminCommentEditor.Text = string.Empty;
         await LoadCommentsAsync(_selectedTicket.Id);
+    }
+
+    private void OnNewTicketClicked(object? sender, EventArgs e)
+    {
+        CreateTicketModalOverlay.IsVisible = true;
+    }
+
+    private void OnCloseModalTapped(object? sender, EventArgs e)
+    {
+        CreateTicketModalOverlay.IsVisible = false;
+        ClearNewTicketForm();
+    }
+
+    private void OnOverlayTapped(object? sender, EventArgs e)
+    {
+        CreateTicketModalOverlay.IsVisible = false;
+        ClearNewTicketForm();
+    }
+
+    private void OnCancelNewTicketClicked(object? sender, EventArgs e)
+    {
+        CreateTicketModalOverlay.IsVisible = false;
+        ClearNewTicketForm();
+    }
+
+    private async void OnSubmitNewTicketClicked(object? sender, EventArgs e)
+    {
+        try
+        {
+            string title = NewTicketTitleEntry.Text?.Trim() ?? string.Empty;
+            string category = NewTicketCategoryPicker.SelectedIndex > 0 ? NewTicketCategoryPicker.Items[NewTicketCategoryPicker.SelectedIndex] : string.Empty;
+            string priority = NewTicketPriorityPicker.SelectedIndex > 0 ? NewTicketPriorityPicker.Items[NewTicketPriorityPicker.SelectedIndex].ToLower() : string.Empty;
+            string description = NewTicketDescriptionEditor.Text?.Trim() ?? string.Empty;
+
+            // Validation
+            if (string.IsNullOrEmpty(title))
+            {
+                await DisplayAlert("Error", "Please enter a title for the ticket.", "OK");
+                return;
+            }
+
+            if (NewTicketCategoryPicker.SelectedIndex <= 0)
+            {
+                await DisplayAlert("Error", "Please select a category.", "OK");
+                return;
+            }
+
+            if (NewTicketPriorityPicker.SelectedIndex <= 0)
+            {
+                await DisplayAlert("Error", "Please select a priority level.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(description))
+            {
+                await DisplayAlert("Error", "Please provide a description of the issue.", "OK");
+                return;
+            }
+
+            // Submit ticket to database (use admin's ID as the creator)
+            var currentUser = _authManager.CurrentUser;
+            if (currentUser == null)
+            {
+                await DisplayAlert("Error", "User not authenticated.", "OK");
+                return;
+            }
+
+            bool success = await _ticketService.CreateTicketAsync(currentUser.Id, title, description, priority);
+            
+            if (success)
+            {
+                await DisplayAlert("Success", "Ticket created successfully!", "OK");
+                CreateTicketModalOverlay.IsVisible = false;
+                ClearNewTicketForm();
+                
+                // Reload tickets to show the new ticket
+                await LoadTicketsAsync();
+            }
+            else
+            {
+                await DisplayAlert("Error", "Failed to create ticket. Please try again.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"AdminTicketsPage: Error creating ticket - {ex.Message}");
+            await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+        }
+    }
+
+    private void ClearNewTicketForm()
+    {
+        NewTicketTitleEntry.Text = string.Empty;
+        NewTicketCategoryPicker.SelectedIndex = 0;
+        NewTicketPriorityPicker.SelectedIndex = 0;
+        NewTicketDescriptionEditor.Text = string.Empty;
     }
 }

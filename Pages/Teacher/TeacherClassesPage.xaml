@@ -105,6 +105,44 @@
                             <TapGestureRecognizer Tapped="OnMessagesTapped"/>
                         </Border.GestureRecognizers>
                     </Border>
+
+                    <!-- Announcements -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
                 </VerticalStackLayout>
 
                 <!-- Spacer -->
@@ -209,10 +247,11 @@
                 </HorizontalStackLayout>
 
                 <!-- Classes List -->
-                <VerticalStackLayout Spacing="15">
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowSpacing="15" RowDefinitions="Auto,Auto">
                     
                     <!-- Class Card 1 -->
-                    <Border BackgroundColor="White"
+                    <Border Grid.Row="0" Grid.Column="0"
+                            BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20">
@@ -225,7 +264,8 @@
                                    Text="Introduction to Computer Science" 
                                    FontSize="18" 
                                    FontAttributes="Bold"
-                                   TextColor="#2C3E50"/>
+                                   TextColor="#2C3E50"
+                                   LineBreakMode="WordWrap"/>
                             
                             <!-- Course Code -->
                             <Label Grid.Row="1" Grid.Column="0"
@@ -255,7 +295,8 @@
                                     BackgroundColor="#D1FAE5"
                                     Padding="8,4"
                                     StrokeThickness="0"
-                                    VerticalOptions="Start">
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="4"/>
                                 </Border.StrokeShape>
@@ -279,7 +320,8 @@
                     </Border>
 
                     <!-- Class Card 2 -->
-                    <Border BackgroundColor="White"
+                    <Border Grid.Row="0" Grid.Column="1"
+                            BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20">
@@ -291,7 +333,8 @@
                                    Text="Data Structures and Algorithms" 
                                    FontSize="18" 
                                    FontAttributes="Bold"
-                                   TextColor="#2C3E50"/>
+                                   TextColor="#2C3E50"
+                                   LineBreakMode="WordWrap"/>
                             
                             <Label Grid.Row="1" Grid.Column="0"
                                    Text="CS-201" 
@@ -318,7 +361,8 @@
                                     BackgroundColor="#D1FAE5"
                                     Padding="8,4"
                                     StrokeThickness="0"
-                                    VerticalOptions="Start">
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="4"/>
                                 </Border.StrokeShape>
@@ -341,7 +385,8 @@
                     </Border>
 
                     <!-- Class Card 3 -->
-                    <Border BackgroundColor="White"
+                    <Border Grid.Row="1" Grid.Column="0"
+                            BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20">
@@ -353,7 +398,8 @@
                                    Text="Web Development Fundamentals" 
                                    FontSize="18" 
                                    FontAttributes="Bold"
-                                   TextColor="#2C3E50"/>
+                                   TextColor="#2C3E50"
+                                   LineBreakMode="WordWrap"/>
                             
                             <Label Grid.Row="1" Grid.Column="0"
                                    Text="CS-301" 
@@ -377,19 +423,21 @@
                             </HorizontalStackLayout>
 
                             <Border Grid.Row="0" Grid.Column="1"
-                                    BackgroundColor="#FEF3C7"
+                                    BackgroundColor="#D1FAE5"
                                     Padding="8,4"
                                     StrokeThickness="0"
-                                    VerticalOptions="Start">
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="4"/>
                                 </Border.StrokeShape>
-                                <Label Text="Upcoming" 
-                                       TextColor="#F59E0B" 
+                                <Label Text="Active" 
+                                       TextColor="#059669" 
                                        FontSize="12"
                                        FontAttributes="Bold"/>
                             </Border>
 
+                            <!-- Action Button -->
                             <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
                                     Text="View Class"
                                     BackgroundColor="#059669"
@@ -402,7 +450,7 @@
                         </Grid>
                     </Border>
 
-                </VerticalStackLayout>
+                </Grid>
 
             </VerticalStackLayout>
         </ScrollView>

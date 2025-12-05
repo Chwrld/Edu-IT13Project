@@ -25,6 +25,16 @@ public partial class TeacherClassDetailsPage : ContentPage
         await DisplayAlert("Messages", "Messages feature coming soon!", "OK");
     }
 
+    // Search functionality
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        // TODO: Implement search filtering logic based on active tab
+        string searchText = e.NewTextValue?.ToLower() ?? "";
+        
+        // This can be expanded to filter students, assignments, grades, or announcements
+        // depending on which tab is currently active
+    }
+
     // Tab Navigation
     private void OnStudentsTabTapped(object sender, EventArgs e)
     {

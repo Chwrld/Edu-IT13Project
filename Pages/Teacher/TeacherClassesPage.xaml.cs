@@ -17,9 +17,24 @@ public partial class TeacherClassesPage : ContentPage
         await Shell.Current.GoToAsync("//TeacherHomePage");
     }
 
+    private async void OnClassesTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherClassesPage");
+    }
+
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//TeacherMessagesPage");
+    }
+
+    private async void OnAnnouncementsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+    }
+
+    private async void OnTicketsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherTicketsPage");
     }
 
     private async void OnViewClassClicked(object sender, EventArgs e)

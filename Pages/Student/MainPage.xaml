@@ -14,84 +14,103 @@
             <!-- Login Card -->
             <Border 
                 BackgroundColor="White"
-                Padding="40,30"
-                StrokeThickness="0"
-                WidthRequest="400"
+                Padding="40,35"
+                StrokeThickness="1"
+                Stroke="#E5E7EB"
+                WidthRequest="420"
                 MaximumWidthRequest="500"
-                Shadow="{Shadow Brush=Black, Opacity=0.1, Radius=10, Offset='0,2'}">
+                Shadow="{Shadow Brush=Black, Opacity=0.08, Radius=20, Offset='0,4'}">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12"/>
+                    <RoundRectangle CornerRadius="8"/>
                 </Border.StrokeShape>
                 
-                <VerticalStackLayout Spacing="20">
+                <VerticalStackLayout Spacing="25">
+                    
+                    <!-- Logo Icon -->
+                    <Border BackgroundColor="#DBEAFE"
+                            WidthRequest="60"
+                            HeightRequest="60"
+                            HorizontalOptions="Center"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="30"/>
+                        </Border.StrokeShape>
+                        <Label Text="🎓"
+                               FontSize="32"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
                     
                     <!-- Logo and Title -->
-                    <VerticalStackLayout Spacing="5">
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
                         <Label 
-                            Text="School Portal"
-                            FontSize="28"
+                            Text="Education Portal"
+                            FontSize="24"
                             FontAttributes="Bold"
-                            TextColor="#2C3E50"
+                            TextColor="#111827"
                             HorizontalOptions="Center"/>
                         <Label 
                             Text="Communication &amp; Engagement System"
-                            FontSize="12"
-                            TextColor="#7F8C8D"
+                            FontSize="11"
+                            TextColor="#9CA3AF"
                             HorizontalOptions="Center"/>
                     </VerticalStackLayout>
 
                     <!-- Subtitle -->
                     <Label
                         Text="Sign in to manage your campus services"
-                        FontSize="14"
+                        FontSize="13"
                         TextColor="#6B7280"
-                        HorizontalTextAlignment="Center"/>
+                        HorizontalTextAlignment="Center"
+                        Margin="0,-5,0,0"/>
 
                     <!-- Email Input -->
-                    <VerticalStackLayout Spacing="8">
+                    <VerticalStackLayout Spacing="6">
                         <Label 
                             Text="Email"
-                            FontSize="14"
-                            TextColor="#2C3E50"
-                            FontAttributes="Bold"/>
+                            FontSize="13"
+                            TextColor="#374151"
+                            FontAttributes="None"/>
                         <Border
-                            BackgroundColor="White"
-                            Stroke="#E0E0E0"
+                            BackgroundColor="#F9FAFB"
+                            Stroke="#E5E7EB"
                             StrokeThickness="1"
-                            Padding="12,8">
+                            Padding="12,6">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="6"/>
                             </Border.StrokeShape>
                             <Entry 
                                 x:Name="EmailEntry"
                                 Placeholder="email@gmail.com"
-                                PlaceholderColor="#B0B0B0"
-                                TextColor="#2C3E50"
+                                PlaceholderColor="#9CA3AF"
+                                TextColor="#111827"
+                                FontSize="12"
                                 Keyboard="Email"
                                 BackgroundColor="Transparent"/>
                         </Border>
                     </VerticalStackLayout>
 
                     <!-- Password Input -->
-                    <VerticalStackLayout Spacing="8">
+                    <VerticalStackLayout Spacing="6">
                         <Label 
                             Text="Password"
-                            FontSize="14"
-                            TextColor="#2C3E50"
-                            FontAttributes="Bold"/>
+                            FontSize="13"
+                            TextColor="#374151"
+                            FontAttributes="None"/>
                         <Border
-                            BackgroundColor="White"
-                            Stroke="#E0E0E0"
+                            BackgroundColor="#F9FAFB"
+                            Stroke="#E5E7EB"
                             StrokeThickness="1"
-                            Padding="12,8">
+                            Padding="12,6">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="6"/>
                             </Border.StrokeShape>
                             <Entry 
                                 x:Name="PasswordEntry"
                                 Placeholder="••••••••"
-                                PlaceholderColor="#B0B0B0"
-                                TextColor="#2C3E50"
+                                PlaceholderColor="#9CA3AF"
+                                TextColor="#111827"
+                                FontSize="12"
                                 IsPassword="True"
                                 BackgroundColor="Transparent"/>
                         </Border>
@@ -103,20 +122,20 @@
                         Text="Sign In"
                         BackgroundColor="#0891B2"
                         TextColor="White"
-                        FontSize="16"
+                        FontSize="15"
                         FontAttributes="Bold"
                         CornerRadius="6"
-                        HeightRequest="48"
-                        Margin="0,10,0,0"
+                        HeightRequest="44"
+                        Margin="0,5,0,0"
                         Clicked="OnSignInClicked"/>
 
                     <!-- Role-based note -->
                     <Label 
-                        Text="Use your assigned credentials to access School Portal services."
-                        FontSize="13"
-                        TextColor="#6B7280"
+                        Text="Use your assigned credentials to access School Portal"
+                        FontSize="12"
+                        TextColor="#9CA3AF"
                         HorizontalTextAlignment="Center"
-                        Margin="0,15,0,0"/>
+                        Margin="0,5,0,0"/>
 
                 </VerticalStackLayout>
             </Border>

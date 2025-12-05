@@ -64,6 +64,26 @@
         ContentTemplate="{DataTemplate teacher:TeacherMessagesPage}"
         Route="TeacherMessagesPage" />
 
+    <!-- Teacher Tickets -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherTicketsPage}"
+        Route="TeacherTicketsPage" />
+
+    <!-- Teacher Announcements -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherAnnouncementsPage}"
+        Route="TeacherAnnouncementsPage" />
+
+    <!-- Teacher Profile -->
+    <ShellContent
+        ContentTemplate="{DataTemplate teacher:TeacherProfilePage}"
+        Route="TeacherProfilePage" />
+
+    <!-- Admin Profile -->
+    <ShellContent
+        ContentTemplate="{DataTemplate admin:AdminProfilePage}"
+        Route="AdminProfilePage" />
+
     <!-- Student Pages -->
     <ShellContent
         ContentTemplate="{DataTemplate student:HomePage}"

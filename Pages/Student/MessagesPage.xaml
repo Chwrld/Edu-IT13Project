@@ -17,12 +17,12 @@
 
         <!-- Top Navigation Bar -->
         <Border Grid.Row="0" Grid.ColumnSpan="2" 
-                BackgroundColor="White"
+                BackgroundColor="#0891B2"
                 StrokeThickness="0">
             <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
                 <!-- Logo -->
                 <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                    <Border BackgroundColor="#0891B2" 
+                    <Border BackgroundColor="White" 
                             WidthRequest="32" 
                             HeightRequest="32"
                             StrokeThickness="0">
@@ -30,7 +30,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <Label Text="S" 
-                               TextColor="White" 
+                               TextColor="#0891B2" 
                                FontSize="20" 
                                FontAttributes="Bold"
                                HorizontalOptions="Center"
@@ -39,7 +39,7 @@
                     <Label Text="StudentHub" 
                            FontSize="18" 
                            FontAttributes="Bold"
-                           TextColor="#2C3E50"
+                           TextColor="White"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
             </Grid>
