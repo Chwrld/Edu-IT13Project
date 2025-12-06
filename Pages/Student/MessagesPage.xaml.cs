@@ -190,6 +190,11 @@ public partial class MessagesPage : ContentPage
             // Load messages for this conversation
             var messages = await _messageService.GetConversationMessagesAsync(conversation.Id);
             _currentMessages = messages;
+
+            if (_currentUserId != Guid.Empty)
+            {
+                await _messageService.MarkConversationMessagesAsReadAsync(conversation.Id, _currentUserId);
+            }
             
             System.Diagnostics.Debug.WriteLine($"MessagesPage: Loaded {messages.Count} messages");
             

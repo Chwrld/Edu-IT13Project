@@ -175,7 +175,7 @@
                 
                 <!-- Page Header -->
                 <VerticalStackLayout Spacing="5">
-                    <Label Text="Announcements &amp; Reminders" 
+                    <Label Text="Announcements"
                            FontSize="24" 
                            FontAttributes="Bold"
                            TextColor="#2C3E50"/>
@@ -219,21 +219,6 @@
                                FontSize="14"/>
                     </Border>
 
-                    <Border x:Name="RemindersTab"
-                            BackgroundColor="Transparent"
-                            Padding="20,10"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6"/>
-                        </Border.StrokeShape>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnRemindersTabTapped"/>
-                        </Border.GestureRecognizers>
-                        <Label x:Name="RemindersTabLabel"
-                               Text="Reminders" 
-                               TextColor="#0891B2"
-                               FontSize="14"/>
-                    </Border>
                 </HorizontalStackLayout>
 
                 <!-- Search Bar -->

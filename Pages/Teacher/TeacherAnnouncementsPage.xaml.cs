@@ -1,7 +1,11 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Versioning;
+using MauiAppIT13.Models;
+using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
+using Microsoft.Maui.ApplicationModel;
 
 namespace MauiAppIT13.Pages.Teacher;
 
@@ -9,67 +13,106 @@ namespace MauiAppIT13.Pages.Teacher;
 [SupportedOSPlatform("android21.0")]
 public partial class TeacherAnnouncementsPage : ContentPage
 {
+    private readonly AnnouncementService _announcementService;
     private readonly AuthManager _authManager;
     private ObservableCollection<AnnouncementItem> _allAnnouncements = new();
     private ObservableCollection<AnnouncementItem> _filteredAnnouncements = new();
     private AnnouncementItem? _selectedAnnouncement;
     private string _currentFilter = "all";
     private bool _isEditMode = false;
+    private bool _isLoading = false;
 
     public TeacherAnnouncementsPage()
     {
         InitializeComponent();
+        _announcementService = AppServiceProvider.GetService<AnnouncementService>()
+            ?? throw new InvalidOperationException("AnnouncementService not found");
         _authManager = AppServiceProvider.GetService<AuthManager>()
             ?? throw new InvalidOperationException("AuthManager not found");
-        
+
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
-        LoadSampleData();
     }
 
-    private void LoadSampleData()
+    protected override async void OnAppearing()
     {
-        // Sample announcements data
-        var announcements = new[]
-        {
-            new AnnouncementItem
-            {
-                Id = Guid.NewGuid(),
-                Subject = "Midterm Exam Schedule",
-                Message = "The midterm examinations will be held from December 10-15. Please review the detailed schedule posted on the course portal. Make sure to bring valid ID and writing materials.",
-                Priority = "Important",
-                TargetAudience = "All Students",
-                CreatedAt = DateTime.Now.AddDays(-2),
-                PriorityColor = Color.FromArgb("#F59E0B")
-            },
-            new AnnouncementItem
-            {
-                Id = Guid.NewGuid(),
-                Subject = "Library Closure Notice",
-                Message = "The university library will be closed for maintenance on December 5-6. All borrowed materials should be returned by December 4.",
-                Priority = "Normal",
-                TargetAudience = "All Students",
-                CreatedAt = DateTime.Now.AddDays(-5),
-                PriorityColor = Color.FromArgb("#10B981")
-            },
-            new AnnouncementItem
-            {
-                Id = Guid.NewGuid(),
-                Subject = "Class Cancellation - December 8",
-                Message = "Due to a faculty meeting, all classes on December 8 are cancelled. Make-up classes will be scheduled next week.",
-                Priority = "Urgent",
-                TargetAudience = "Specific Class",
-                CreatedAt = DateTime.Now.AddHours(-6),
-                PriorityColor = Color.FromArgb("#EF4444")
-            }
-        };
+        base.OnAppearing();
+        await LoadAnnouncementsAsync();
+    }
 
-        foreach (var announcement in announcements)
+    private async Task LoadAnnouncementsAsync()
+    {
+        if (_isLoading)
+            return;
+
+        var currentUser = _authManager.CurrentUser;
+        if (currentUser == null)
         {
-            _allAnnouncements.Add(announcement);
-            _filteredAnnouncements.Add(announcement);
+            await DisplayAlert("Authentication Required", "Please log in again to manage announcements.", "OK");
+            return;
         }
 
-        UpdateStatistics();
+        _isLoading = true;
+        try
+        {
+            var announcements = await _announcementService.GetAnnouncementsAsync(150);
+            var teacherAnnouncements = announcements
+                .Where(a => TeacherCanViewAnnouncement(a, currentUser.Id))
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => MapToAnnouncementItem(a, currentUser.Id))
+                .ToList();
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _allAnnouncements.Clear();
+                foreach (var announcement in teacherAnnouncements)
+                {
+                    _allAnnouncements.Add(announcement);
+                }
+
+                ApplyFilters();
+                UpdateStatistics();
+            });
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"TeacherAnnouncementsPage: Failed to load announcements - {ex.Message}");
+            await DisplayAlert("Error", "Failed to load announcements. Please try again.", "OK");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static bool TeacherCanViewAnnouncement(Announcement announcement, Guid teacherId)
+    {
+        var visibility = (announcement.Visibility ?? "all").ToLowerInvariant();
+        if (IsAnnouncementOwnedByTeacher(announcement, teacherId))
+            return true;
+
+        return visibility is "all" or "advisers";
+    }
+
+    private static bool IsAnnouncementOwnedByTeacher(Announcement announcement, Guid teacherId) =>
+        announcement.AuthorId == teacherId || announcement.CreatedBy == teacherId;
+
+    private AnnouncementItem MapToAnnouncementItem(Announcement announcement, Guid teacherId)
+    {
+        var visibility = (announcement.Visibility ?? "all").ToLowerInvariant();
+        var isOwned = IsAnnouncementOwnedByTeacher(announcement, teacherId);
+        return new AnnouncementItem
+        {
+            Id = announcement.Id,
+            Subject = announcement.Title,
+            Message = announcement.Content,
+            TargetAudience = GetTargetLabelFromVisibility(visibility),
+            CreatedAt = announcement.CreatedAt,
+            TargetColor = GetTargetColor(visibility),
+            Visibility = visibility,
+            IsPublished = announcement.IsPublished,
+            AuthorName = announcement.AuthorName ?? "Unknown",
+            IsOwnedByCurrentUser = isOwned
+        };
     }
 
     private void UpdateStatistics()
@@ -77,12 +120,11 @@ public partial class TeacherAnnouncementsPage : ContentPage
         var total = _allAnnouncements.Count;
         var weekAgo = DateTime.Now.AddDays(-7);
         var thisWeek = _allAnnouncements.Count(a => a.CreatedAt >= weekAgo);
-        var important = _allAnnouncements.Count(a => a.Priority.Equals("Important", StringComparison.OrdinalIgnoreCase) || 
-                                                     a.Priority.Equals("Urgent", StringComparison.OrdinalIgnoreCase));
+        var studentsTargeted = _allAnnouncements.Count(a => a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase));
 
         TotalCountLabel.Text = total.ToString();
         WeekCountLabel.Text = thisWeek.ToString();
-        ImportantCountLabel.Text = important.ToString();
+        ImportantCountLabel.Text = studentsTargeted.ToString();
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
@@ -95,11 +137,13 @@ public partial class TeacherAnnouncementsPage : ContentPage
         searchText ??= SearchEntry.Text;
         var query = _allAnnouncements.AsEnumerable();
 
-        // Apply priority filter
-        if (_currentFilter != "all")
+        // Apply visibility filter
+        query = _currentFilter switch
         {
-            query = query.Where(a => a.Priority.Equals(_currentFilter, StringComparison.OrdinalIgnoreCase));
-        }
+            "students" => query.Where(a => a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase)),
+            "advisers" => query.Where(a => a.Visibility.Equals("advisers", StringComparison.OrdinalIgnoreCase)),
+            _ => query
+        };
 
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(searchText))
@@ -125,10 +169,10 @@ public partial class TeacherAnnouncementsPage : ContentPage
         // Reset all buttons
         FilterAllBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
         FilterAllBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterImportantBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterImportantBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterUrgentBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterUrgentBtn.TextColor = Color.FromArgb("#6B7280");
+        FilterStudentsBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
+        FilterStudentsBtn.TextColor = Color.FromArgb("#6B7280");
+        FilterAdvisersBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
+        FilterAdvisersBtn.TextColor = Color.FromArgb("#6B7280");
 
         // Highlight active button
         switch (activeFilter)
@@ -137,13 +181,13 @@ public partial class TeacherAnnouncementsPage : ContentPage
                 FilterAllBtn.BackgroundColor = Color.FromArgb("#059669");
                 FilterAllBtn.TextColor = Colors.White;
                 break;
-            case "important":
-                FilterImportantBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterImportantBtn.TextColor = Colors.White;
+            case "students":
+                FilterStudentsBtn.BackgroundColor = Color.FromArgb("#059669");
+                FilterStudentsBtn.TextColor = Colors.White;
                 break;
-            case "urgent":
-                FilterUrgentBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterUrgentBtn.TextColor = Colors.White;
+            case "advisers":
+                FilterAdvisersBtn.BackgroundColor = Color.FromArgb("#059669");
+                FilterAdvisersBtn.TextColor = Colors.White;
                 break;
         }
 
@@ -155,15 +199,9 @@ public partial class TeacherAnnouncementsPage : ContentPage
         UpdateFilterButtons("all");
     }
 
-    private void OnFilterImportantClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("important");
-    }
+    private void OnFilterStudentsClicked(object? sender, EventArgs e) => UpdateFilterButtons("students");
 
-    private void OnFilterUrgentClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("urgent");
-    }
+    private void OnFilterAdvisersClicked(object? sender, EventArgs e) => UpdateFilterButtons("advisers");
 
     private void OnNewAnnouncementClicked(object? sender, EventArgs e)
     {
@@ -187,8 +225,8 @@ public partial class TeacherAnnouncementsPage : ContentPage
             // Populate form with existing data
             SubjectEntry.Text = announcement.Subject;
             MessageEditor.Text = announcement.Message;
-            TargetPicker.SelectedItem = announcement.TargetAudience;
-            PriorityPicker.SelectedItem = announcement.Priority;
+            TargetPicker.SelectedIndex = GetTargetPickerIndex(announcement.Visibility);
+            PublishSwitch.IsToggled = announcement.IsPublished;
             
             ModalOverlay.IsVisible = true;
         }
@@ -204,9 +242,14 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
             if (confirm)
             {
-                _allAnnouncements.Remove(announcement);
-                _filteredAnnouncements.Remove(announcement);
-                UpdateStatistics();
+                var success = await _announcementService.DeleteAnnouncementAsync(announcement.Id);
+                if (!success)
+                {
+                    await DisplayAlert("Error", "Failed to delete announcement. Please try again.", "OK");
+                    return;
+                }
+
+                await LoadAnnouncementsAsync();
                 await DisplayAlert("Success", "Announcement deleted successfully.", "OK");
             }
         }
@@ -243,50 +286,53 @@ public partial class TeacherAnnouncementsPage : ContentPage
         {
             var subject = SubjectEntry.Text.Trim();
             var message = MessageEditor.Text.Trim();
-            var target = TargetPicker.SelectedItem?.ToString() ?? "All Students";
-            var priority = PriorityPicker.SelectedItem?.ToString() ?? "Normal";
+            var visibility = GetVisibilityFromPicker();
+            var isPublished = PublishSwitch.IsToggled;
+
+            var currentUser = _authManager.CurrentUser;
+            if (currentUser == null)
+            {
+                await DisplayAlert("Authentication Required", "Please log in again to continue.", "OK");
+                return;
+            }
+
+            bool success;
 
             if (_isEditMode && _selectedAnnouncement != null)
             {
-                // Update existing announcement
-                _selectedAnnouncement.Subject = subject;
-                _selectedAnnouncement.Message = message;
-                _selectedAnnouncement.TargetAudience = target;
-                _selectedAnnouncement.Priority = priority;
-                _selectedAnnouncement.PriorityColor = GetPriorityColor(priority);
-
-                await DisplayAlert("Success", "Announcement updated successfully.", "OK");
+                success = await _announcementService.UpdateAnnouncementAsync(
+                    _selectedAnnouncement.Id,
+                    subject,
+                    message,
+                    visibility,
+                    isPublished,
+                    currentUser.Id);
             }
             else
             {
-                // Create new announcement
-                var newAnnouncement = new AnnouncementItem
-                {
-                    Id = Guid.NewGuid(),
-                    Subject = subject,
-                    Message = message,
-                    TargetAudience = target,
-                    Priority = priority,
-                    CreatedAt = DateTime.Now,
-                    PriorityColor = GetPriorityColor(priority)
-                };
+                var newId = await _announcementService.CreateAnnouncementAsync(
+                    subject,
+                    message,
+                    visibility,
+                    isPublished,
+                    currentUser.Id,
+                    currentUser.Id);
 
-                _allAnnouncements.Insert(0, newAnnouncement);
-                
-                // Apply current filter
-                if (_currentFilter == "all" || 
-                    (_currentFilter == "important" && priority == "Important") ||
-                    (_currentFilter == "urgent" && priority == "Urgent"))
-                {
-                    _filteredAnnouncements.Insert(0, newAnnouncement);
-                }
-
-                await DisplayAlert("Success", "Announcement posted successfully.", "OK");
+                success = newId.HasValue;
             }
 
-            UpdateStatistics();
+            if (!success)
+            {
+                await DisplayAlert("Error", "Failed to save announcement. Please try again.", "OK");
+                return;
+            }
+
+            var successMessage = _isEditMode ? "Announcement updated successfully." : "Announcement posted successfully.";
+
+            await LoadAnnouncementsAsync();
             ModalOverlay.IsVisible = false;
             ClearForm();
+            await DisplayAlert("Success", successMessage, "OK");
         }
         catch (Exception ex)
         {
@@ -300,20 +346,40 @@ public partial class TeacherAnnouncementsPage : ContentPage
         SubjectEntry.Text = string.Empty;
         MessageEditor.Text = string.Empty;
         TargetPicker.SelectedIndex = 0;
-        PriorityPicker.SelectedIndex = 0;
+        PublishSwitch.IsToggled = true;
         _isEditMode = false;
         _selectedAnnouncement = null;
     }
 
-    private Color GetPriorityColor(string priority)
+    private static string GetVisibilityFromPickerIndex(int index) => index switch
     {
-        return priority.ToLower() switch
-        {
-            "urgent" => Color.FromArgb("#EF4444"),
-            "important" => Color.FromArgb("#F59E0B"),
-            _ => Color.FromArgb("#10B981")
-        };
-    }
+        1 => "students",
+        2 => "advisers",
+        _ => "all"
+    };
+
+    private string GetVisibilityFromPicker() => GetVisibilityFromPickerIndex(TargetPicker.SelectedIndex);
+
+    private static string GetTargetLabelFromVisibility(string visibility) => visibility switch
+    {
+        "students" => "Students",
+        "advisers" => "Advisers",
+        _ => "All Users"
+    };
+
+    private static int GetTargetPickerIndex(string visibility) => visibility switch
+    {
+        "students" => 1,
+        "advisers" => 2,
+        _ => 0
+    };
+
+    private static Color GetTargetColor(string visibility) => visibility switch
+    {
+        "students" => Color.FromArgb("#2563EB"),
+        "advisers" => Color.FromArgb("#D97706"),
+        _ => Color.FromArgb("#059669")
+    };
 
     private async void OnDashboardTapped(object? sender, EventArgs e)
     {
@@ -352,8 +418,11 @@ public class AnnouncementItem
     public Guid Id { get; set; }
     public string Subject { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
-    public string Priority { get; set; } = "Normal";
-    public string TargetAudience { get; set; } = "All Students";
+    public string TargetAudience { get; set; } = "All Users";
     public DateTime CreatedAt { get; set; }
-    public Color PriorityColor { get; set; } = Color.FromArgb("#10B981");
+    public Color TargetColor { get; set; } = Color.FromArgb("#059669");
+    public string Visibility { get; set; } = "all";
+    public bool IsPublished { get; set; }
+    public string AuthorName { get; set; } = "Unknown";
+    public bool IsOwnedByCurrentUser { get; set; }
 }
