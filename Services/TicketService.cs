@@ -44,7 +44,7 @@ public class TicketService
                 WHERE t.student_id = @StudentId
                 ORDER BY t.created_at DESC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             await using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
@@ -119,7 +119,7 @@ public class TicketService
                 LEFT JOIN users u_assigned ON t.assigned_to_id = u_assigned.user_id
                 ORDER BY t.created_at DESC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
 
             await using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
@@ -185,7 +185,7 @@ public class TicketService
                 WHERE c.ticket_id = @TicketId
                 ORDER BY c.created_at ASC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             await using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
@@ -228,7 +228,7 @@ public class TicketService
         {
             Debug.WriteLine($"TicketService: Creating ticket for student {studentId}");
             
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             const string sql = @"
                 INSERT INTO support_tickets (ticket_id, ticket_number, title, description, status, priority, created_at, created_by, student_id)
@@ -270,7 +270,7 @@ public class TicketService
         {
             Debug.WriteLine($"TicketService: Adding comment to ticket {ticketId}");
             
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             const string sql = @"
                 INSERT INTO ticket_comments (comment_id, ticket_id, user_id, content, created_at)
@@ -307,7 +307,7 @@ public class TicketService
         {
             Debug.WriteLine($"TicketService: Updating ticket {ticketId} to status {status}");
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
 
             const string sql = @"
                 UPDATE support_tickets
