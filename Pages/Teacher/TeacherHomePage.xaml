@@ -218,7 +218,7 @@
                 </Border>
 
                 <!-- Statistics Cards -->
-                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="15">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
                     <Border Grid.Column="0" 
                             BackgroundColor="White"
                             StrokeThickness="1"
@@ -272,36 +272,14 @@
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Pending Grades" 
+                            <Label Text="Tickets Today" 
                                    FontSize="13" 
                                    TextColor="#6B7280"/>
-                            <Label Text="23" 
+                            <Label Text="35" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
-                                   TextColor="#F59E0B"/>
-                            <Label Text="Awaiting review" 
-                                   FontSize="11" 
-                                   TextColor="#9CA3AF"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <Border Grid.Column="3" 
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
-                            <Label Text="Upcoming Classes" 
-                                   FontSize="13" 
-                                   TextColor="#6B7280"/>
-                            <Label Text="3" 
-                                   FontSize="32" 
-                                   FontAttributes="Bold"
-                                   TextColor="#059669"/>
-                            <Label Text="Today" 
+                                   TextColor="#0891B2"/>
+                            <Label Text="Support requests" 
                                    FontSize="11" 
                                    TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
@@ -496,7 +474,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Upcoming Events Section -->
+                    <!-- Ticket Updates Section -->
                     <Border Grid.Column="1" 
                             BackgroundColor="White"
                             StrokeThickness="1"
@@ -507,114 +485,136 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text=" Upcoming Events" 
+                                <Label Text="🔔" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text=" Ticket Updates" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
                                        FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
-                            <Label Text="Don't miss these important dates" 
+                            <Label Text="Recently received support tickets" 
                                    FontSize="12" 
                                    TextColor="#6B7280"
                                    Margin="0,-10,0,0"/>
 
-                            <!-- Event 1 -->
-                            <Border BackgroundColor="#F9FAFB"
+                            <!-- Ticket 1 -->
+                            <Border BackgroundColor="#FEF3C7"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="6"/>
                                 </Border.StrokeShape>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Border BackgroundColor="#FFEAEA"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="📝" 
-                                               FontSize="20"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                        <Label Text="End of Semester Evaluation" 
+                                <VerticalStackLayout Spacing="6">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Border BackgroundColor="#F59E0B"
+                                                Padding="4,2"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="3"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="NEW" 
+                                                   TextColor="White"
+                                                   FontSize="9"
+                                                   FontAttributes="Bold"/>
+                                        </Border>
+                                        <Label Text="Grade Inquiry - CS101" 
                                                FontSize="12" 
                                                FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Dec 20, All Day" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
+                                               TextColor="#92400E"
+                                               VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                    <Label Text="Student requesting grade explanation..." 
+                                           FontSize="11" 
+                                           TextColor="#78350F"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="5 min ago" 
+                                           FontSize="10" 
+                                           TextColor="#A16207"/>
+                                </VerticalStackLayout>
                             </Border>
 
-                            <!-- Event 2 -->
-                            <Border BackgroundColor="#F9FAFB"
+                            <!-- Ticket 2 -->
+                            <Border BackgroundColor="#DBEAFE"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="6"/>
                                 </Border.StrokeShape>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Border BackgroundColor="#E5F3FA"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="🎄" 
-                                               FontSize="20"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                        <Label Text="Winter Break Holiday" 
+                                <VerticalStackLayout Spacing="6">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Border BackgroundColor="#0284C7"
+                                                Padding="4,2"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="3"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="OPEN" 
+                                                   TextColor="White"
+                                                   FontSize="9"
+                                                   FontAttributes="Bold"/>
+                                        </Border>
+                                        <Label Text="Assignment Extension Request" 
                                                FontSize="12" 
                                                FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Dec 23 - Jan 2" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
+                                               TextColor="#075985"
+                                               VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                    <Label Text="Request for 2-day deadline extension..." 
+                                           FontSize="11" 
+                                           TextColor="#0C4A6E"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="15 min ago" 
+                                           FontSize="10" 
+                                           TextColor="#0369A1"/>
+                                </VerticalStackLayout>
                             </Border>
 
-                            <!-- Event 3 -->
-                            <Border BackgroundColor="#F9FAFB"
+                            <!-- Ticket 3 -->
+                            <Border BackgroundColor="#FEE2E2"
                                     Padding="12"
                                     StrokeThickness="0">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="6"/>
                                 </Border.StrokeShape>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Border BackgroundColor="#FFF5E5"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="📚" 
-                                               FontSize="20"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
-                                        <Label Text="Spring Semester Begins" 
+                                <VerticalStackLayout Spacing="6">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Border BackgroundColor="#DC2626"
+                                                Padding="4,2"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="3"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="URGENT" 
+                                                   TextColor="White"
+                                                   FontSize="9"
+                                                   FontAttributes="Bold"/>
+                                        </Border>
+                                        <Label Text="Lab Access Issue" 
                                                FontSize="12" 
                                                FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Jan 8, 8:00 AM" 
-                                               FontSize="11" 
-                                               TextColor="#6B7280"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
+                                               TextColor="#991B1B"
+                                               VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                    <Label Text="Unable to access course materials..." 
+                                           FontSize="11" 
+                                           TextColor="#7F1D1D"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="30 min ago" 
+                                           FontSize="10" 
+                                           TextColor="#B91C1C"/>
+                                </VerticalStackLayout>
                             </Border>
+
+                            <!-- View All Tickets Button -->
+                            <Button Text="View All Tickets"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#059669"
+                                    FontSize="13"
+                                    FontAttributes="Bold"
+                                    Padding="0"
+                                    Margin="0,5,0,0"
+                                    Clicked="OnTicketsTapped"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>

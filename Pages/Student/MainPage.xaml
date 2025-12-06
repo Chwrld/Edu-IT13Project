@@ -1,15 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiAppIT13.Pages.Student.MainPage"
-             BackgroundColor="#F5F5F5">
+             x:Class="MauiAppIT13.Pages.Student.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="20"
-            Spacing="0"
-            VerticalOptions="Center"
-            HorizontalOptions="Center">
+    <Grid>
+        <!-- Background Image -->
+        <Image Source="campus_background.jpg"
+               Aspect="AspectFill"/>
+        
+        <!-- Transparent Blue Overlay -->
+        <BoxView BackgroundColor="#80094B5C"/>
+        
+        <!-- Content -->
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="20"
+                Spacing="0"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
             
             <!-- Login Card -->
             <Border 
@@ -141,6 +149,7 @@
             </Border>
 
         </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+    </Grid>
 
 </ContentPage>
