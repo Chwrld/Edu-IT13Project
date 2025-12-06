@@ -8,7 +8,7 @@ public class AnnouncementService
 {
     private const string ConnectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
 
-    public async Task<List<Announcement>> GetAnnouncementsAsync(int limit = 100)
+    public async Task<List<Announcement>> GetAnnouncementsAsync(int limit = 100, Guid? currentUserId = null)
     {
         var announcements = new List<Announcement>();
 
@@ -27,7 +27,8 @@ public class AnnouncementService
                 author.display_name AS author_name,
                 creator.display_name AS created_by_name,
                 updater.display_name AS updated_by_name,
-                COUNT(v.view_id) AS view_count
+                COUNT(v.view_id) AS view_count,
+                MAX(CASE WHEN @CurrentUserId IS NOT NULL AND v.user_id = @CurrentUserId THEN 1 ELSE 0 END) AS has_viewed
             FROM announcements a
             LEFT JOIN users author ON a.author_id = author.user_id
             LEFT JOIN users creator ON a.created_by = creator.user_id
@@ -56,6 +57,7 @@ public class AnnouncementService
 
             await using var command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@Limit", limit);
+            command.Parameters.AddWithValue("@CurrentUserId", currentUserId.HasValue ? currentUserId.Value : (object)DBNull.Value);
             command.CommandTimeout = 8;
 
             await using var reader = await command.ExecuteReaderAsync();
@@ -76,7 +78,8 @@ public class AnnouncementService
                     AuthorName = reader.IsDBNull(10) ? "Unknown" : reader.GetString(10),
                     CreatedByName = reader.IsDBNull(11) ? "Unknown" : reader.GetString(11),
                     UpdatedByName = reader.IsDBNull(12) ? null : reader.GetString(12),
-                    ViewCount = reader.GetInt32(13)
+                    ViewCount = reader.GetInt32(13),
+                    HasViewed = !reader.IsDBNull(14) && reader.GetInt32(14) > 0
                 };
                 announcements.Add(announcement);
             }

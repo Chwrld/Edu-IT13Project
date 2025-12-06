@@ -32,17 +32,34 @@
 Data Source=LAPTOP-ABC123\SQLEXPRESS;Initial Catalog=EduCRM;...
 ```
 
-### Step 3: Create Database and Tables
+### Step 3: Create & seed the database
 
-1. Open **SQL Server Management Studio (SSMS)**
-2. Connect to your SQL Server instance
-3. Open the file: `Database\InitializeDatabase.sql`
-4. Click **Execute** (or press F5)
+`Database\InitializeDatabase.sql` now contains **all schema + seed data**. Running it will *drop and recreate* the `EduCRM` database, then populate every table with deterministic demo data (admin/teacher/student, plus 10×3×30 bulk accounts, sample announcements, conversations, etc.).
 
-This will:
-- Create the `EduCRM` database
-- Create all required tables (users, conversations, messages, etc.)
-- Prepare the database for the application
+#### Option A – `sqlcmd` (recommended)
+```powershell
+sqlcmd -S "LAPTOP-L1R9L9R3\SQLEXPRESS01" -i ".\Database\InitializeDatabase.sql"
+```
+Expected output:
+```
+Changed database context to 'EduCRM'.
+EduCRM database created and fully seeded.
+```
+
+#### Option B – SSMS
+1. Open the script in SSMS.
+2. Make sure no other queries are connected to `EduCRM`.
+3. Execute (F5). The script automatically runs:
+   ```sql
+   ALTER DATABASE [EduCRM] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+   DROP DATABASE [EduCRM];
+   CREATE DATABASE [EduCRM];
+   ```
+   followed by all table/seed statements.
+
+> **If the DROP fails** (e.g., another app still has connections), manually run  
+> `ALTER DATABASE [EduCRM] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [EduCRM];`  
+> then re-run the initializer.
 
 ### Step 4: Run the Application
 
@@ -55,21 +72,28 @@ The app will:
 - Automatically seed 3 test users on first run
 - Display debug messages in the output
 
-### Step 5: Test Login
+### Step 5: Test login
 
-Use these credentials:
+| Role    | Email                     | Password    | Notes                               |
+|---------|---------------------------|-------------|-------------------------------------|
+| Admin   | `admin@university.edu`    | `admin@123` | Full system access                  |
+| Teacher | `teacher@university.edu`  | `teacher@123` | Adviser for the baseline student |
+| Teacher | `dr.smith@university.edu` | `teacher@123` | Second faculty demo account      |
+| Student | `student@university.edu`  | `student@123` | Linked to John Teacher           |
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@university.edu | admin@123 |
-| Teacher | teacher@university.edu | teacher@123 |
-| Student | student@university.edu | student@123 |
+Additional demo users:
+- **Teachers:** `teacher01@university.edu` → `teacher10@university.edu` (password `teacher@123`)
+- **Students:** `student{TT}{C}{SS}@university.edu` (password `student@123`) where:
+  - `{TT}` = teacher index `01`–`10`
+  - `{C}` = class `1`–`3`
+  - `{SS}` = student number `01`–`30`
+  - Example: `student01105@university.edu` = Teacher 01, Class 1, Student 05.
 
 ---
 
 ## Troubleshooting
 
-### ❌ "Invalid email or password" error
+### "Invalid email or password" error
 **Cause:** Database is empty (seeding failed)
 
 **Solutions:**

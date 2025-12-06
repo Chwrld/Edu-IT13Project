@@ -18,6 +18,7 @@ public class Announcement
     public string? CreatedByName { get; set; }
     public string? UpdatedByName { get; set; }
     public int ViewCount { get; set; }
+    public bool HasViewed { get; set; }
 
     public string VisibilityLabel => Visibility switch
     {

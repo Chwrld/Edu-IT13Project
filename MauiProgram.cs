@@ -54,6 +54,7 @@ namespace MauiAppIT13
             builder.Services.AddSingleton<AuthController>();
             builder.Services.AddSingleton<UserController>();
             builder.Services.AddSingleton<MessageService>();
+            builder.Services.AddSingleton<ClassService>();
             builder.Services.AddSingleton<TicketService>();
             builder.Services.AddSingleton<AnnouncementService>();
 

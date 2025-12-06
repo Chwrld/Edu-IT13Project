@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MauiAppIT13.Models"
              x:Class="MauiAppIT13.Pages.Teacher.TeacherClassesPage"
              BackgroundColor="#F5F7FA">
 
@@ -203,254 +204,166 @@
 
                 <!-- Filter Tabs -->
                 <HorizontalStackLayout Spacing="10">
-                    <Border BackgroundColor="#059669"
+                    <Border x:Name="AllFilter"
+                            BackgroundColor="#059669"
                             Padding="12,8"
                             StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
-                        <Label Text="All Classes" 
+                        <Label x:Name="AllFilterLabel"
+                               Text="All Classes" 
                                TextColor="White" 
                                FontSize="13"
                                FontAttributes="Bold"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnFilterTapped"
+                                CommandParameter="All"/>
+                        </Border.GestureRecognizers>
                     </Border>
-                    <Border BackgroundColor="#E5E7EB"
+                    <Border x:Name="ActiveFilter"
+                            BackgroundColor="#E5E7EB"
                             Padding="12,8"
                             StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
-                        <Label Text="Active" 
+                        <Label x:Name="ActiveFilterLabel"
+                               Text="Active" 
                                TextColor="#6B7280" 
                                FontSize="13"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnFilterTapped"
+                                CommandParameter="Active"/>
+                        </Border.GestureRecognizers>
                     </Border>
-                    <Border BackgroundColor="#E5E7EB"
+                    <Border x:Name="UpcomingFilter"
+                            BackgroundColor="#E5E7EB"
                             Padding="12,8"
                             StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
-                        <Label Text="Upcoming" 
+                        <Label x:Name="UpcomingFilterLabel"
+                               Text="Upcoming" 
                                TextColor="#6B7280" 
                                FontSize="13"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnFilterTapped"
+                                CommandParameter="Upcoming"/>
+                        </Border.GestureRecognizers>
                     </Border>
-                    <Border BackgroundColor="#E5E7EB"
+                    <Border x:Name="CompletedFilter"
+                            BackgroundColor="#E5E7EB"
                             Padding="12,8"
                             StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
-                        <Label Text="Completed" 
+                        <Label x:Name="CompletedFilterLabel"
+                               Text="Completed" 
                                TextColor="#6B7280" 
                                FontSize="13"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnFilterTapped"
+                                CommandParameter="Completed"/>
+                        </Border.GestureRecognizers>
                     </Border>
                 </HorizontalStackLayout>
 
                 <!-- Classes List -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowSpacing="15" RowDefinitions="Auto,Auto">
-                    
-                    <!-- Class Card 1 -->
-                    <Border Grid.Row="0" Grid.Column="0"
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
-                            <!-- Class Name -->
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="Introduction to Computer Science" 
-                                   FontSize="18" 
+                <CollectionView x:Name="CoursesCollectionView"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="40,60" Spacing="12" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="No classes yet"
+                                   FontSize="18"
                                    FontAttributes="Bold"
-                                   TextColor="#2C3E50"
-                                   LineBreakMode="WordWrap"/>
-                            
-                            <!-- Course Code -->
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="CS-101" 
-                                   FontSize="14" 
-                                   FontAttributes="Bold"
-                                   TextColor="#059669"/>
-                            
-                            <!-- Details Row -->
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="20">
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="👥" FontSize="14"/>
-                                    <Label Text="35 students" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="📅" FontSize="14"/>
-                                    <Label Text="AY 2024-2025 • 1st Sem" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <!-- Status Badge -->
-                            <Border Grid.Row="0" Grid.Column="1"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Start"
-                                    HorizontalOptions="End">
+                                   TextColor="#4B5563"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Once classes are assigned to you, they will appear here automatically."
+                                   FontSize="14"
+                                   TextColor="#6B7280"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ClassModel">
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1"
+                                    Stroke="#E5E7EB"
+                                    Padding="20"
+                                    Margin="0,0,0,15">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="4"/>
+                                    <RoundRectangle CornerRadius="10"/>
                                 </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       TextColor="#059669" 
-                                       FontSize="12"
-                                       FontAttributes="Bold"/>
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="#2C3E50"
+                                           LineBreakMode="WordWrap"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0"
+                                           Text="{Binding Code}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="#059669"/>
+
+                                    <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="20">
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Label Text="👥" FontSize="14"/>
+                                            <Label Text="{Binding StudentCountDisplay}"
+                                                   FontSize="13"
+                                                   TextColor="#6B7280"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Label Text="📅" FontSize="14"/>
+                                            <Label Text="{Binding AcademicTerm}"
+                                                   FontSize="13"
+                                                   TextColor="#6B7280"/>
+                                        </HorizontalStackLayout>
+                                    </HorizontalStackLayout>
+
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            BackgroundColor="{Binding StatusColor}"
+                                            Padding="8,4"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start"
+                                            HorizontalOptions="End">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Status}"
+                                               TextColor="{Binding StatusTextColor}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"/>
+                                    </Border>
+
+                                    <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                            Text="View Class"
+                                            BackgroundColor="#059669"
+                                            TextColor="White"
+                                            FontSize="14"
+                                            CornerRadius="6"
+                                            HeightRequest="40"
+                                            Margin="0,10,0,0"
+                                            Clicked="OnViewClassClicked"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
                             </Border>
-
-                            <!-- Action Button -->
-                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                    Text="View Class"
-                                    BackgroundColor="#059669"
-                                    TextColor="White"
-                                    FontSize="14"
-                                    CornerRadius="6"
-                                    HeightRequest="40"
-                                    Margin="0,10,0,0"
-                                    Clicked="OnViewClassClicked"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Class Card 2 -->
-                    <Border Grid.Row="0" Grid.Column="1"
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="Data Structures and Algorithms" 
-                                   FontSize="18" 
-                                   FontAttributes="Bold"
-                                   TextColor="#2C3E50"
-                                   LineBreakMode="WordWrap"/>
-                            
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="CS-201" 
-                                   FontSize="14" 
-                                   FontAttributes="Bold"
-                                   TextColor="#059669"/>
-                            
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="20">
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="👥" FontSize="14"/>
-                                    <Label Text="28 students" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="📅" FontSize="14"/>
-                                    <Label Text="AY 2024-2025 • 1st Sem" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <Border Grid.Row="0" Grid.Column="1"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Start"
-                                    HorizontalOptions="End">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="4"/>
-                                </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       TextColor="#059669" 
-                                       FontSize="12"
-                                       FontAttributes="Bold"/>
-                            </Border>
-
-                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                    Text="View Class"
-                                    BackgroundColor="#059669"
-                                    TextColor="White"
-                                    FontSize="14"
-                                    CornerRadius="6"
-                                    HeightRequest="40"
-                                    Margin="0,10,0,0"
-                                    Clicked="OnViewClassClicked"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Class Card 3 -->
-                    <Border Grid.Row="1" Grid.Column="0"
-                            BackgroundColor="White"
-                            StrokeThickness="1"
-                            Stroke="#E5E7EB"
-                            Padding="20">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="Web Development Fundamentals" 
-                                   FontSize="18" 
-                                   FontAttributes="Bold"
-                                   TextColor="#2C3E50"
-                                   LineBreakMode="WordWrap"/>
-                            
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="CS-301" 
-                                   FontSize="14" 
-                                   FontAttributes="Bold"
-                                   TextColor="#059669"/>
-                            
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="20">
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="👥" FontSize="14"/>
-                                    <Label Text="42 students" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Spacing="5">
-                                    <Label Text="📅" FontSize="14"/>
-                                    <Label Text="AY 2024-2025 • 1st Sem" 
-                                           FontSize="13" 
-                                           TextColor="#6B7280"/>
-                                </HorizontalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <Border Grid.Row="0" Grid.Column="1"
-                                    BackgroundColor="#D1FAE5"
-                                    Padding="8,4"
-                                    StrokeThickness="0"
-                                    VerticalOptions="Start"
-                                    HorizontalOptions="End">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="4"/>
-                                </Border.StrokeShape>
-                                <Label Text="Active" 
-                                       TextColor="#059669" 
-                                       FontSize="12"
-                                       FontAttributes="Bold"/>
-                            </Border>
-
-                            <!-- Action Button -->
-                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                    Text="View Class"
-                                    BackgroundColor="#059669"
-                                    TextColor="White"
-                                    FontSize="14"
-                                    CornerRadius="6"
-                                    HeightRequest="40"
-                                    Margin="0,10,0,0"
-                                    Clicked="OnViewClassClicked"/>
-                        </Grid>
-                    </Border>
-
-                </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
             </VerticalStackLayout>
         </ScrollView>

@@ -82,12 +82,10 @@ public partial class AnnouncementsPage : ContentPage
     {
         IEnumerable<Announcement> query = _allAnnouncements;
 
-        query = _currentFilter switch
+        if (_currentFilter == "Announcements")
         {
-            "Announcements" => query.Where(a => a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase)),
-            "Reminders" => query.Where(a => a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase)),
-            _ => query
-        };
+            query = query.Where(a => a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase));
+        }
 
         if (!string.IsNullOrWhiteSpace(_searchText))
         {
@@ -117,7 +115,6 @@ public partial class AnnouncementsPage : ContentPage
 
         SetTabVisuals(AllTab, AllTabLabel, _currentFilter == "All");
         SetTabVisuals(AnnouncementsTab, AnnouncementsTabLabel, _currentFilter == "Announcements");
-        SetTabVisuals(RemindersTab, RemindersTabLabel, _currentFilter == "Reminders");
     }
 
     private void ChangeFilter(string filter)
@@ -133,8 +130,6 @@ public partial class AnnouncementsPage : ContentPage
     private void OnAllTabTapped(object? sender, EventArgs e) => ChangeFilter("All");
 
     private void OnAnnouncementsTabTapped(object? sender, EventArgs e) => ChangeFilter("Announcements");
-
-    private void OnRemindersTabTapped(object? sender, EventArgs e) => ChangeFilter("Reminders");
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {

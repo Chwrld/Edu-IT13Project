@@ -189,6 +189,70 @@ public class MessageService
         }
     }
 
+    public async Task MarkConversationMessagesAsReadAsync(Guid conversationId, Guid userId)
+    {
+        try
+        {
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: MarkConversationMessagesAsReadAsync - DbConnection is not SqlServerDbConnection");
+                return;
+            }
+
+            const string conversationSql = "SELECT participant1_id, participant2_id FROM conversations WHERE conversation_id = @ConversationId";
+
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: MarkConversationMessagesAsReadAsync - Could not get SQL connection");
+                return;
+            }
+
+            await connection.OpenAsync();
+
+            Guid participant1;
+            Guid participant2;
+
+            await using (var conversationCommand = new SqlCommand(conversationSql, connection))
+            {
+                conversationCommand.Parameters.AddWithValue("@ConversationId", conversationId);
+                await using var reader = await conversationCommand.ExecuteReaderAsync();
+                if (!await reader.ReadAsync())
+                {
+                    Debug.WriteLine("MessageService: MarkConversationMessagesAsReadAsync - Conversation not found");
+                    return;
+                }
+
+                participant1 = reader.GetGuid(0);
+                participant2 = reader.GetGuid(1);
+            }
+
+            if (participant1 != userId && participant2 != userId)
+            {
+                Debug.WriteLine("MessageService: MarkConversationMessagesAsReadAsync - User is not part of conversation");
+                return;
+            }
+
+            var otherParticipant = participant1 == userId ? participant2 : participant1;
+
+            const string updateSql = @"
+                UPDATE messages
+                SET is_read = 1
+                WHERE receiver_id = @UserId AND sender_id = @OtherParticipant";
+
+            await using var updateCommand = new SqlCommand(updateSql, connection);
+            updateCommand.Parameters.AddWithValue("@UserId", userId);
+            updateCommand.Parameters.AddWithValue("@OtherParticipant", otherParticipant);
+
+            var rowsUpdated = await updateCommand.ExecuteNonQueryAsync();
+            Debug.WriteLine($"MessageService: MarkConversationMessagesAsReadAsync - Updated {rowsUpdated} messages");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MessageService: MarkConversationMessagesAsReadAsync failed - {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
     public async Task<List<Message>> GetConversationMessagesAsync(Guid conversationId)
     {
         try
@@ -288,7 +352,13 @@ public class MessageService
                 UPDATE conversations 
                 SET last_message_id = @MessageId, last_message_time = GETUTCDATE()
                 WHERE (participant1_id = @SenderId AND participant2_id = @ReceiverId) 
-                   OR (participant1_id = @ReceiverId AND participant2_id = @SenderId);";
+                   OR (participant1_id = @ReceiverId AND participant2_id = @SenderId);
+
+                UPDATE messages
+                SET is_read = 1
+                WHERE sender_id = @ReceiverId
+                  AND receiver_id = @SenderId
+                  AND is_read = 0;";
 
             var messageId = Guid.NewGuid();
             
@@ -350,6 +420,53 @@ public class MessageService
             var assignedColor = AvatarPalette[AvatarRandom.Next(AvatarPalette.Length)];
             AvatarColorAssignments[id] = assignedColor;
             return assignedColor;
+        }
+    }
+
+    public async Task<(int TotalUnread, int AdvisorUnread)> GetUnreadMessageSummaryAsync(Guid userId)
+    {
+        try
+        {
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: GetUnreadMessageSummaryAsync - DbConnection is not SqlServerDbConnection");
+                return (0, 0);
+            }
+
+            const string sql = @"
+                SELECT 
+                    SUM(CASE WHEN m.is_read = 0 THEN 1 ELSE 0 END) AS total_unread,
+                    SUM(CASE WHEN m.is_read = 0 AND u.role = 'Teacher' THEN 1 ELSE 0 END) AS advisor_unread
+                FROM messages m
+                INNER JOIN users u ON m.sender_id = u.user_id
+                WHERE m.receiver_id = @UserId";
+
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: GetUnreadMessageSummaryAsync - Could not get SQL connection");
+                return (0, 0);
+            }
+
+            await connection.OpenAsync();
+            await using var command = new SqlCommand(sql, connection);
+            command.CommandTimeout = 5;
+            command.Parameters.AddWithValue("@UserId", userId);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                var totalUnread = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                var advisorUnread = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
+                return (totalUnread, advisorUnread);
+            }
+
+            return (0, 0);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MessageService: GetUnreadMessageSummaryAsync failed - {ex.GetType().Name}: {ex.Message}");
+            return (0, 0);
         }
     }
 }

@@ -1,13 +1,91 @@
+using System.Collections.ObjectModel;
 using System.Runtime.Versioning;
+using MauiAppIT13.Models;
+using MauiAppIT13.Services;
+using MauiAppIT13.Utils;
 
 namespace MauiAppIT13.Pages.Teacher;
 
+[QueryProperty(nameof(ClassIdQuery), "classId")]
 [SupportedOSPlatform("windows10.0.17763.0")]
 public partial class TeacherClassDetailsPage : ContentPage
 {
+    private ClassService? _classService;
+    private readonly ObservableCollection<ClassStudent> _students = new();
+    private Guid _classId;
+    private bool _hasAppeared;
+
+    public string? ClassIdQuery
+    {
+        get => _classId.ToString();
+        set
+        {
+            if (Guid.TryParse(value, out var parsed))
+            {
+                var shouldReload = _classId != parsed;
+                _classId = parsed;
+                if (_hasAppeared && shouldReload)
+                {
+                    _ = LoadClassAsync();
+                }
+            }
+        }
+    }
+
     public TeacherClassDetailsPage()
     {
         InitializeComponent();
+        StudentsCollectionView.ItemsSource = _students;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _hasAppeared = true;
+        if (_classId != Guid.Empty)
+        {
+            _ = LoadClassAsync();
+        }
+    }
+
+    private async Task LoadClassAsync()
+    {
+        try
+        {
+            _classService ??= AppServiceProvider.GetService<ClassService>();
+            if (_classService is null || _classId == Guid.Empty)
+            {
+                await DisplayAlert("Error", "Class information unavailable.", "OK");
+                return;
+            }
+
+            var classModel = await _classService.GetClassByIdAsync(_classId);
+            if (classModel is null)
+            {
+                await DisplayAlert("Error", "Unable to load class details.", "OK");
+                return;
+            }
+
+            ClassTitleLabel.Text = classModel.Name;
+            ClassCodeLabel.Text = classModel.Code;
+            ClassStudentsLabel.Text = $"{classModel.StudentCount} Students";
+            ClassTermLabel.Text = classModel.AcademicTerm;
+
+            var students = await _classService.GetClassStudentsAsync(_classId);
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                _students.Clear();
+                foreach (var student in students)
+                {
+                    _students.Add(student);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to load class details: {ex.Message}", "OK");
+        }
     }
 
     private async void OnBackToClassesTapped(object sender, EventArgs e)
@@ -20,9 +98,24 @@ public partial class TeacherClassDetailsPage : ContentPage
         await Shell.Current.GoToAsync("//TeacherHomePage");
     }
 
+    private async void OnClassesMenuTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherClassesPage");
+    }
+
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Messages", "Messages feature coming soon!", "OK");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+    }
+
+    private async void OnAnnouncementsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+    }
+
+    private async void OnTicketsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherTicketsPage");
     }
 
     // Search functionality

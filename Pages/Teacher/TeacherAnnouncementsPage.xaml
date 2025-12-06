@@ -270,7 +270,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Important -->
+                    <!-- Students Target -->
                     <Border Grid.Column="2" 
                             BackgroundColor="White"
                             StrokeThickness="1"
@@ -282,11 +282,11 @@
                         <VerticalStackLayout Spacing="8">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Label Grid.Column="0"
-                                       Text="Important" 
-                                       FontSize="13" 
+                                       Text="Students"
+                                       FontSize="13"
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="⚠️" FontSize="16"/>
+                                       Text="🎓" FontSize="16"/>
                             </Grid>
                             <Label x:Name="ImportantCountLabel"
                                    Text="0" 
@@ -341,23 +341,23 @@
                                 CornerRadius="6"
                                 Clicked="OnFilterAllClicked"/>
                         <Button Grid.Column="2"
-                                x:Name="FilterImportantBtn"
-                                Text="Important"
+                                x:Name="FilterStudentsBtn"
+                                Text="Students"
                                 BackgroundColor="#F3F4F6"
                                 TextColor="#6B7280"
                                 FontSize="13"
                                 Padding="15,8"
                                 CornerRadius="6"
-                                Clicked="OnFilterImportantClicked"/>
+                                Clicked="OnFilterStudentsClicked"/>
                         <Button Grid.Column="3"
-                                x:Name="FilterUrgentBtn"
-                                Text="Urgent"
+                                x:Name="FilterAdvisersBtn"
+                                Text="Advisers"
                                 BackgroundColor="#F3F4F6"
                                 TextColor="#6B7280"
                                 FontSize="13"
                                 Padding="15,8"
                                 CornerRadius="6"
-                                Clicked="OnFilterUrgentClicked"/>
+                                Clicked="OnFilterAdvisersClicked"/>
                     </Grid>
                 </Border>
 
@@ -402,16 +402,16 @@
                                                TextColor="#9CA3AF"/>
                                     </VerticalStackLayout>
 
-                                    <!-- Priority Badge -->
+                                    <!-- Target Badge -->
                                     <Border Grid.Row="0" Grid.Column="1"
-                                            BackgroundColor="{Binding PriorityColor}"
+                                            BackgroundColor="{Binding TargetColor}"
                                             Padding="10,6"
                                             StrokeThickness="0"
                                             VerticalOptions="Start">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="12"/>
                                         </Border.StrokeShape>
-                                        <Label Text="{Binding Priority}" 
+                                        <Label Text="{Binding TargetAudience}" 
                                                TextColor="White"
                                                FontSize="12"
                                                FontAttributes="Bold"/>
@@ -424,35 +424,24 @@
                                            TextColor="#374151"
                                            LineBreakMode="WordWrap"/>
 
-                                    <!-- Target Audience -->
-                                    <Border Grid.Row="2" Grid.ColumnSpan="2"
-                                            BackgroundColor="#F9FAFB"
-                                            Padding="12"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="{Binding TargetAudience, StringFormat='Target: {0}'}"
-                                               FontSize="13"
-                                               TextColor="#6B7280"/>
-                                    </Border>
-
                                     <!-- Actions -->
-                                    <HorizontalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="12">
+                                    <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="12">
                                         <Button Text="✏️ Edit"
                                                 BackgroundColor="Transparent"
                                                 TextColor="#059669"
                                                 FontSize="13"
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
-                                                Clicked="OnEditAnnouncementClicked"/>
+                                                Clicked="OnEditAnnouncementClicked"
+                                                IsVisible="{Binding IsOwnedByCurrentUser}"/>
                                         <Button Text="🗑️ Delete"
                                                 BackgroundColor="Transparent"
                                                 TextColor="#EF4444"
                                                 FontSize="13"
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
-                                                Clicked="OnDeleteAnnouncementClicked"/>
+                                                Clicked="OnDeleteAnnouncementClicked"
+                                                IsVisible="{Binding IsOwnedByCurrentUser}"/>
                                     </HorizontalStackLayout>
                                 </Grid>
                             </Border>
@@ -538,7 +527,7 @@
                                 </Border>
                             </VerticalStackLayout>
 
-                            <!-- Target Audience and Subject Code (side by side) -->
+                            <!-- Target Audience and Publish Row -->
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
                                 <!-- Target Audience -->
                                 <VerticalStackLayout Spacing="10" Grid.Column="0">
@@ -552,33 +541,36 @@
                                             FontSize="14"
                                             SelectedIndexChanged="OnTargetPickerChanged">
                                         <Picker.Items>
-                                            <x:String>All Students under my advisory</x:String>
-                                            <x:String>Specific Class</x:String>
-                                            <x:String>Faculty</x:String>
+                                            <x:String>All Users</x:String>
+                                            <x:String>Students</x:String>
+                                            <x:String>Advisers</x:String>
                                         </Picker.Items>
                                         <Picker.SelectedIndex>0</Picker.SelectedIndex>
                                     </Picker>
                                 </VerticalStackLayout>
 
-                                <!-- Subject Code Field (Visible only when Specific Class is selected) -->
-                                <VerticalStackLayout x:Name="SubjectCodeSection" Spacing="10" Grid.Column="1" IsVisible="False">
-                                    <Label Text="Subject Code" 
+                                <!-- Publish Switch -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="10">
+                                    <Label Text="Publish Status *" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
                                     <Border BackgroundColor="#F9FAFB"
                                             Stroke="#E5E7EB"
                                             StrokeThickness="1"
-                                            Padding="14,12">
+                                            Padding="14,10">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="8"/>
                                         </Border.StrokeShape>
-                                        <Entry x:Name="SubjectCodeEntry"
-                                               Placeholder="Enter subject code (e.g., IT-101)"
-                                               PlaceholderColor="#9CA3AF"
-                                               TextColor="#2C3E50"
-                                               BackgroundColor="Transparent"
-                                               FontSize="14"/>
+                                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                            <Label Text="Publish immediately"
+                                                   FontSize="14"
+                                                   TextColor="#2C3E50"
+                                                   VerticalOptions="Center"/>
+                                            <Switch x:Name="PublishSwitch"
+                                                    IsToggled="True"
+                                                    OnColor="#059669"/>
+                                        </HorizontalStackLayout>
                                     </Border>
                                 </VerticalStackLayout>
                             </Grid>
