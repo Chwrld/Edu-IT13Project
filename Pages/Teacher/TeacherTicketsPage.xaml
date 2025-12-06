@@ -720,51 +720,28 @@
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Category and Priority Row -->
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                            <!-- Category Picker -->
-                            <VerticalStackLayout Grid.Column="0" Spacing="10">
-                                <Label Text="Category *" 
-                                       FontSize="14" 
-                                       TextColor="#2C3E50"
-                                       FontAttributes="Bold"/>
-                                <Picker x:Name="NewTicketCategoryPicker"
-                                        TextColor="#2C3E50"
-                                        BackgroundColor="White"
-                                        FontSize="14">
-                                    <Picker.Items>
-                                        <x:String>Select category</x:String>
-                                        <x:String>Academic</x:String>
-                                        <x:String>Facilities</x:String>
-                                        <x:String>Administration</x:String>
-                                        <x:String>Technical</x:String>
-                                        <x:String>Financial</x:String>
-                                        <x:String>Other</x:String>
-                                    </Picker.Items>
-                                    <Picker.SelectedIndex>0</Picker.SelectedIndex>
-                                </Picker>
-                            </VerticalStackLayout>
-
-                            <!-- Priority Picker -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="10">
-                                <Label Text="Priority *" 
-                                       FontSize="14" 
-                                       TextColor="#2C3E50"
-                                       FontAttributes="Bold"/>
-                                <Picker x:Name="NewTicketPriorityPicker"
-                                        TextColor="#2C3E50"
-                                        BackgroundColor="White"
-                                        FontSize="14">
-                                    <Picker.Items>
-                                        <x:String>Select priority</x:String>
-                                        <x:String>Low</x:String>
-                                        <x:String>Medium</x:String>
-                                        <x:String>High</x:String>
-                                    </Picker.Items>
-                                    <Picker.SelectedIndex>0</Picker.SelectedIndex>
-                                </Picker>
-                            </VerticalStackLayout>
-                        </Grid>
+                        <!-- Category -->
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Category *" 
+                                   FontSize="14" 
+                                   TextColor="#2C3E50"
+                                   FontAttributes="Bold"/>
+                            <Picker x:Name="NewTicketCategoryPicker"
+                                    TextColor="#2C3E50"
+                                    BackgroundColor="White"
+                                    FontSize="14">
+                                <Picker.Items>
+                                    <x:String>Select category</x:String>
+                                    <x:String>Academic</x:String>
+                                    <x:String>Facilities</x:String>
+                                    <x:String>Administration</x:String>
+                                    <x:String>Technical</x:String>
+                                    <x:String>Financial</x:String>
+                                    <x:String>Other</x:String>
+                                </Picker.Items>
+                                <Picker.SelectedIndex>0</Picker.SelectedIndex>
+                            </Picker>
+                        </VerticalStackLayout>
 
                         <!-- Description Field -->
                         <VerticalStackLayout Spacing="10">

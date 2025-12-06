@@ -410,7 +410,7 @@ public partial class TeacherTicketsPage : ContentPage
         {
             string title = NewTicketTitleEntry.Text?.Trim() ?? string.Empty;
             string category = NewTicketCategoryPicker.SelectedIndex > 0 ? NewTicketCategoryPicker.Items[NewTicketCategoryPicker.SelectedIndex] : string.Empty;
-            string priority = NewTicketPriorityPicker.SelectedIndex > 0 ? NewTicketPriorityPicker.Items[NewTicketPriorityPicker.SelectedIndex].ToLower() : string.Empty;
+            string priority = "medium";
             string description = NewTicketDescriptionEditor.Text?.Trim() ?? string.Empty;
 
             // Validation
@@ -423,12 +423,6 @@ public partial class TeacherTicketsPage : ContentPage
             if (NewTicketCategoryPicker.SelectedIndex <= 0)
             {
                 await DisplayAlert("Error", "Please select a category.", "OK");
-                return;
-            }
-
-            if (NewTicketPriorityPicker.SelectedIndex <= 0)
-            {
-                await DisplayAlert("Error", "Please select a priority level.", "OK");
                 return;
             }
 
@@ -473,7 +467,6 @@ public partial class TeacherTicketsPage : ContentPage
     {
         NewTicketTitleEntry.Text = string.Empty;
         NewTicketCategoryPicker.SelectedIndex = 0;
-        NewTicketPriorityPicker.SelectedIndex = 0;
         NewTicketDescriptionEditor.Text = string.Empty;
     }
 }

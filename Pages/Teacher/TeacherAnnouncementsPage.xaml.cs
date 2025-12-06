@@ -188,7 +188,14 @@ public partial class TeacherAnnouncementsPage : ContentPage
             SubjectEntry.Text = announcement.Subject;
             MessageEditor.Text = announcement.Message;
             TargetPicker.SelectedItem = announcement.TargetAudience;
-            PriorityPicker.SelectedItem = announcement.Priority;
+            
+            // Show subject code field if target is "Specific Class"
+            if (announcement.TargetAudience == "Specific Class")
+            {
+                SubjectCodeSection.IsVisible = true;
+                // Extract subject code from message or set empty
+                SubjectCodeEntry.Text = string.Empty;
+            }
             
             ModalOverlay.IsVisible = true;
         }
@@ -244,7 +251,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
             var subject = SubjectEntry.Text.Trim();
             var message = MessageEditor.Text.Trim();
             var target = TargetPicker.SelectedItem?.ToString() ?? "All Students";
-            var priority = PriorityPicker.SelectedItem?.ToString() ?? "Normal";
+            var priority = "Normal";
 
             if (_isEditMode && _selectedAnnouncement != null)
             {
@@ -300,9 +307,27 @@ public partial class TeacherAnnouncementsPage : ContentPage
         SubjectEntry.Text = string.Empty;
         MessageEditor.Text = string.Empty;
         TargetPicker.SelectedIndex = 0;
-        PriorityPicker.SelectedIndex = 0;
+        SubjectCodeEntry.Text = string.Empty;
+        SubjectCodeSection.IsVisible = false;
         _isEditMode = false;
         _selectedAnnouncement = null;
+    }
+
+    private void OnTargetPickerChanged(object? sender, EventArgs e)
+    {
+        // Null check to prevent crashes during initialization
+        if (SubjectCodeSection == null || SubjectCodeEntry == null || TargetPicker == null)
+            return;
+
+        if (TargetPicker.SelectedItem?.ToString() == "Specific Class")
+        {
+            SubjectCodeSection.IsVisible = true;
+        }
+        else
+        {
+            SubjectCodeSection.IsVisible = false;
+            SubjectCodeEntry.Text = string.Empty;
+        }
     }
 
     private Color GetPriorityColor(string priority)
@@ -347,6 +372,8 @@ public partial class TeacherAnnouncementsPage : ContentPage
 }
 
 // Helper class for announcement data
+[SupportedOSPlatform("windows10.0.17763.0")]
+[SupportedOSPlatform("android21.0")]
 public class AnnouncementItem
 {
     public Guid Id { get; set; }

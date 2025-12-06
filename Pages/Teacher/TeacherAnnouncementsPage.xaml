@@ -491,7 +491,7 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0" Spacing="6">
                                 <Label x:Name="ModalTitleLabel"
-                                       Text="Create New Announcement" 
+                                       Text="Create Announcement" 
                                        FontSize="22" 
                                        FontAttributes="Bold"
                                        TextColor="White"/>
@@ -518,7 +518,7 @@
                             
                             <!-- Subject Field -->
                             <VerticalStackLayout Spacing="10">
-                                <Label Text="Subject *" 
+                                <Label Text="Subject: " 
                                        FontSize="14" 
                                        TextColor="#2C3E50"
                                        FontAttributes="Bold"/>
@@ -538,50 +538,54 @@
                                 </Border>
                             </VerticalStackLayout>
 
-                            <!-- Target Audience and Priority Row -->
+                            <!-- Target Audience and Subject Code (side by side) -->
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
                                 <!-- Target Audience -->
-                                <VerticalStackLayout Grid.Column="0" Spacing="10">
-                                    <Label Text="Target Audience *" 
+                                <VerticalStackLayout Spacing="10" Grid.Column="0">
+                                    <Label Text="Target Audience:" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
                                     <Picker x:Name="TargetPicker"
                                             TextColor="#2C3E50"
                                             BackgroundColor="White"
-                                            FontSize="14">
+                                            FontSize="14"
+                                            SelectedIndexChanged="OnTargetPickerChanged">
                                         <Picker.Items>
-                                            <x:String>All Students</x:String>
+                                            <x:String>All Students under my advisory</x:String>
                                             <x:String>Specific Class</x:String>
-                                            <x:String>All Faculty</x:String>
+                                            <x:String>Faculty</x:String>
                                         </Picker.Items>
                                         <Picker.SelectedIndex>0</Picker.SelectedIndex>
                                     </Picker>
                                 </VerticalStackLayout>
 
-                                <!-- Priority Picker -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="10">
-                                    <Label Text="Priority *" 
+                                <!-- Subject Code Field (Visible only when Specific Class is selected) -->
+                                <VerticalStackLayout x:Name="SubjectCodeSection" Spacing="10" Grid.Column="1" IsVisible="False">
+                                    <Label Text="Subject Code" 
                                            FontSize="14" 
                                            TextColor="#2C3E50"
                                            FontAttributes="Bold"/>
-                                    <Picker x:Name="PriorityPicker"
-                                            TextColor="#2C3E50"
-                                            BackgroundColor="White"
-                                            FontSize="14">
-                                        <Picker.Items>
-                                            <x:String>Normal</x:String>
-                                            <x:String>Important</x:String>
-                                            <x:String>Urgent</x:String>
-                                        </Picker.Items>
-                                        <Picker.SelectedIndex>0</Picker.SelectedIndex>
-                                    </Picker>
+                                    <Border BackgroundColor="#F9FAFB"
+                                            Stroke="#E5E7EB"
+                                            StrokeThickness="1"
+                                            Padding="14,12">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Entry x:Name="SubjectCodeEntry"
+                                               Placeholder="Enter subject code (e.g., IT-101)"
+                                               PlaceholderColor="#9CA3AF"
+                                               TextColor="#2C3E50"
+                                               BackgroundColor="Transparent"
+                                               FontSize="14"/>
+                                    </Border>
                                 </VerticalStackLayout>
                             </Grid>
 
                             <!-- Message Field -->
                             <VerticalStackLayout Spacing="10">
-                                <Label Text="Message *" 
+                                <Label Text="Message:" 
                                        FontSize="14" 
                                        TextColor="#2C3E50"
                                        FontAttributes="Bold"/>
