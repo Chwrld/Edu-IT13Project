@@ -28,7 +28,8 @@ public partial class AnnouncementsPage : ContentPage
     {
         InitializeComponent();
 
-        _announcementService = AppServiceProvider.GetService<AnnouncementService>() ?? new AnnouncementService();
+        _announcementService = AppServiceProvider.GetService<AnnouncementService>() ?? throw new InvalidOperationException("AnnouncementService not available");
+
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;

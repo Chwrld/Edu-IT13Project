@@ -21,7 +21,8 @@ public partial class AdminAnnouncementsPage : ContentPage
     {
         InitializeComponent();
 
-        _announcementService = AppServiceProvider.GetService<AnnouncementService>() ?? new AnnouncementService();
+        _announcementService = AppServiceProvider.GetService<AnnouncementService>()
+            ?? throw new InvalidOperationException("AnnouncementService not available");
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
@@ -210,7 +211,7 @@ public partial class AdminAnnouncementsPage : ContentPage
         AnnouncementModal.IsVisible = true;
     }
 
-    private async void OnEditAnnouncementClicked(object? sender, EventArgs e)
+    private void OnEditAnnouncementClicked(object? sender, EventArgs e)
     {
         var announcement = GetAnnouncementFromSender(sender);
         if (announcement == null)

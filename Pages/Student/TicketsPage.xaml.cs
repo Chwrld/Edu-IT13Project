@@ -15,9 +15,8 @@ public partial class TicketsPage : ContentPage
     public TicketsPage()
     {
         InitializeComponent();
-        
-        var dbConnection = AppServiceProvider.GetService<MauiAppIT13.Database.DbConnection>();
-        _ticketService = AppServiceProvider.GetService<TicketService>() ?? new TicketService(dbConnection ?? throw new InvalidOperationException("DbConnection not found"));
+        _ticketService = AppServiceProvider.GetService<TicketService>()
+            ?? throw new InvalidOperationException("TicketService not available");
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
     }
 

@@ -75,13 +75,12 @@ public partial class HomePage : ContentPage
 
         _messageService = AppServiceProvider.GetService<MessageService>()
             ?? throw new InvalidOperationException("MessageService not registered");
-        _announcementService = AppServiceProvider.GetService<AnnouncementService>() ?? new AnnouncementService();
+        _announcementService = AppServiceProvider.GetService<AnnouncementService>()
+            ?? throw new InvalidOperationException("AnnouncementService not available");
 
         _dbConnection = AppServiceProvider.GetService<DbConnection>();
         _ticketService = AppServiceProvider.GetService<TicketService>()
-            ?? (_dbConnection is not null
-                ? new TicketService(_dbConnection)
-                : throw new InvalidOperationException("TicketService dependencies missing"));
+            ?? throw new InvalidOperationException("TicketService not available");
 
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 

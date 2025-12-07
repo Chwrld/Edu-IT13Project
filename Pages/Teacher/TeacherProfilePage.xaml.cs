@@ -1,4 +1,6 @@
 using System.Runtime.Versioning;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Models;
 using MauiAppIT13.Utils;
 
@@ -9,11 +11,14 @@ namespace MauiAppIT13.Pages.Teacher;
 public partial class TeacherProfilePage : ContentPage
 {
     private readonly AuthManager _authManager;
+    private readonly IConfiguration _configuration;
 
     public TeacherProfilePage()
     {
         InitializeComponent();
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
+        _configuration = AppServiceProvider.GetService<IConfiguration>()
+            ?? throw new InvalidOperationException("Configuration service not available");
     }
 
     protected override void OnAppearing()
@@ -161,9 +166,7 @@ public partial class TeacherProfilePage : ContentPage
                     address = @Address
                 WHERE user_id = @UserId";
 
-            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
-            await using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+            await using var connection = CreateSqlConnection();
             await connection.OpenAsync();
             
             using var command = connection.CreateCommand();
@@ -190,5 +193,12 @@ public partial class TeacherProfilePage : ContentPage
             _authManager.ClearAuthentication();
             await Shell.Current.GoToAsync("//MainPage");
         }
+    }
+
+    private SqlConnection CreateSqlConnection()
+    {
+        var connectionString = _configuration.GetConnectionString("EduCrmSql")
+            ?? throw new InvalidOperationException("Connection string 'EduCrmSql' not found");
+        return new SqlConnection(connectionString);
     }
 }

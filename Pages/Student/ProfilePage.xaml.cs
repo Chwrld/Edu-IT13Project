@@ -1,3 +1,5 @@
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Models;
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
@@ -8,12 +10,16 @@ public partial class ProfilePage : ContentPage
 {
     private readonly AuthManager _authManager;
     private readonly StudentService _studentService;
+    private readonly IConfiguration _configuration;
 
     public ProfilePage()
     {
         InitializeComponent();
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
-        _studentService = AppServiceProvider.GetService<StudentService>() ?? new StudentService();
+        _studentService = AppServiceProvider.GetService<StudentService>()
+            ?? throw new InvalidOperationException("StudentService not available");
+        _configuration = AppServiceProvider.GetService<IConfiguration>()
+            ?? throw new InvalidOperationException("Configuration service not available");
     }
 
     protected override void OnAppearing()
@@ -179,9 +185,7 @@ public partial class ProfilePage : ContentPage
                     address = @Address
                 WHERE user_id = @UserId";
 
-            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
-            await using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+            await using var connection = CreateSqlConnection();
             await connection.OpenAsync();
             
             using var command = connection.CreateCommand();
@@ -207,5 +211,12 @@ public partial class ProfilePage : ContentPage
         {
             await Shell.Current.GoToAsync("//MainPage");
         }
+    }
+
+    private SqlConnection CreateSqlConnection()
+    {
+        var connectionString = _configuration.GetConnectionString("EduCrmSql")
+            ?? throw new InvalidOperationException("Connection string 'EduCrmSql' not found");
+        return new SqlConnection(connectionString);
     }
 }

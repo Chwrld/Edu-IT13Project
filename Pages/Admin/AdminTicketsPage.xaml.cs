@@ -27,9 +27,8 @@ public partial class AdminTicketsPage : ContentPage
     {
         InitializeComponent();
 
-        var dbConnection = AppServiceProvider.GetService<DbConnection>();
-        _ticketService = AppServiceProvider.GetService<TicketService>() ??
-                         new TicketService(dbConnection ?? throw new InvalidOperationException("DbConnection not found"));
+        _ticketService = AppServiceProvider.GetService<TicketService>()
+            ?? throw new InvalidOperationException("TicketService not available");
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 
         TicketsCollectionView.ItemsSource = _filteredTickets;
