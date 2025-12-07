@@ -1,13 +1,18 @@
 using System.Collections.ObjectModel;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Models;
 
 namespace MauiAppIT13.Services;
 
 public class StudentService
 {
-    public StudentService()
+    private readonly string _connectionString;
+
+    public StudentService(IConfiguration configuration)
     {
+        _connectionString = configuration.GetConnectionString("EduCrmSql")
+            ?? throw new InvalidOperationException("Connection string 'EduCrmSql' not found in configuration.");
     }
 
     public async Task<Student?> GetStudentByUserIdAsync(Guid userId)
@@ -29,10 +34,8 @@ public class StudentService
                 FROM students
                 WHERE student_id = @UserId";
 
-            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
             System.Diagnostics.Debug.WriteLine($"StudentService: Connecting to database...");
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             System.Diagnostics.Debug.WriteLine($"StudentService: Connection opened successfully");
             
@@ -87,12 +90,10 @@ public class StudentService
                 WHERE student_id = @StudentId
                 ORDER BY awarded_date DESC";
 
-            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
-            
             var achievements = new ObservableCollection<StudentAchievement>();
 
             System.Diagnostics.Debug.WriteLine($"StudentService: Connecting to database for achievements...");
-            await using var connection = new SqlConnection(connectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             System.Diagnostics.Debug.WriteLine($"StudentService: Connection opened successfully for achievements");
             

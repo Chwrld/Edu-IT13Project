@@ -1,12 +1,5 @@
 # EduCRM Setup Instructions
 
-## SQL Server Setup (Required)
-
-### Prerequisites
-- **SQL Server 2019 or later** (SQL Server Express is fine)
-- **SQL Server Management Studio (SSMS)** - for running SQL scripts
-- **.NET 9.0 SDK** - to run the application
-
 ### Step 1: Find Your SQL Server Instance Name
 
 1. Open **SQL Server Management Studio (SSMS)**

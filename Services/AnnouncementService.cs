@@ -1,12 +1,19 @@
 using System.Diagnostics;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Models;
 
 namespace MauiAppIT13.Services;
 
 public class AnnouncementService
 {
-    private const string ConnectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+    private readonly string _connectionString;
+
+    public AnnouncementService(IConfiguration configuration)
+    {
+        _connectionString = configuration.GetConnectionString("EduCrmSql")
+            ?? throw new InvalidOperationException("Connection string 'EduCrmSql' not found in configuration.");
+    }
 
     public async Task<List<Announcement>> GetAnnouncementsAsync(int limit = 100, Guid? currentUserId = null)
     {
@@ -52,7 +59,7 @@ public class AnnouncementService
 
         try
         {
-            await using var connection = new SqlConnection(ConnectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             await using var command = new SqlCommand(sql, connection);
@@ -101,7 +108,7 @@ public class AnnouncementService
         try
         {
             var id = Guid.NewGuid();
-            await using var connection = new SqlConnection(ConnectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 8;
@@ -138,7 +145,7 @@ public class AnnouncementService
 
         try
         {
-            await using var connection = new SqlConnection(ConnectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 8;
@@ -167,7 +174,7 @@ public class AnnouncementService
 
         try
         {
-            await using var connection = new SqlConnection(ConnectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
 
             await using var transaction = await connection.BeginTransactionAsync();
@@ -214,7 +221,7 @@ public class AnnouncementService
 
         try
         {
-            await using var connection = new SqlConnection(ConnectionString);
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             await using var command = new SqlCommand(sql, connection);
             command.CommandTimeout = 5;
