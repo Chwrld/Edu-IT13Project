@@ -6,7 +6,7 @@ namespace MauiAppIT13.Services;
 
 public class AnnouncementService
 {
-    private const string ConnectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+    private const string ConnectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
 
     public async Task<List<Announcement>> GetAnnouncementsAsync(int limit = 100, Guid? currentUserId = null)
     {

@@ -179,7 +179,7 @@ public partial class ProfilePage : ContentPage
                     address = @Address
                 WHERE user_id = @UserId";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             await using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
             await connection.OpenAsync();

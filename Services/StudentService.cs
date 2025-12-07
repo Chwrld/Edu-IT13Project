@@ -29,7 +29,7 @@ public class StudentService
                 FROM students
                 WHERE student_id = @UserId";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             System.Diagnostics.Debug.WriteLine($"StudentService: Connecting to database...");
             await using var connection = new SqlConnection(connectionString);
@@ -87,7 +87,7 @@ public class StudentService
                 WHERE student_id = @StudentId
                 ORDER BY awarded_date DESC";
 
-            const string connectionString = "Data Source=LAPTOP-L1R9L9R3\\SQLEXPRESS01;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
+            const string connectionString = "Data Source=DESKTOP-K7IHCGQ\\SQLEXPRESS;Initial Catalog=EduCRM;Integrated Security=True;Connect Timeout=10;Encrypt=False;Trust Server Certificate=True;";
             
             var achievements = new ObservableCollection<StudentAchievement>();
 
