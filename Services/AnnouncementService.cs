@@ -24,6 +24,7 @@ public class AnnouncementService
                 a.announcement_id,
                 a.title,
                 a.content,
+                a.course_id,
                 a.author_id,
                 a.visibility,
                 a.is_published,
@@ -76,17 +77,18 @@ public class AnnouncementService
                     Title = reader.GetString(1),
                     Content = reader.GetString(2),
                     AuthorId = reader.GetGuid(3),
-                    Visibility = reader.GetString(4),
-                    IsPublished = reader.GetBoolean(5),
-                    CreatedAt = reader.GetDateTime(6),
-                    CreatedBy = reader.GetGuid(7),
-                    UpdatedAt = reader.IsDBNull(8) ? null : reader.GetDateTime(8),
-                    UpdatedBy = reader.IsDBNull(9) ? null : reader.GetGuid(9),
-                    AuthorName = reader.IsDBNull(10) ? "Unknown" : reader.GetString(10),
-                    CreatedByName = reader.IsDBNull(11) ? "Unknown" : reader.GetString(11),
-                    UpdatedByName = reader.IsDBNull(12) ? null : reader.GetString(12),
-                    ViewCount = reader.GetInt32(13),
-                    HasViewed = !reader.IsDBNull(14) && reader.GetInt32(14) > 0
+                    CourseId = reader.IsDBNull(4) ? null : reader.GetGuid(4),
+                    Visibility = reader.GetString(5),
+                    IsPublished = reader.GetBoolean(6),
+                    CreatedAt = reader.GetDateTime(7),
+                    CreatedBy = reader.GetGuid(8),
+                    UpdatedAt = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
+                    UpdatedBy = reader.IsDBNull(10) ? null : reader.GetGuid(10),
+                    AuthorName = reader.IsDBNull(11) ? "Unknown" : reader.GetString(11),
+                    CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
+                    UpdatedByName = reader.IsDBNull(13) ? null : reader.GetString(13),
+                    ViewCount = reader.GetInt32(14),
+                    HasViewed = !reader.IsDBNull(15) && reader.GetInt32(15) > 0
                 };
                 announcements.Add(announcement);
             }
@@ -99,11 +101,82 @@ public class AnnouncementService
         return announcements;
     }
 
-    public async Task<Guid?> CreateAnnouncementAsync(string title, string content, string visibility, bool isPublished, Guid authorId, Guid createdBy)
+    public async Task<List<Announcement>> GetClassAnnouncementsAsync(Guid courseId, int limit = 50)
+    {
+        var announcements = new List<Announcement>();
+        if (courseId == Guid.Empty)
+        {
+            return announcements;
+        }
+
+        const string sql = @"
+            SELECT TOP (@Limit)
+                a.announcement_id,
+                a.title,
+                a.content,
+                a.course_id,
+                a.author_id,
+                a.visibility,
+                a.is_published,
+                a.created_at,
+                a.created_by,
+                a.updated_at,
+                a.updated_by,
+                author.display_name AS author_name,
+                creator.display_name AS created_by_name,
+                updater.display_name AS updated_by_name
+            FROM announcements a
+            LEFT JOIN users author ON a.author_id = author.user_id
+            LEFT JOIN users creator ON a.created_by = creator.user_id
+            LEFT JOIN users updater ON a.updated_by = updater.user_id
+            WHERE a.course_id = @CourseId
+            ORDER BY a.created_at DESC";
+
+        try
+        {
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            await using var command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@Limit", limit);
+            command.Parameters.AddWithValue("@CourseId", courseId);
+            command.CommandTimeout = 8;
+
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                announcements.Add(new Announcement
+                {
+                    Id = reader.GetGuid(0),
+                    Title = reader.GetString(1),
+                    Content = reader.GetString(2),
+                    CourseId = reader.IsDBNull(3) ? null : reader.GetGuid(3),
+                    AuthorId = reader.GetGuid(4),
+                    Visibility = reader.GetString(5),
+                    IsPublished = reader.GetBoolean(6),
+                    CreatedAt = reader.GetDateTime(7),
+                    CreatedBy = reader.GetGuid(8),
+                    UpdatedAt = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
+                    UpdatedBy = reader.IsDBNull(10) ? null : reader.GetGuid(10),
+                    AuthorName = reader.IsDBNull(11) ? "Unknown" : reader.GetString(11),
+                    CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
+                    UpdatedByName = reader.IsDBNull(13) ? null : reader.GetString(13)
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"AnnouncementService: Failed to load class announcements - {ex.Message}");
+        }
+
+        return announcements;
+    }
+
+    public async Task<Guid?> CreateAnnouncementAsync(string title, string content, string visibility, bool isPublished, Guid authorId, Guid createdBy, Guid? courseId = null)
     {
         const string sql = @"
-            INSERT INTO announcements (announcement_id, title, content, author_id, visibility, is_published, created_at, created_by)
-            VALUES (@Id, @Title, @Content, @AuthorId, @Visibility, @IsPublished, GETUTCDATE(), @CreatedBy)";
+            INSERT INTO announcements (announcement_id, title, content, author_id, course_id, visibility, is_published, created_at, created_by)
+            VALUES (@Id, @Title, @Content, @AuthorId, @CourseId, @Visibility, @IsPublished, GETUTCDATE(), @CreatedBy)";
 
         try
         {
@@ -117,6 +190,7 @@ public class AnnouncementService
             command.Parameters.AddWithValue("@Title", title);
             command.Parameters.AddWithValue("@Content", content);
             command.Parameters.AddWithValue("@AuthorId", authorId);
+            command.Parameters.AddWithValue("@CourseId", courseId.HasValue ? courseId.Value : (object)DBNull.Value);
             command.Parameters.AddWithValue("@Visibility", visibility);
             command.Parameters.AddWithValue("@IsPublished", isPublished);
             command.Parameters.AddWithValue("@CreatedBy", createdBy);

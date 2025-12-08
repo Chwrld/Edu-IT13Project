@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CA1416
 using Microsoft.Extensions.Logging;
+using QuestPDF.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Controllers;
@@ -58,6 +59,13 @@ namespace MauiAppIT13
             builder.Services.AddSingleton<ClassService>();
             builder.Services.AddSingleton<TicketService>();
             builder.Services.AddSingleton<AnnouncementService>();
+            builder.Services.AddSingleton<AssignmentService>();
+            builder.Services.AddSingleton<GradeService>();
+            builder.Services.AddSingleton<AuditLogService>();
+            builder.Services.AddSingleton<ReportsService>();
+            builder.Services.AddSingleton<ReportExportService>();
+            builder.Services.AddSingleton<AdminDashboardService>();
+            builder.Services.AddSingleton<AdminDataExportService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
@@ -68,6 +76,8 @@ namespace MauiAppIT13
             // Initialize service provider and seed database in background
             AppServiceProvider.Initialize(app.Services);
             SeedDatabaseInBackground(app.Services);
+
+            QuestPDF.Settings.License = LicenseType.Community;
 
             return app;
         }

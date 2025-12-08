@@ -31,7 +31,7 @@ public static class DbInitializer
                 PasswordSalt = adminSalt,
                 Role = Role.Admin,
                 DisplayName = "Admin User",
-                IsActive = true,
+                Status = User.StatusActive,
                 CreatedAtUtc = DateTime.UtcNow
             };
 
@@ -44,7 +44,7 @@ public static class DbInitializer
                 PasswordSalt = teacherSalt,
                 Role = Role.Teacher,
                 DisplayName = "John Teacher",
-                IsActive = true,
+                Status = User.StatusActive,
                 CreatedAtUtc = DateTime.UtcNow
             };
 
@@ -57,7 +57,7 @@ public static class DbInitializer
                 PasswordSalt = studentSalt,
                 Role = Role.Student,
                 DisplayName = "Sarah Student",
-                IsActive = true,
+                Status = User.StatusActive,
                 CreatedAtUtc = DateTime.UtcNow
             };
 

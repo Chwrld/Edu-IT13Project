@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Data.SqlClient;
 using MauiAppIT13.Database;
 using MauiAppIT13.Models;
@@ -23,6 +24,7 @@ public class MessageService
     public MessageService(DbConnection dbConnection)
     {
         _dbConnection = dbConnection;
+        InitializeSampleData();
     }
 
     private void InitializeSampleData()
@@ -329,6 +331,118 @@ public class MessageService
         }
     }
 
+    public async Task<IReadOnlyCollection<MessageRecipient>> GetTeacherRecipientsForStudentAsync(Guid studentId)
+    {
+        try
+        {
+            var recipients = new Dictionary<Guid, MessageRecipient>();
+
+            if (_dbConnection is not SqlServerDbConnection sqlConnection)
+            {
+                Debug.WriteLine("MessageService: GetTeacherRecipientsForStudentAsync - DbConnection is not SqlServerDbConnection");
+                return recipients.Values.ToList();
+            }
+
+            await using var connection = sqlConnection.GetConnection() as SqlConnection;
+            if (connection == null)
+            {
+                Debug.WriteLine("MessageService: GetTeacherRecipientsForStudentAsync - Could not get SQL connection");
+                return recipients.Values.ToList();
+            }
+
+            await connection.OpenAsync();
+
+            const string adviserSql = @"
+                SELECT DISTINCT 
+                    u.user_id,
+                    u.display_name,
+                    u.email,
+                    u.role
+                FROM students s
+                INNER JOIN users u ON u.user_id = s.adviser_id
+                WHERE s.student_id = @StudentId";
+
+            await using (var adviserCommand = new SqlCommand(adviserSql, connection))
+            {
+                adviserCommand.CommandTimeout = 5;
+                adviserCommand.Parameters.AddWithValue("@StudentId", studentId);
+
+                await using var reader = await adviserCommand.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var id = reader.GetGuid(0);
+                    if (recipients.ContainsKey(id))
+                        continue;
+
+                    recipients[id] = CreateRecipient(reader);
+                }
+            }
+
+            const string enrollmentSql = @"
+                SELECT DISTINCT
+                    u.user_id,
+                    u.display_name,
+                    u.email,
+                    u.role
+                FROM student_courses sc
+                INNER JOIN users u ON u.user_id = sc.teacher_id
+                WHERE sc.student_id = @StudentId";
+
+            await using (var enrollmentCommand = new SqlCommand(enrollmentSql, connection))
+            {
+                enrollmentCommand.CommandTimeout = 5;
+                enrollmentCommand.Parameters.AddWithValue("@StudentId", studentId);
+
+                await using var reader = await enrollmentCommand.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var id = reader.GetGuid(0);
+                    if (recipients.ContainsKey(id))
+                        continue;
+
+                    recipients[id] = CreateRecipient(reader);
+                }
+            }
+
+            const string conversationSql = @"
+                SELECT DISTINCT 
+                    other.user_id,
+                    other.display_name,
+                    other.email,
+                    other.role
+                FROM conversations c
+                CROSS APPLY (
+                    SELECT CASE WHEN c.participant1_id = @StudentId THEN c.participant2_id ELSE c.participant1_id END AS other_id
+                ) partner
+                INNER JOIN users other ON other.user_id = partner.other_id
+                WHERE (c.participant1_id = @StudentId OR c.participant2_id = @StudentId)
+                  AND other.role IN ('Teacher', 'Adviser')";
+
+            await using (var conversationCommand = new SqlCommand(conversationSql, connection))
+            {
+                conversationCommand.CommandTimeout = 5;
+                conversationCommand.Parameters.AddWithValue("@StudentId", studentId);
+
+                await using var reader = await conversationCommand.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var id = reader.GetGuid(0);
+                    if (recipients.ContainsKey(id))
+                        continue;
+
+                    recipients[id] = CreateRecipient(reader);
+                }
+            }
+
+            return recipients.Values.ToList();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"MessageService: GetTeacherRecipientsForStudentAsync failed - {ex.GetType().Name}: {ex.Message}");
+            return Array.Empty<MessageRecipient>();
+        }
+    }
+
     public async Task<bool> SendMessageAsync(Guid senderId, Guid receiverId, string content)
     {
         try
@@ -345,7 +459,17 @@ public class MessageService
                 return false;
             }
 
-            const string sql = @"
+            const string ensureConversationSql = @"
+                IF NOT EXISTS (
+                    SELECT 1 FROM conversations
+                    WHERE (participant1_id = @SenderId AND participant2_id = @ReceiverId)
+                       OR (participant1_id = @ReceiverId AND participant2_id = @SenderId))
+                BEGIN
+                    INSERT INTO conversations (conversation_id, participant1_id, participant2_id, created_at)
+                    VALUES (@ConversationId, @SenderId, @ReceiverId, GETUTCDATE());
+                END";
+
+            const string messageSql = @"
                 INSERT INTO messages (message_id, sender_id, receiver_id, content, is_read, created_at)
                 VALUES (@MessageId, @SenderId, @ReceiverId, @Content, 0, GETUTCDATE());
                 
@@ -361,6 +485,7 @@ public class MessageService
                   AND is_read = 0;";
 
             var messageId = Guid.NewGuid();
+            var conversationId = Guid.NewGuid();
             
             await using var connection = sqlConnection.GetConnection() as SqlConnection;
             if (connection == null)
@@ -370,15 +495,38 @@ public class MessageService
             }
 
             await connection.OpenAsync();
-            await using var command = new SqlCommand(sql, connection);
-            command.CommandTimeout = 5;
-            
-            command.Parameters.AddWithValue("@MessageId", messageId);
-            command.Parameters.AddWithValue("@SenderId", senderId);
-            command.Parameters.AddWithValue("@ReceiverId", receiverId);
-            command.Parameters.AddWithValue("@Content", content);
+            await using var transaction = (SqlTransaction)(await connection.BeginTransactionAsync());
 
-            await command.ExecuteNonQueryAsync();
+            try
+            {
+                await using (var ensureCommand = new SqlCommand(ensureConversationSql, connection, transaction))
+                {
+                    ensureCommand.CommandTimeout = 5;
+                    ensureCommand.Parameters.AddWithValue("@SenderId", senderId);
+                    ensureCommand.Parameters.AddWithValue("@ReceiverId", receiverId);
+                    ensureCommand.Parameters.AddWithValue("@ConversationId", conversationId);
+
+                    await ensureCommand.ExecuteNonQueryAsync();
+                }
+
+                await using (var messageCommand = new SqlCommand(messageSql, connection, transaction))
+                {
+                    messageCommand.CommandTimeout = 5;
+                    messageCommand.Parameters.AddWithValue("@MessageId", messageId);
+                    messageCommand.Parameters.AddWithValue("@SenderId", senderId);
+                    messageCommand.Parameters.AddWithValue("@ReceiverId", receiverId);
+                    messageCommand.Parameters.AddWithValue("@Content", content);
+
+                    await messageCommand.ExecuteNonQueryAsync();
+                }
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
             
             Debug.WriteLine($"MessageService: Message sent successfully");
             return true;
@@ -401,6 +549,22 @@ public class MessageService
             return $"{parts[0][0]}{parts[1][0]}".ToUpper();
         
         return name.Substring(0, Math.Min(2, name.Length)).ToUpper();
+    }
+
+    private static MessageRecipient CreateRecipient(SqlDataReader reader)
+    {
+        var id = reader.GetGuid(0);
+        var displayName = reader.IsDBNull(1) ? "Teacher" : reader.GetString(1);
+        var email = reader.IsDBNull(2) ? string.Empty : reader.GetString(2);
+        var role = reader.IsDBNull(3) ? "Teacher" : reader.GetString(3);
+
+        return new MessageRecipient(
+            id,
+            displayName,
+            email,
+            role,
+            GetInitials(displayName),
+            GetAvatarColor(id));
     }
 
     private static string GetAvatarColor(Guid id)
@@ -470,3 +634,11 @@ public class MessageService
         }
     }
 }
+
+public sealed record MessageRecipient(
+    Guid Id,
+    string DisplayName,
+    string Email,
+    string Role,
+    string Initials,
+    string AvatarColor);

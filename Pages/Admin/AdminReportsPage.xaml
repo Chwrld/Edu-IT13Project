@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolTip="clr-namespace:Microsoft.Maui.Controls;assembly=Microsoft.Maui.Controls"
              x:Class="MauiAppIT13.Pages.Admin.AdminReportsPage"
              BackgroundColor="#F5F7FA">
 
@@ -211,19 +212,29 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="20"
+                            toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected period.
+Includes every ticket regardless of status.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Total Tickets" 
-                                   FontSize="13" 
-                                   TextColor="#6B7280"/>
-                            <Label Text="1,234" 
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="Total Tickets" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Text="ⓘ"
+                                       FontSize="12"
+                                       TextColor="#9CA3AF"
+                                       toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected period, across every status."/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="TotalTicketsValueLabel"
+                                   Text="1,234" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="+12% from previous period" 
+                            <Label x:Name="TotalTicketsChangeLabel"
+                                   Text="+12% from previous period" 
                                    FontSize="11" 
                                    TextColor="#10B981"/>
                         </VerticalStackLayout>
@@ -234,19 +245,28 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="20"
+                            toolTip:ToolTipProperties.Text="Average time from ticket creation to the latest update or resolution during the selected period.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Avg Response Time" 
-                                   FontSize="13" 
-                                   TextColor="#6B7280"/>
-                            <Label Text="2.4 hrs" 
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="Avg Response Time" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Text="ⓘ"
+                                       FontSize="12"
+                                       TextColor="#9CA3AF"
+                                       toolTip:ToolTipProperties.Text="Average duration between ticket creation and its most recent update or resolution in the period."/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="AvgResponseValueLabel"
+                                   Text="2.4 hrs" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="-8% from previous period" 
+                            <Label x:Name="AvgResponseChangeLabel"
+                                   Text="-8% from previous period" 
                                    FontSize="11" 
                                    TextColor="#10B981"/>
                         </VerticalStackLayout>
@@ -257,19 +277,28 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="20"
+                            toolTip:ToolTipProperties.Text="Percentage of tickets resolved or closed out of all tickets created in the selected period.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Resolution Rate" 
-                                   FontSize="13" 
-                                   TextColor="#6B7280"/>
-                            <Label Text="94%" 
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="Resolution Rate" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Text="ⓘ"
+                                       FontSize="12"
+                                       TextColor="#9CA3AF"
+                                       toolTip:ToolTipProperties.Text="Share of tickets marked resolved/closed out of all tickets created in the selected period."/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="ResolutionRateValueLabel"
+                                   Text="94%" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="+2% from previous period" 
+                            <Label x:Name="ResolutionRateChangeLabel"
+                                   Text="+2% from previous period" 
                                    FontSize="11" 
                                    TextColor="#10B981"/>
                         </VerticalStackLayout>
@@ -280,19 +309,28 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="20"
+                            toolTip:ToolTipProperties.Text="Total active accounts and their growth within the selected period.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="Active Users" 
-                                   FontSize="13" 
-                                   TextColor="#6B7280"/>
-                            <Label Text="856" 
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="Active Users" 
+                                       FontSize="13" 
+                                       TextColor="#6B7280"/>
+                                <Label Text="ⓘ"
+                                       FontSize="12"
+                                       TextColor="#9CA3AF"
+                                       toolTip:ToolTipProperties.Text="Count of accounts currently marked active plus growth within the selected period."/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="ActiveUsersValueLabel"
+                                   Text="856" 
                                    FontSize="28" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="+5% from previous period" 
+                            <Label x:Name="ActiveUsersChangeLabel"
+                                   Text="+5% from previous period" 
                                    FontSize="11" 
                                    TextColor="#10B981"/>
                         </VerticalStackLayout>
@@ -307,7 +345,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="*,280" ColumnSpacing="30">
+                    <Grid ColumnDefinitions="*,340" ColumnSpacing="30">
                         <!-- Left Side - Form -->
                         <VerticalStackLayout Grid.Column="0" Spacing="18">
                             <Label Text="Generate Report" 
@@ -331,7 +369,8 @@
                                     <Picker x:Name="ReportTypePicker"
                                             TextColor="#1F2937"
                                             BackgroundColor="Transparent"
-                                            FontSize="14">
+                                            FontSize="14"
+                                            SelectedIndexChanged="OnReportTypeChanged">
                                         <Picker.Items>
                                             <x:String>📊 Ticket Summary</x:String>
                                             <x:String>📚 Student Activity</x:String>
@@ -355,10 +394,12 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="6"/>
                                 </Border.StrokeShape>
-                                <Picker TextColor="#1F2937"
+                                <Picker x:Name="DateRangePicker"
+                                        TextColor="#1F2937"
                                         BackgroundColor="Transparent"
                                         FontSize="14"
-                                        SelectedIndex="1">
+                                        SelectedIndex="1"
+                                        SelectedIndexChanged="OnDateRangeChanged">
                                     <Picker.Items>
                                         <x:String>Last 7 Days</x:String>
                                         <x:String>Last 30 Days</x:String>
@@ -399,7 +440,8 @@
                                     <Label Text="Period:" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="Last 30 Days" 
+                                    <Label x:Name="PreviewPeriodLabel"
+                                           Text="Last 30 Days" 
                                            FontSize="13" 
                                            FontAttributes="Bold"
                                            TextColor="#1F2937"/>
@@ -409,7 +451,8 @@
                                     <Label Text="Generated:" 
                                            FontSize="12" 
                                            TextColor="#6B7280"/>
-                                    <Label Text="Not yet generated" 
+                                    <Label x:Name="PreviewGeneratedLabel"
+                                           Text="Not yet generated" 
                                            FontSize="13" 
                                            FontAttributes="Bold"
                                            TextColor="#1F2937"/>
@@ -419,13 +462,14 @@
                                          BackgroundColor="#E5E7EB" 
                                          Margin="0,8"/>
 
-                                <Label Text="Export Options" 
-                                       FontSize="13" 
+                                <Label Text="Quick Export"
+                                       FontSize="13"
                                        FontAttributes="Bold"
                                        TextColor="#374151"/>
 
                                 <HorizontalStackLayout Spacing="10">
-                                    <Button Text="📄 PDF"
+                                    <Button x:Name="QuickPdfButton"
+                                            Text="📄 Export as PDF"
                                             BackgroundColor="White"
                                             TextColor="#005BA5"
                                             FontSize="12"
@@ -433,8 +477,9 @@
                                             CornerRadius="6"
                                             BorderColor="#D1D5DB"
                                             BorderWidth="1"
-                                            Clicked="OnExportPdfClicked"/>
-                                    <Button Text="📊 CSV"
+                                            Clicked="OnQuickExportPdfClicked"/>
+                                    <Button x:Name="QuickCsvButton"
+                                            Text="📊 Export as CSV"
                                             BackgroundColor="White"
                                             TextColor="#005BA5"
                                             FontSize="12"
@@ -442,7 +487,7 @@
                                             CornerRadius="6"
                                             BorderColor="#D1D5DB"
                                             BorderWidth="1"
-                                            Clicked="OnExportCsvClicked"/>
+                                            Clicked="OnQuickExportCsvClicked"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
                         </Border>
@@ -473,7 +518,13 @@
                                        FontSize="15" 
                                        FontAttributes="Bold"
                                        TextColor="#1F2937"/>
-                                <Label Text="Average ticket response time decreased by 8% this month." 
+                                <Label x:Name="ResponseInsightValueLabel"
+                                       Text="0 hrs"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#005BA5"/>
+                                <Label x:Name="ResponseInsightLabel"
+                                       Text="Average ticket response time decreased by 8% this month." 
                                        FontSize="13" 
                                        TextColor="#6B7280"
                                        LineBreakMode="WordWrap"/>
@@ -498,7 +549,13 @@
                                        FontSize="15" 
                                        FontAttributes="Bold"
                                        TextColor="#1F2937"/>
-                                <Label Text="Student activity increased by 18% compared to last period." 
+                                <Label x:Name="EngagementInsightValueLabel"
+                                       Text="0 activities"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#005BA5"/>
+                                <Label x:Name="EngagementInsightLabel"
+                                       Text="Student activity increased by 18% compared to last period." 
                                        FontSize="13" 
                                        TextColor="#6B7280"
                                        LineBreakMode="WordWrap"/>
@@ -523,7 +580,13 @@
                                        FontSize="15" 
                                        FontAttributes="Bold"
                                        TextColor="#1F2937"/>
-                                <Label Text="86 messages sent through the platform this week." 
+                                <Label x:Name="CommunicationInsightValueLabel"
+                                       Text="0 messages"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#005BA5"/>
+                                <Label x:Name="CommunicationInsightLabel"
+                                       Text="86 messages sent through the platform this week." 
                                        FontSize="13" 
                                        TextColor="#6B7280"
                                        LineBreakMode="WordWrap"/>

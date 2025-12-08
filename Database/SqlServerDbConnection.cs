@@ -61,9 +61,12 @@ public sealed class SqlServerDbConnection : DbConnection
                                 display_name,
                                 phone_number,
                                 address,
-                                profile_picture_url,
-                                is_active,
-                                created_at
+                                status,
+                                archive_reason,
+                                created_at,
+                                created_by,
+                                updated_at,
+                                updated_by
                              FROM users
                              WHERE email = @Email";
 
@@ -90,7 +93,7 @@ public sealed class SqlServerDbConnection : DbConnection
 
     public override async Task<IReadOnlyCollection<User>> GetUsersAsync()
     {
-        const string sql = "SELECT user_id, email, password_hash, password_salt, role, display_name, phone_number, address, profile_picture_url, is_active, created_at FROM users";
+        const string sql = "SELECT user_id, email, password_hash, password_salt, role, display_name, phone_number, address, status, archive_reason, created_at, created_by, updated_at, updated_by FROM users";
         var users = new List<User>();
 
         try
@@ -130,11 +133,14 @@ public sealed class SqlServerDbConnection : DbConnection
                     display_name = @DisplayName,
                     phone_number = @PhoneNumber,
                     address = @Address,
-                    is_active = @IsActive
+                    status = @Status,
+                    archive_reason = @ArchiveReason,
+                    updated_at = @UpdatedAt,
+                    updated_by = @UpdatedBy
                 WHERE user_id = @UserId
             ELSE
-                INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, phone_number, address, is_active, created_at)
-                VALUES (@UserId, @Email, @PasswordHash, @PasswordSalt, @Role, @DisplayName, @PhoneNumber, @Address, @IsActive, @CreatedAt)";
+                INSERT INTO users (user_id, email, password_hash, password_salt, role, display_name, phone_number, address, status, archive_reason, created_at, created_by)
+                VALUES (@UserId, @Email, @PasswordHash, @PasswordSalt, @Role, @DisplayName, @PhoneNumber, @Address, @Status, @ArchiveReason, @CreatedAt, @CreatedBy)";
 
         try
         {
@@ -151,8 +157,12 @@ public sealed class SqlServerDbConnection : DbConnection
             command.Parameters.AddWithValue("@DisplayName", user.DisplayName);
             command.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@Address", user.Address ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("@IsActive", user.IsActive);
+            command.Parameters.AddWithValue("@Status", user.Status);
+            command.Parameters.AddWithValue("@ArchiveReason", (object?)user.ArchiveReason ?? DBNull.Value);
             command.Parameters.AddWithValue("@CreatedAt", user.CreatedAtUtc);
+            command.Parameters.AddWithValue("@CreatedBy", user.CreatedBy ?? (object)DBNull.Value);
+            command.Parameters.AddWithValue("@UpdatedAt", (object?)user.UpdatedAtUtc ?? DBNull.Value);
+            command.Parameters.AddWithValue("@UpdatedBy", user.UpdatedBy ?? (object)DBNull.Value);
 
             await command.ExecuteNonQueryAsync();
         }
@@ -175,9 +185,12 @@ public sealed class SqlServerDbConnection : DbConnection
             DisplayName = reader.GetString(5),
             PhoneNumber = reader.IsDBNull(6) ? null : reader.GetString(6),
             Address = reader.IsDBNull(7) ? null : reader.GetString(7),
-            ProfilePictureUrl = reader.IsDBNull(8) ? null : reader.GetString(8),
-            IsActive = reader.GetBoolean(9),
-            CreatedAtUtc = reader.GetDateTime(10)
+            Status = User.NormalizeStatus(reader.GetString(8)),
+            ArchiveReason = reader.IsDBNull(9) ? null : reader.GetString(9),
+            CreatedAtUtc = reader.GetDateTime(10),
+            CreatedBy = reader.IsDBNull(11) ? null : reader.GetGuid(11),
+            UpdatedAtUtc = reader.IsDBNull(12) ? null : reader.GetDateTime(12),
+            UpdatedBy = reader.IsDBNull(13) ? null : reader.GetGuid(13)
         };
     }
 }

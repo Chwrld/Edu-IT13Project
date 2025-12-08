@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.Maui.Controls.Shapes;
 using MauiAppIT13.Database;
 using MauiAppIT13.Models;
@@ -12,9 +13,13 @@ public partial class MessagesPage : ContentPage
     private readonly MessageService _messageService;
     private readonly AuthManager _authManager;
     private ObservableCollection<Conversation> _conversations = new();
+    private ObservableCollection<MessageRecipient> _composeRecipients = new();
     private List<Message> _currentMessages = new();
     private Guid _currentUserId;
     private Conversation? _selectedConversation;
+    private MessageRecipient? _selectedRecipient;
+    private bool _isLoadingRecipients;
+    private bool _isSendingComposeMessage;
 
     public MessagesPage()
     {
@@ -24,6 +29,7 @@ public partial class MessagesPage : ContentPage
         var dbConnection = AppServiceProvider.GetService<DbConnection>();
         _messageService = AppServiceProvider.GetService<MessageService>() ?? new MessageService(dbConnection ?? throw new InvalidOperationException("DbConnection not found"));
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
+        ComposeRecipientsCollectionView.ItemsSource = _composeRecipients;
         
         System.Diagnostics.Debug.WriteLine("MessagesPage: Services initialized");
     }
@@ -344,6 +350,206 @@ public partial class MessagesPage : ContentPage
         {
             System.Diagnostics.Debug.WriteLine($"MessagesPage: Error sending message - {ex.Message}");
             await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnComposeMessageTapped(object? sender, TappedEventArgs e)
+    {
+        try
+        {
+            if (_currentUserId == Guid.Empty)
+            {
+                await DisplayAlert("Error", "User information not loaded yet. Please try again.", "OK");
+                return;
+            }
+
+            if (_isLoadingRecipients)
+            {
+                return;
+            }
+
+            ShowComposeOverlay();
+            await LoadComposeRecipientsAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"MessagesPage: Error opening compose overlay - {ex.Message}");
+            await DisplayAlert("Error", $"Unable to start a new message: {ex.Message}", "OK");
+        }
+    }
+
+    private void OnComposeOverlayTapped(object? sender, TappedEventArgs e)
+    {
+        HideComposeOverlay();
+    }
+
+    private void OnComposeCancelClicked(object? sender, EventArgs e)
+    {
+        HideComposeOverlay();
+    }
+
+    private async void OnComposeSendClicked(object? sender, EventArgs e)
+    {
+        if (_isSendingComposeMessage)
+        {
+            return;
+        }
+
+        if (_currentUserId == Guid.Empty)
+        {
+            await DisplayAlert("Error", "User information not loaded yet. Please try again.", "OK");
+            return;
+        }
+
+        if (_selectedRecipient == null)
+        {
+            SetComposeError("Please select a teacher to message.");
+            return;
+        }
+
+        var messageContent = ComposeMessageEditor.Text?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(messageContent))
+        {
+            SetComposeError("Message content cannot be empty.");
+            return;
+        }
+
+        try
+        {
+            _isSendingComposeMessage = true;
+            SetComposeError(string.Empty);
+
+            var recipientId = _selectedRecipient.Id;
+            var sent = await _messageService.SendMessageAsync(_currentUserId, recipientId, messageContent);
+            if (!sent)
+            {
+                SetComposeError("Failed to send the message. Please try again.");
+                return;
+            }
+
+            var existingConversation = _selectedConversation;
+            var wasOpenConversation = existingConversation?.ParticipantId == recipientId;
+
+            HideComposeOverlay();
+
+            if (wasOpenConversation && existingConversation != null)
+            {
+                await SelectConversation(existingConversation);
+            }
+
+            await LoadConversations();
+
+            var refreshedConversation = _conversations.FirstOrDefault(c => c.ParticipantId == recipientId);
+            if (refreshedConversation != null)
+            {
+                await SelectConversation(refreshedConversation);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"MessagesPage: Error sending compose message - {ex.Message}");
+            SetComposeError($"Error sending message: {ex.Message}");
+        }
+        finally
+        {
+            _isSendingComposeMessage = false;
+        }
+    }
+
+    private void OnComposeRecipientSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        _selectedRecipient = e.CurrentSelection.FirstOrDefault() as MessageRecipient;
+        if (_selectedRecipient != null)
+        {
+            SetComposeError(string.Empty);
+        }
+    }
+
+    private void OnComposeRecipientTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not MessageRecipient recipient)
+        {
+            return;
+        }
+
+        ComposeRecipientsCollectionView.SelectedItem = recipient;
+    }
+
+    private async Task LoadComposeRecipientsAsync()
+    {
+        try
+        {
+            _isLoadingRecipients = true;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                ComposeEmptyStateLabel.Text = "Loading available teachers...";
+                ComposeEmptyStateLabel.IsVisible = true;
+                ComposeRecipientsCollectionView.IsVisible = false;
+            });
+
+            var recipients = await _messageService.GetTeacherRecipientsForStudentAsync(_currentUserId);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                _composeRecipients.Clear();
+                foreach (var recipient in recipients)
+                {
+                    _composeRecipients.Add(recipient);
+                }
+
+                var hasRecipients = _composeRecipients.Count > 0;
+                ComposeRecipientsCollectionView.IsVisible = hasRecipients;
+                ComposeEmptyStateLabel.Text = hasRecipients
+                    ? ComposeEmptyStateLabel.Text
+                    : "No available teachers to message right now.";
+                ComposeEmptyStateLabel.IsVisible = !hasRecipients;
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"MessagesPage: Error loading compose recipients - {ex.Message}");
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                ComposeEmptyStateLabel.Text = "Unable to load teachers. Please try again later.";
+                ComposeEmptyStateLabel.IsVisible = true;
+                ComposeRecipientsCollectionView.IsVisible = false;
+            });
+        }
+        finally
+        {
+            _isLoadingRecipients = false;
+        }
+    }
+
+    private void ShowComposeOverlay()
+    {
+        ComposeOverlay.IsVisible = true;
+        ComposeMessageEditor.Text = string.Empty;
+        ComposeRecipientsCollectionView.SelectedItem = null;
+        _selectedRecipient = null;
+        SetComposeError(string.Empty);
+    }
+
+    private void HideComposeOverlay()
+    {
+        ComposeOverlay.IsVisible = false;
+        ComposeMessageEditor.Text = string.Empty;
+        ComposeRecipientsCollectionView.SelectedItem = null;
+        _selectedRecipient = null;
+        SetComposeError(string.Empty);
+    }
+
+    private void SetComposeError(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            ComposeErrorLabel.IsVisible = false;
+            ComposeErrorLabel.Text = string.Empty;
+        }
+        else
+        {
+            ComposeErrorLabel.IsVisible = true;
+            ComposeErrorLabel.Text = message;
         }
     }
 

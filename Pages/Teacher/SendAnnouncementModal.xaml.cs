@@ -1,18 +1,27 @@
+using System;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 
 namespace MauiAppIT13.Pages.Teacher;
 
 [SupportedOSPlatform("windows10.0.17763.0")]
 public partial class SendAnnouncementModal : ContentPage
 {
+    private readonly Func<AnnouncementDraft, Task<bool>>? _submitHandler;
+
     public SendAnnouncementModal()
     {
         InitializeComponent();
+        PriorityPicker.SelectedIndex = 0;
+    }
+
+    public SendAnnouncementModal(Func<AnnouncementDraft, Task<bool>> submitHandler) : this()
+    {
+        _submitHandler = submitHandler;
     }
 
     private async void OnBackgroundTapped(object sender, EventArgs e)
     {
-        // Close modal when clicking outside
         await Navigation.PopModalAsync();
     }
 
@@ -28,7 +37,6 @@ public partial class SendAnnouncementModal : ContentPage
 
     private async void OnSendClicked(object sender, EventArgs e)
     {
-        // Validate inputs
         if (string.IsNullOrWhiteSpace(SubjectEntry.Text))
         {
             await DisplayAlert("Validation Error", "Please enter a subject.", "OK");
@@ -41,21 +49,44 @@ public partial class SendAnnouncementModal : ContentPage
             return;
         }
 
-        // Get priority
-        string priority = PriorityPicker.SelectedIndex >= 0 
-            ? PriorityPicker.Items[PriorityPicker.SelectedIndex] 
+        string priority = PriorityPicker.SelectedIndex >= 0
+            ? PriorityPicker.Items[PriorityPicker.SelectedIndex]
             : "Normal";
 
-        // Here you would typically save the announcement to a database
-        // For now, just show a success message
-        await DisplayAlert("Success", 
-            $"Announcement sent successfully!\n\n" +
-            $"Subject: {SubjectEntry.Text}\n" +
-            $"Priority: {priority}\n" +
-            $"Message: {MessageEditor.Text.Substring(0, Math.Min(50, MessageEditor.Text.Length))}...", 
-            "OK");
+        if (_submitHandler is null)
+        {
+            await DisplayAlert("Announcements", "Sending announcements is currently unavailable.", "OK");
+            return;
+        }
 
-        // Close modal
-        await Navigation.PopModalAsync();
+        var draft = new AnnouncementDraft
+        {
+            Subject = SubjectEntry.Text.Trim(),
+            Message = MessageEditor.Text.Trim(),
+            Priority = priority
+        };
+
+        bool success;
+        try
+        {
+            success = await _submitHandler(draft);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Announcements", $"Failed to send announcement: {ex.Message}", "OK");
+            return;
+        }
+
+        if (success)
+        {
+            await Navigation.PopModalAsync();
+        }
     }
+}
+
+public sealed class AnnouncementDraft
+{
+    public string Subject { get; init; } = string.Empty;
+    public string Message { get; init; } = string.Empty;
+    public string Priority { get; init; } = "Normal";
 }

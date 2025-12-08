@@ -14,6 +14,8 @@ public class Ticket
     public Guid? UpdatedBy { get; set; }
     public Guid StudentId { get; set; }
     public Guid? AssignedToId { get; set; }
+    public string? StudentName { get; set; }
+    public string SourceTag { get; set; } = "student"; // student | teacher
     
     // Display properties
     public string CreatedByName { get; set; } = string.Empty;

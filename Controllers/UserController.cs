@@ -94,9 +94,13 @@ public sealed class UserController
                 Role = role,
                 PhoneNumber = string.IsNullOrWhiteSpace(phoneNumber) ? null : phoneNumber,
                 Address = string.IsNullOrWhiteSpace(address) ? null : address,
-                IsActive = true,
+                Status = User.StatusActive,
                 CreatedAtUtc = DateTime.UtcNow
             };
+
+            // Audit metadata
+            var currentAdmin = AppServiceProvider.GetService<AuthManager>()?.CurrentUser;
+            newUser.CreatedBy = currentAdmin?.Id ?? currentAdmin?.Id;
 
             // Save user
             await _dbConnection.SaveUserAsync(newUser);
@@ -155,6 +159,11 @@ public sealed class UserController
                 user.PasswordSalt = salt;
             }
 
+            // Audit metadata
+            var currentAdmin = AppServiceProvider.GetService<AuthManager>()?.CurrentUser;
+            user.UpdatedAtUtc = DateTime.UtcNow;
+            user.UpdatedBy = currentAdmin?.Id ?? user.UpdatedBy;
+
             // Save user
             await _dbConnection.SaveUserAsync(user);
             return (true, $"User '{displayName}' has been updated successfully.");
@@ -168,14 +177,19 @@ public sealed class UserController
     /// <summary>
     /// Deletes a user from the database.
     /// </summary>
-    public async Task<(bool Success, string Message)> DeleteUserAsync(User user)
+    public async Task<(bool Success, string Message)> DeleteUserAsync(User user, string? archiveReason = null)
     {
         try
         {
             // For now, we'll mark as inactive instead of deleting
-            user.IsActive = false;
+            user.Status = User.StatusArchived;
+            if (!string.IsNullOrWhiteSpace(archiveReason))
+            {
+                user.ArchiveReason = archiveReason.Trim();
+            }
+
             await _dbConnection.SaveUserAsync(user);
-            return (true, $"User '{user.DisplayName}' has been deactivated.");
+            return (true, $"User '{user.DisplayName}' has been archived.");
         }
         catch (Exception ex)
         {

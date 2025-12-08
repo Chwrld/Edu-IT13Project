@@ -6,6 +6,7 @@ public class Announcement
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public Guid AuthorId { get; set; }
+    public Guid? CourseId { get; set; }
     public string Visibility { get; set; } = "all"; // all, students, advisers
     public bool IsPublished { get; set; } = true;
     public DateTime CreatedAt { get; set; }
@@ -28,6 +29,8 @@ public class Announcement
     };
 
     public string PublishedStatus => IsPublished ? "Published" : "Draft";
+    public bool IsClassAnnouncement => CourseId.HasValue;
+    public string CreatedDisplay => CreatedAt.ToLocalTime().ToString("MMM dd, yyyy • hh:mm tt");
 }
 
 public class AnnouncementView

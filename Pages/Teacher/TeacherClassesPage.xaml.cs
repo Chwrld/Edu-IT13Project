@@ -135,8 +135,7 @@ public partial class TeacherClassesPage : ContentPage
         IEnumerable<ClassModel> filtered = _currentFilter switch
         {
             "Active" => FilterByStatus("Active"),
-            "Upcoming" => FilterByStatus("Upcoming"),
-            "Completed" => FilterByStatus("Completed"),
+            "Inactive" => FilterByStatus("Inactive"),
             _ => _allClasses
         };
 
@@ -158,8 +157,7 @@ public partial class TeacherClassesPage : ContentPage
     {
         SetFilterState(AllFilter, AllFilterLabel, _currentFilter.Equals("All", StringComparison.OrdinalIgnoreCase));
         SetFilterState(ActiveFilter, ActiveFilterLabel, _currentFilter.Equals("Active", StringComparison.OrdinalIgnoreCase));
-        SetFilterState(UpcomingFilter, UpcomingFilterLabel, _currentFilter.Equals("Upcoming", StringComparison.OrdinalIgnoreCase));
-        SetFilterState(CompletedFilter, CompletedFilterLabel, _currentFilter.Equals("Completed", StringComparison.OrdinalIgnoreCase));
+        SetFilterState(InactiveFilter, InactiveFilterLabel, _currentFilter.Equals("Inactive", StringComparison.OrdinalIgnoreCase));
     }
 
     private static void SetFilterState(Border border, Label label, bool isActive)

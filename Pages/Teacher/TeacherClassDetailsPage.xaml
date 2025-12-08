@@ -376,21 +376,24 @@
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
-                                                        Clicked="OnMessageStudentClicked"/>
+                                                        Clicked="OnMessageStudentClicked"
+                                                        CommandParameter="{Binding .}"/>
                                                 <Button Text="📝 View Concerns"
                                                         BackgroundColor="#F59E0B"
                                                         TextColor="White"
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
-                                                        Clicked="OnViewConcernsClicked"/>
+                                                        Clicked="OnViewConcernsClicked"
+                                                        CommandParameter="{Binding .}"/>
                                                 <Button Text="📊 View Details"
                                                         BackgroundColor="#059669"
                                                         TextColor="White"
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
-                                                        Clicked="OnViewStudentDetailsClicked"/>
+                                                        Clicked="OnViewStudentDetailsClicked"
+                                                        CommandParameter="{Binding .}"/>
                                             </HorizontalStackLayout>
                                         </Grid>
                                     </Border>
@@ -416,34 +419,69 @@
                                     Clicked="OnCreateAssignmentClicked"/>
                         </HorizontalStackLayout>
 
-                        <!-- Assignment List -->
-                        <VerticalStackLayout Spacing="10">
-                            <Border BackgroundColor="White"
-                                    StrokeThickness="1"
-                                    Stroke="#E5E7EB"
-                                    Padding="20">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8"/>
-                                </Border.StrokeShape>
-                                <VerticalStackLayout Spacing="10">
-                                    <Label Text="Assignment 1: Basic Programming Concepts" 
-                                           FontSize="16" 
+                        <CollectionView x:Name="AssignmentsCollectionView"
+                                        SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Spacing="6" Padding="20" BackgroundColor="White">
+                                    <Label Text="No assignments yet"
+                                           FontSize="16"
                                            FontAttributes="Bold"
+                                           HorizontalOptions="Center"
                                            TextColor="#2C3E50"/>
-                                    <Label Text="Write a program that demonstrates variables, loops, and conditionals." 
-                                           FontSize="13" 
+                                    <Label Text="Create an assignment to get started."
+                                           FontSize="13"
+                                           HorizontalOptions="Center"
                                            TextColor="#6B7280"/>
-                                    <HorizontalStackLayout Spacing="15">
-                                        <Label Text="📅 Deadline: Dec 15, 2025" 
-                                               FontSize="12" 
-                                               TextColor="#F59E0B"/>
-                                        <Label Text="📝 28/35 Submitted" 
-                                               FontSize="12" 
-                                               TextColor="#059669"/>
-                                    </HorizontalStackLayout>
                                 </VerticalStackLayout>
-                            </Border>
-                        </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ClassAssignment">
+                                    <Border BackgroundColor="White"
+                                            StrokeThickness="1"
+                                            Stroke="#E5E7EB"
+                                            Padding="20"
+                                            Margin="0,0,0,10">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="8">
+                                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                                <Label Text="{Binding Title}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#2C3E50"
+                                                       HorizontalOptions="StartAndExpand"/>
+                                                <Border BackgroundColor="#FEF3C7"
+                                                        Padding="8,4"
+                                                        StrokeThickness="0"
+                                                        HorizontalOptions="End">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="20"/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding DeadlineBadge}"
+                                                           FontSize="12"
+                                                           TextColor="#B45309"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="13"
+                                                   TextColor="#6B7280"/>
+                                            <HorizontalStackLayout Spacing="15">
+                                                <Label Text="{Binding DeadlineDisplay}"
+                                                       FontSize="12"
+                                                       TextColor="#F59E0B"/>
+                                                <Label Text="{Binding SubmissionSummary}"
+                                                       FontSize="12"
+                                                       TextColor="#059669"/>
+                                                <Label Text="{Binding TotalPoints, StringFormat='Points: {0}'}"
+                                                       FontSize="12"
+                                                       TextColor="#4B5563"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </VerticalStackLayout>
 
                     <!-- Grades Tab Content (Hidden by default) -->
@@ -463,32 +501,74 @@
                             </Border.StrokeShape>
                             <VerticalStackLayout Spacing="10">
                                 <!-- Table Header -->
-                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10"
+                                <Grid ColumnDefinitions="2*,*,*,*,*,*" ColumnSpacing="10" Padding="10"
                                       BackgroundColor="#F9FAFB">
                                     <Label Grid.Column="0" Text="Student" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="1" Text="Assignments" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="2" Text="Activities" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="3" Text="Exams" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="4" Text="Projects" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
+                                    <Label Grid.Column="5" Text="Final Avg" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                 </Grid>
 
-                                <!-- Student Rows -->
-                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10">
-                                    <Label Grid.Column="0" Text="Jane Student" FontSize="13" TextColor="#2C3E50"/>
-                                    <Label Grid.Column="1" Text="95%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="2" Text="88%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="3" Text="92%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="4" Text="90%" FontSize="13" TextColor="#059669"/>
-                                </Grid>
-
-                                <Grid ColumnDefinitions="2*,*,*,*,*" ColumnSpacing="10" Padding="10"
-                                      BackgroundColor="#F9FAFB">
-                                    <Label Grid.Column="0" Text="John Doe" FontSize="13" TextColor="#2C3E50"/>
-                                    <Label Grid.Column="1" Text="85%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="2" Text="90%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="3" Text="87%" FontSize="13" TextColor="#059669"/>
-                                    <Label Grid.Column="4" Text="88%" FontSize="13" TextColor="#059669"/>
-                                </Grid>
+                                <CollectionView x:Name="GradesCollectionView"
+                                                SelectionMode="None">
+                                    <CollectionView.EmptyView>
+                                        <VerticalStackLayout Spacing="6" Padding="20">
+                                            <Label Text="No grade records yet"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#6B7280"/>
+                                        </VerticalStackLayout>
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:StudentGradeSummary">
+                                            <Border BackgroundColor="Transparent"
+                                                    StrokeThickness="0"
+                                                    Padding="0,5">
+                                                <Grid ColumnDefinitions="2*,*,*,*,*,*,Auto"
+                                                      ColumnSpacing="10"
+                                                      Padding="10"
+                                                      BackgroundColor="#FFFFFF">
+                                                    <Label Grid.Column="0" Text="{Binding StudentName}" FontSize="13" TextColor="#2C3E50"/>
+                                                    <Entry Grid.Column="1"
+                                                           Text="{Binding AssignmentsScore, Mode=TwoWay}"
+                                                           FontSize="13"
+                                                           TextColor="#059669"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="0-100"/>
+                                                    <Entry Grid.Column="2"
+                                                           Text="{Binding ActivitiesScore, Mode=TwoWay}"
+                                                           FontSize="13"
+                                                           TextColor="#059669"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="0-100"/>
+                                                    <Entry Grid.Column="3"
+                                                           Text="{Binding ExamsScore, Mode=TwoWay}"
+                                                           FontSize="13"
+                                                           TextColor="#059669"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="0-100"/>
+                                                    <Entry Grid.Column="4"
+                                                           Text="{Binding ProjectsScore, Mode=TwoWay}"
+                                                           FontSize="13"
+                                                           TextColor="#059669"
+                                                           Keyboard="Numeric"
+                                                           Placeholder="0-100"/>
+                                                    <Label Grid.Column="5" Text="{Binding FinalAverageDisplay}" FontSize="13" TextColor="#4B5563" FontAttributes="Bold"/>
+                                                    <Button Grid.Column="6"
+                                                            Text="Edit"
+                                                            Padding="10,5"
+                                                            FontSize="12"
+                                                            BackgroundColor="#059669"
+                                                            TextColor="White"
+                                                            Clicked="OnSingleGradeEditClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
                             </VerticalStackLayout>
                         </Border>
                     </VerticalStackLayout>
@@ -511,33 +591,53 @@
                         </HorizontalStackLayout>
 
                         <!-- Announcement History -->
-                        <VerticalStackLayout Spacing="10">
-                            <Border BackgroundColor="White"
-                                    StrokeThickness="1"
-                                    Stroke="#E5E7EB"
-                                    Padding="20">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8"/>
-                                </Border.StrokeShape>
-                                <VerticalStackLayout Spacing="8">
-                                    <Label Text="Midterm Exam Schedule" 
-                                           FontSize="16" 
+                        <CollectionView x:Name="AnnouncementsCollectionView"
+                                        SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Spacing="6" Padding="20" BackgroundColor="White">
+                                    <Label Text="No announcements yet"
+                                           FontSize="16"
                                            FontAttributes="Bold"
+                                           HorizontalOptions="Center"
                                            TextColor="#2C3E50"/>
-                                    <Label Text="The midterm exam will be held on December 10, 2025, at 9:00 AM in Room 301." 
-                                           FontSize="13" 
+                                    <Label Text="Use the button above to send the first announcement."
+                                           FontSize="13"
+                                           HorizontalOptions="Center"
                                            TextColor="#6B7280"/>
-                                    <Label Text="Posted on Nov 25, 2025" 
-                                           FontSize="11" 
-                                           TextColor="#9CA3AF"/>
                                 </VerticalStackLayout>
-                            </Border>
-                        </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Announcement">
+                                    <Border BackgroundColor="White"
+                                            StrokeThickness="1"
+                                            Stroke="#E5E7EB"
+                                            Padding="20"
+                                            Margin="0,0,0,10">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="6">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#2C3E50"/>
+                                            <Label Text="{Binding Content}"
+                                                   FontSize="13"
+                                                   TextColor="#6B7280"/>
+                                            <Label Text="{Binding CreatedDisplay}"
+                                                   FontSize="11"
+                                                   TextColor="#9CA3AF"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </VerticalStackLayout>
 
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>
+        
     </Grid>
 </ContentPage>

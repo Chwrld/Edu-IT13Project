@@ -46,3 +46,38 @@ public sealed class ClassStudent
         }
     }
 }
+
+public sealed class ClassAssignment
+{
+    public Guid Id { get; set; }
+    public Guid ClassId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public DateTime Deadline { get; set; }
+    public int TotalPoints { get; set; }
+    public int SubmittedCount { get; set; }
+    public int TotalStudents { get; set; }
+
+    public string DeadlineDisplay => Deadline.ToLocalTime().ToString("MMM dd, yyyy • hh:mm tt");
+    public string SubmissionSummary => $"📝 {SubmittedCount}/{TotalStudents} Submitted";
+    public string DeadlineBadge => $"📅 Due {Deadline.ToLocalTime():MMM dd}";
+}
+
+public sealed class StudentGradeSummary
+{
+    public Guid GradeId { get; set; }
+    public Guid StudentId { get; set; }
+    public string StudentName { get; set; } = string.Empty;
+    public double AssignmentsScore { get; set; }
+    public double ActivitiesScore { get; set; }
+    public double ExamsScore { get; set; }
+    public double ProjectsScore { get; set; }
+
+    public double FinalAverage => Math.Round((AssignmentsScore + ActivitiesScore + ExamsScore + ProjectsScore) / 4.0, 2);
+
+    public string AssignmentsDisplay => $"{AssignmentsScore:0}%";
+    public string ActivitiesDisplay => $"{ActivitiesScore:0}%";
+    public string ExamsDisplay => $"{ExamsScore:0}%";
+    public string ProjectsDisplay => $"{ProjectsScore:0}%";
+    public string FinalAverageDisplay => $"{FinalAverage:0}%";
+}

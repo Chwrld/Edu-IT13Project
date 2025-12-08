@@ -243,28 +243,76 @@
                             BackgroundColor="White"
                             Padding="20"
                             StrokeThickness="0">
-                        <Border BackgroundColor="#F9FAFB"
-                                Stroke="#E5E7EB"
-                                StrokeThickness="1"
-                                Padding="12,8">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="8"/>
-                            </Border.StrokeShape>
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                <Label Grid.Column="0" 
-                                       Text="🔍" 
-                                       FontSize="16"
+                        <VerticalStackLayout Spacing="12">
+                            <Border BackgroundColor="#F9FAFB"
+                                    Stroke="#E5E7EB"
+                                    StrokeThickness="1"
+                                    Padding="12,8">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Grid.Column="0" 
+                                           Text="🔍" 
+                                           FontSize="16"
+                                           VerticalOptions="Center"/>
+                                    <Entry Grid.Column="1"
+                                           x:Name="SearchEntry"
+                                           Placeholder="Search by name or email..."
+                                           PlaceholderColor="#9CA3AF"
+                                           TextColor="#1F2937"
+                                           BackgroundColor="Transparent"
+                                           VerticalOptions="Center"
+                                           TextChanged="OnSearchTextChanged"/>
+                                </Grid>
+                            </Border>
+
+                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                <Label Text="Status:"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="#4B5563"
                                        VerticalOptions="Center"/>
-                                <Entry Grid.Column="1"
-                                       x:Name="SearchEntry"
-                                       Placeholder="Search by name or email..."
-                                       PlaceholderColor="#9CA3AF"
-                                       TextColor="#1F2937"
-                                       BackgroundColor="Transparent"
-                                       VerticalOptions="Center"
-                                       TextChanged="OnSearchTextChanged"/>
-                            </Grid>
-                        </Border>
+                                <HorizontalStackLayout Spacing="8">
+                                    <Border x:Name="ActiveFilterButton"
+                                            BackgroundColor="#005BA5"
+                                            Padding="14,6"
+                                            StrokeThickness="0">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Label x:Name="ActiveFilterLabel"
+                                               Text="Active"
+                                               FontSize="13"
+                                               TextColor="White"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnStatusFilterTapped"
+                                                                  CommandParameter="active"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                    <Border x:Name="InactiveFilterButton"
+                                            BackgroundColor="White"
+                                            Padding="14,6"
+                                            Stroke="#D1D5DB"
+                                            StrokeThickness="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Label x:Name="InactiveFilterLabel"
+                                               Text="Inactive"
+                                               FontSize="13"
+                                               TextColor="#374151"
+                                               HorizontalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnStatusFilterTapped"
+                                                                  CommandParameter="inactive"/>
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
                     </Border>
 
                     <!-- Table Header -->
@@ -339,20 +387,24 @@
                                                    HorizontalOptions="Center"/>
                                         </Border>
                                         <Border Grid.Column="3"
-                                                BackgroundColor="{Binding IsActive, Converter={StaticResource StatusColorConverter}}"
+                                                BackgroundColor="{Binding Status, Converter={StaticResource StatusColorConverter}}"
                                                 Padding="8,4"
-                                                WidthRequest="70"
+                                                WidthRequest="80"
                                                 StrokeThickness="0"
                                                 VerticalOptions="Center"
                                                 HorizontalOptions="Start">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="6"/>
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding IsActive, Converter={StaticResource StatusTextConverter}}" 
+                                            <Label Text="{Binding Status, Converter={StaticResource StatusTextConverter}}" 
                                                    FontSize="12" 
-                                                   TextColor="{Binding IsActive, Converter={StaticResource StatusTextColorConverter}}"
+                                                   TextColor="{Binding Status, Converter={StaticResource StatusTextColorConverter}}"
                                                    FontAttributes="Bold"
                                                    HorizontalOptions="Center"/>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnStatusChipTapped"
+                                                                      CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
                                         </Border>
                                         <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center" HorizontalOptions="Start">
                                             <Label Text="✏️" FontSize="16">
@@ -365,9 +417,9 @@
                                                     <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="🗑️" FontSize="16">
+                                            <Label Text="🗃️" FontSize="16">
                                                 <Label.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="OnDeleteUserTapped"/>
+                                                    <TapGestureRecognizer Tapped="OnArchiveUserTapped"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
                                         </HorizontalStackLayout>
@@ -385,15 +437,20 @@
         <!-- Add User Modal -->
         <Grid x:Name="AddUserModal"
               Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
-              BackgroundColor="#CC000000"
               IsVisible="False"
-              Padding="20"
+              Padding="0"
               ZIndex="1000">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnModalBackgroundTapped"/>
-            </Grid.GestureRecognizers>
+            <BoxView BackgroundColor="#80000000"
+                     InputTransparent="False"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Fill">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnModalBackgroundTapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
 
             <Border BackgroundColor="White"
+                    Margin="20"
                     Padding="30"
                     StrokeThickness="0"
                     VerticalOptions="Center"
