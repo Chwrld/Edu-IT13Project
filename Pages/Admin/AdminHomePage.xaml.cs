@@ -94,27 +94,27 @@ public partial class AdminHomePage : ContentPage
 
     private async void OnAdminProfileTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//AdminProfilePage");
+        await Shell.Current.GoToAsync("//AdminProfilePage", animate: false);
     }
 
     private async void OnUsersTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminUsersPage");
+        await Shell.Current.GoToAsync("AdminUsersPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminAnnouncementsPage");
+        await Shell.Current.GoToAsync("AdminAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminTicketsPage");
+        await Shell.Current.GoToAsync("AdminTicketsPage", animate: false);
     }
 
     private async void OnReportsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminReportsPage");
+        await Shell.Current.GoToAsync("AdminReportsPage", animate: false);
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)
@@ -122,23 +122,23 @@ public partial class AdminHomePage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage", animate: false);
         }
     }
 
     private async void OnCreateAnnouncementClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminAnnouncementsPage?action=new");
+        await Shell.Current.GoToAsync("AdminAnnouncementsPage?action=new", animate: false);
     }
 
     private async void OnAddUserClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminUsersPage?action=new");
+        await Shell.Current.GoToAsync("AdminUsersPage?action=new", animate: false);
     }
 
     private async void OnViewReportsClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminReportsPage");
+        await Shell.Current.GoToAsync("AdminReportsPage", animate: false);
     }
 
     private async void OnDownloadDataClicked(object sender, EventArgs e)

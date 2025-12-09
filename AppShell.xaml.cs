@@ -10,6 +10,9 @@ namespace MauiAppIT13
         {
             InitializeComponent();
             
+            // Disable slide animations for page transitions
+            Shell.SetPresentationMode(this, PresentationMode.NotAnimated);
+            
             // Register routes for navigation
             Routing.RegisterRoute("HomePage", typeof(HomePage));
             Routing.RegisterRoute("AdminHomePage", typeof(AdminHomePage));

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utils="clr-namespace:MauiAppIT13.Utils"
              x:Class="MauiAppIT13.Pages.Teacher.TeacherHomePage"
              BackgroundColor="#F5F7FA">
 
@@ -42,8 +43,17 @@
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
 
-                <!-- Teacher Profile -->
-                <BoxView Grid.Column="2" Color="Transparent"/>
+                <!-- Network Status Indicator -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}"
+                           FontSize="18"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}"
+                           TextColor="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusColorConverter}}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
             </Grid>
         </Border>
 

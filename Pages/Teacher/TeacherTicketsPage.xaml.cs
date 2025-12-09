@@ -184,6 +184,24 @@ public partial class TeacherTicketsPage : ContentPage
             DetailStatusLabel.Text = ticket.Status;
             DetailDescriptionLabel.Text = ticket.Description;
 
+            // Set status text color
+            DetailStatusLabel.TextColor = ticket.Status.ToLower() switch
+            {
+                "open" => Color.FromArgb("#EF4444"),        // Red
+                "in_progress" => Color.FromArgb("#F59E0B"), // Orange
+                "resolved" => Color.FromArgb("#10B981"),    // Green
+                _ => Color.FromArgb("#6B7280")              // Gray
+            };
+
+            // Set priority text color
+            DetailPriorityLabel.TextColor = ticket.Priority.ToLower() switch
+            {
+                "low" => Color.FromArgb("#10B981"),    // Green
+                "medium" => Color.FromArgb("#F59E0B"), // Orange
+                "high" => Color.FromArgb("#EF4444"),   // Red
+                _ => Color.FromArgb("#6B7280")         // Gray
+            };
+
             // Load comments
             var comments = await _ticketService.GetTicketCommentsAsync(ticket.Id);
             CommentsStackLayout.Clear();

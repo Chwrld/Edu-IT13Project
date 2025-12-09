@@ -73,7 +73,9 @@ public class TicketService
                     CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
                     AssignedToName = reader.IsDBNull(13) ? "Unassigned" : reader.GetString(13),
                     StatusColor = GetStatusColor(reader.GetString(4)),
-                    PriorityColor = GetPriorityColor(reader.GetString(5))
+                    PriorityColor = GetPriorityColor(reader.GetString(5)),
+                    StatusTextColor = GetStatusTextColor(reader.GetString(4)),
+                    PriorityTextColor = GetPriorityTextColor(reader.GetString(5))
                 };
                 tickets.Add(ticket);
                 Debug.WriteLine($"TicketService: Loaded ticket {ticket.TicketNumber}: {ticket.Title}");
@@ -147,7 +149,9 @@ public class TicketService
                     CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
                     AssignedToName = reader.IsDBNull(13) ? "Unassigned" : reader.GetString(13),
                     StatusColor = GetStatusColor(reader.GetString(4)),
-                    PriorityColor = GetPriorityColor(reader.GetString(5))
+                    PriorityColor = GetPriorityColor(reader.GetString(5)),
+                    StatusTextColor = GetStatusTextColor(reader.GetString(4)),
+                    PriorityTextColor = GetPriorityTextColor(reader.GetString(5))
                 };
 
                 tickets.Add(ticket);
@@ -218,7 +222,9 @@ public class TicketService
                     CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
                     AssignedToName = reader.IsDBNull(13) ? "Unassigned" : reader.GetString(13),
                     StatusColor = GetStatusColor(reader.GetString(4)),
-                    PriorityColor = GetPriorityColor(reader.GetString(5))
+                    PriorityColor = GetPriorityColor(reader.GetString(5)),
+                    StatusTextColor = GetStatusTextColor(reader.GetString(4)),
+                    PriorityTextColor = GetPriorityTextColor(reader.GetString(5))
                 };
 
                 tickets.Add(ticket);
@@ -420,6 +426,28 @@ public class TicketService
             "medium" => "#F59E0B",
             "high" => "#EF4444",
             _ => "#6B7280"
+        };
+    }
+
+    private static string GetStatusTextColor(string status)
+    {
+        return status switch
+        {
+            "open" => "#EF4444",        // Red
+            "in_progress" => "#F59E0B", // Orange/Yellow
+            "resolved" => "#10B981",    // Green
+            _ => "#6B7280"              // Gray
+        };
+    }
+
+    private static string GetPriorityTextColor(string priority)
+    {
+        return priority switch
+        {
+            "low" => "#10B981",    // Green
+            "medium" => "#F59E0B", // Orange/Yellow
+            "high" => "#EF4444",   // Red
+            _ => "#6B7280"         // Gray
         };
     }
 }

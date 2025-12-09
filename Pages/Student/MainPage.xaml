@@ -52,7 +52,7 @@
                     <!-- Logo and Title -->
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
                         <Label 
-                            Text="Education Portal"
+                            Text="EduCRM"
                             FontSize="24"
                             FontAttributes="Bold"
                             TextColor="#111827"

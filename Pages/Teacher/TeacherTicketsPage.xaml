@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utils="clr-namespace:MauiAppIT13.Utils"
              x:Class="MauiAppIT13.Pages.Teacher.TeacherTicketsPage"
              BackgroundColor="#F5F7FA">
 
@@ -39,6 +40,18 @@
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Network Status Indicator -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}"
+                           FontSize="18"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}"
+                           TextColor="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusColorConverter}}"
+                           FontSize="14"
+                           FontAttributes="Bold"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
             </Grid>
@@ -451,35 +464,21 @@
                                            TextColor="#6B7280"
                                            VerticalOptions="Center"/>
 
-                                    <Border Grid.Column="3"
-                                            BackgroundColor="{Binding StatusColor}"
-                                            Padding="8,4"
-                                            StrokeThickness="0"
-                                            VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="{Binding Status}"
-                                               FontSize="12" 
-                                               TextColor="White"
-                                               FontAttributes="Bold"
-                                               HorizontalOptions="Center"/>
-                                    </Border>
+                                    <Label Grid.Column="3"
+                                           Text="{Binding Status}"
+                                           FontSize="12" 
+                                           TextColor="{Binding StatusTextColor}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
 
-                                    <Border Grid.Column="4"
-                                            BackgroundColor="{Binding PriorityColor}"
-                                            Padding="8,4"
-                                            StrokeThickness="0"
-                                            VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="6"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="{Binding Priority}"
-                                               FontSize="12" 
-                                               TextColor="White"
-                                               FontAttributes="Bold"
-                                               HorizontalOptions="Center"/>
-                                    </Border>
+                                    <Label Grid.Column="4"
+                                           Text="{Binding Priority}"
+                                           FontSize="12" 
+                                           TextColor="{Binding PriorityTextColor}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
 
                                     <HorizontalStackLayout Grid.Column="5" Spacing="10" VerticalOptions="Center">
                                         <Button Text="View"
@@ -544,57 +543,60 @@
                     </Grid>
 
                     <!-- Metadata -->
-                    <Grid Row="1" ColumnDefinitions="*,*" ColumnSpacing="20" Padding="0,0,0,20">
-                        <VerticalStackLayout Spacing="6">
+                    <Grid Row="1" RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15" Padding="0,0,0,20">
+                        <!-- First Row: Student and Created -->
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="4">
                             <Label Text="Student"
                                    FontAttributes="Bold"
-                                   FontSize="13"
+                                   FontSize="12"
                                    TextColor="#6B7280"/>
                             <Label x:Name="DetailStudentLabel"
                                    Text="Student Name"
-                                   FontSize="15"
+                                   FontSize="14"
                                    TextColor="#1F2937"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" Spacing="6">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
                             <Label Text="Created"
                                    FontAttributes="Bold"
-                                   FontSize="13"
+                                   FontSize="12"
                                    TextColor="#6B7280"/>
                             <Label x:Name="DetailCreatedLabel"
                                    Text="Date"
-                                   FontSize="15"
+                                   FontSize="14"
                                    TextColor="#1F2937"/>
                         </VerticalStackLayout>
 
-                        <VerticalStackLayout Grid.Column="0" Spacing="6" Margin="0,20,0,0">
+                        <!-- Second Row: Priority and Status -->
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4">
                             <Label Text="Priority"
                                    FontAttributes="Bold"
-                                   FontSize="13"
+                                   FontSize="12"
                                    TextColor="#6B7280"/>
                             <Label x:Name="DetailPriorityLabel"
                                    Text="High"
-                                   FontSize="15"
-                                   TextColor="#1F2937"/>
+                                   FontSize="14"
+                                   FontAttributes="Bold"/>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Column="1" Spacing="6" Margin="0,20,0,0">
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
                             <Label Text="Status"
                                    FontAttributes="Bold"
-                                   FontSize="13"
+                                   FontSize="12"
                                    TextColor="#6B7280"/>
                             <Label x:Name="DetailStatusLabel"
                                    Text="Open"
-                                   FontSize="15"
-                                   TextColor="#1F2937"/>
+                                   FontSize="14"
+                                   FontAttributes="Bold"/>
                         </VerticalStackLayout>
 
-                        <VerticalStackLayout Grid.ColumnSpan="2" Spacing="6" Margin="0,20,0,0">
+                        <!-- Third Row: Description (Full Width) -->
+                        <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="8">
                             <Label Text="Description"
                                    FontAttributes="Bold"
-                                   FontSize="13"
+                                   FontSize="12"
                                    TextColor="#6B7280"/>
                             <Label x:Name="DetailDescriptionLabel"
                                    Text="Description"
-                                   FontSize="15"
+                                   FontSize="14"
                                    TextColor="#1F2937"
                                    LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>

@@ -22,4 +22,6 @@ public class Ticket
     public string AssignedToName { get; set; } = string.Empty;
     public string StatusColor { get; set; } = "#6B7280";
     public string PriorityColor { get; set; } = "#FCD34D";
+    public string StatusTextColor { get; set; } = "#6B7280";
+    public string PriorityTextColor { get; set; } = "#6B7280";
 }

@@ -126,4 +126,155 @@ VALUES (@Id, @CourseId, @Title, @Description, @DeadlineUtc, @TotalPoints, @Creat
         var rows = await command.ExecuteNonQueryAsync();
         return rows > 0 ? assignmentId : null;
     }
+
+    public async Task<IReadOnlyList<AssignmentSubmission>> GetAssignmentSubmissionsAsync(Guid assignmentId, int maxScore = 100)
+    {
+        var submissions = new List<AssignmentSubmission>();
+        if (assignmentId == Guid.Empty)
+        {
+            return submissions;
+        }
+
+        if (_dbConnection is not SqlServerDbConnection sqlConnection)
+        {
+            Debug.WriteLine("AssignmentService: DbConnection is not SqlServerDbConnection");
+            return submissions;
+        }
+
+        // Get all students in the class for this assignment
+        const string sql = @"
+SELECT 
+    s.student_id,
+    s.student_number,
+    u.first_name,
+    u.last_name,
+    a.course_id,
+    sub.submission_id,
+    sub.submitted_at,
+    sub.score,
+    sub.status,
+    sub.notes
+FROM class_assignments a
+INNER JOIN student_courses sc ON sc.course_id = a.course_id
+INNER JOIN students s ON s.student_id = sc.student_id
+INNER JOIN users u ON u.user_id = s.user_id
+LEFT JOIN assignment_submissions sub ON sub.assignment_id = a.assignment_id AND sub.student_id = s.student_id
+WHERE a.assignment_id = @AssignmentId
+ORDER BY 
+    CASE WHEN sub.submission_id IS NOT NULL THEN 0 ELSE 1 END,
+    sub.submitted_at DESC,
+    u.last_name ASC,
+    u.first_name ASC";
+
+        await using var connection = sqlConnection.GetConnection() as SqlConnection;
+        if (connection is null)
+        {
+            Debug.WriteLine("AssignmentService: Unable to create SQL connection");
+            return submissions;
+        }
+
+        await connection.OpenAsync();
+        await using var command = new SqlCommand(sql, connection);
+        command.CommandTimeout = 10;
+        command.Parameters.AddWithValue("@AssignmentId", assignmentId);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var studentId = reader.GetGuid(0);
+            var studentNumber = reader.GetString(1);
+            var firstName = reader.IsDBNull(2) ? "" : reader.GetString(2);
+            var lastName = reader.IsDBNull(3) ? "" : reader.GetString(3);
+            var hasSubmission = !reader.IsDBNull(5);
+            
+            submissions.Add(new AssignmentSubmission
+            {
+                SubmissionId = hasSubmission ? reader.GetGuid(5) : Guid.Empty,
+                AssignmentId = assignmentId,
+                StudentId = studentId,
+                SubmittedAt = hasSubmission ? reader.GetDateTime(6) : DateTime.MinValue,
+                Score = hasSubmission && !reader.IsDBNull(7) ? reader.GetInt32(7) : null,
+                Status = hasSubmission ? reader.GetString(8) : "not submitted",
+                Notes = hasSubmission && !reader.IsDBNull(9) ? reader.GetString(9) : null,
+                StudentNumber = studentNumber,
+                StudentName = $"{firstName} {lastName}".Trim(),
+                MaxScore = maxScore,
+                HasSubmitted = hasSubmission
+            });
+        }
+
+        return submissions;
+    }
+
+    public async Task<string?> GetSubmissionContentAsync(Guid submissionId)
+    {
+        if (submissionId == Guid.Empty)
+        {
+            return null;
+        }
+
+        if (_dbConnection is not SqlServerDbConnection sqlConnection)
+        {
+            Debug.WriteLine("AssignmentService: DbConnection is not SqlServerDbConnection");
+            return null;
+        }
+
+        const string sql = @"
+SELECT submission_content
+FROM assignment_submissions
+WHERE submission_id = @SubmissionId";
+
+        await using var connection = sqlConnection.GetConnection() as SqlConnection;
+        if (connection is null)
+        {
+            Debug.WriteLine("AssignmentService: Unable to create SQL connection");
+            return null;
+        }
+
+        await connection.OpenAsync();
+        await using var command = new SqlCommand(sql, connection);
+        command.CommandTimeout = 10;
+        command.Parameters.AddWithValue("@SubmissionId", submissionId);
+
+        var result = await command.ExecuteScalarAsync();
+        return result?.ToString();
+    }
+
+    public async Task<bool> UpdateSubmissionGradeAsync(Guid submissionId, int score, string? notes)
+    {
+        if (submissionId == Guid.Empty)
+        {
+            return false;
+        }
+
+        if (_dbConnection is not SqlServerDbConnection sqlConnection)
+        {
+            Debug.WriteLine("AssignmentService: DbConnection is not SqlServerDbConnection");
+            return false;
+        }
+
+        const string sql = @"
+UPDATE assignment_submissions
+SET score = @Score,
+    notes = @Notes,
+    status = 'graded'
+WHERE submission_id = @SubmissionId";
+
+        await using var connection = sqlConnection.GetConnection() as SqlConnection;
+        if (connection is null)
+        {
+            Debug.WriteLine("AssignmentService: Unable to create SQL connection");
+            return false;
+        }
+
+        await connection.OpenAsync();
+        await using var command = new SqlCommand(sql, connection);
+        command.CommandTimeout = 10;
+        command.Parameters.AddWithValue("@SubmissionId", submissionId);
+        command.Parameters.AddWithValue("@Score", score);
+        command.Parameters.AddWithValue("@Notes", (object?)notes ?? DBNull.Value);
+
+        var rows = await command.ExecuteNonQueryAsync();
+        return rows > 0;
+    }
 }

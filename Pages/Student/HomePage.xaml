@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utils="clr-namespace:MauiAppIT13.Utils"
              x:Class="MauiAppIT13.Pages.Student.HomePage"
              x:Name="StudentHomePage"
              BackgroundColor="#F5F7FA">
@@ -42,6 +43,17 @@
                            TextColor="White"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
+                
+                <!-- Network Status Indicator -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}" 
+                           FontSize="20"
+                           VerticalOptions="Center"/>
+                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}" 
+                           TextColor="White"
+                           FontSize="12"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
             </Grid>
         </Border>
 
@@ -67,6 +79,25 @@
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Classes Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="Classes" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnClassesTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Messages Menu Item -->

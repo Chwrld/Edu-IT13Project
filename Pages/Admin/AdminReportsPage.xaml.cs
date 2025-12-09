@@ -35,27 +35,27 @@ public partial class AdminReportsPage : ContentPage
 
     private async void OnDashboardTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//AdminHomePage");
+        await Shell.Current.GoToAsync("//AdminHomePage", animate: false);
     }
 
     private async void OnUsersTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminUsersPage");
+        await Shell.Current.GoToAsync("AdminUsersPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminAnnouncementsPage");
+        await Shell.Current.GoToAsync("AdminAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminTicketsPage");
+        await Shell.Current.GoToAsync("AdminTicketsPage", animate: false);
     }
 
     private async void OnAdminProfileTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//AdminProfilePage");
+        await Shell.Current.GoToAsync("//AdminProfilePage", animate: false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
@@ -63,7 +63,7 @@ public partial class AdminReportsPage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage", animate: false);
         }
     }
 
