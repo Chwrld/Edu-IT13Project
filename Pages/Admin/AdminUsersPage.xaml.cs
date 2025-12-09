@@ -3,28 +3,43 @@ using System.Runtime.Versioning;
 using MauiAppIT13.Controllers;
 using MauiAppIT13.Models;
 using MauiAppIT13.Utils;
+using Microsoft.Maui.ApplicationModel;
 
 namespace MauiAppIT13.Pages.Admin;
 
 [SupportedOSPlatform("windows10.0.17763.0")]
 [SupportedOSPlatform("android21.0")]
-public partial class AdminUsersPage : ContentPage
+public partial class AdminUsersPage : ContentPage, IQueryAttributable
 {
     private readonly UserController _userController;
-    private ObservableCollection<User> _allUsers = new();
-    private ObservableCollection<User> _filteredUsers = new();
+    private readonly ObservableCollection<User> _allUsers = new();
+    private readonly ObservableCollection<User> _filteredUsers = new();
     private User? _editingUser = null;
+    private bool _showActive = true;
+    private bool _showInactive;
+    private string _currentSearchText = string.Empty;
+    private string? _pendingAction;
 
     public AdminUsersPage()
     {
         InitializeComponent();
         _userController = AppServiceProvider.GetService<UserController>() ?? throw new InvalidOperationException("UserController not available");
+        UpdateStatusFilterVisuals();
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await LoadUsersAsync();
+        HandlePendingAction();
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("action", out var action))
+        {
+            _pendingAction = action?.ToString()?.ToLowerInvariant();
+        }
     }
 
     private async Task LoadUsersAsync()
@@ -37,11 +52,8 @@ public partial class AdminUsersPage : ContentPage
             {
                 _allUsers.Add(user);
             }
-            _filteredUsers.Clear();
-            foreach (var user in _allUsers)
-            {
-                _filteredUsers.Add(user);
-            }
+
+            ApplyFilters();
             UsersCollectionView.ItemsSource = _filteredUsers;
         }
         catch (Exception ex)
@@ -50,28 +62,148 @@ public partial class AdminUsersPage : ContentPage
         }
     }
 
-    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    private void OnStatusFilterTapped(object? sender, TappedEventArgs e)
     {
-        string searchText = e.NewTextValue?.ToLower() ?? "";
+        if (e.Parameter is not string parameter)
+            return;
+
+        var status = User.NormalizeStatus(parameter);
+
+        if (status == User.StatusActive)
+        {
+            _showActive = !_showActive;
+            if (!_showActive && !_showInactive)
+            {
+                _showActive = true; // ensure at least one filter stays enabled
+            }
+        }
+        else if (status == User.StatusInactive)
+        {
+            _showInactive = !_showInactive;
+            if (!_showInactive && !_showActive)
+            {
+                _showInactive = true;
+            }
+        }
+
+        UpdateStatusFilterVisuals();
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
         _filteredUsers.Clear();
 
-        if (string.IsNullOrWhiteSpace(searchText))
+        foreach (var user in _allUsers)
         {
-            foreach (var user in _allUsers)
-            {
-                _filteredUsers.Add(user);
-            }
+            if (!ShouldIncludeUser(user))
+                continue;
+
+            _filteredUsers.Add(user);
+        }
+    }
+
+    private bool ShouldIncludeUser(User user)
+    {
+        var normalizedStatus = User.NormalizeStatus(user.Status);
+        if (normalizedStatus == User.StatusArchived)
+        {
+            return false; // archived users hidden from standard lists
+        }
+
+        bool matchesStatus = (normalizedStatus == User.StatusActive && _showActive) ||
+                             (normalizedStatus == User.StatusInactive && _showInactive);
+
+        if (!matchesStatus)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(_currentSearchText))
+        {
+            return true;
+        }
+
+        return user.DisplayName.Contains(_currentSearchText, StringComparison.OrdinalIgnoreCase) ||
+               user.Email.Contains(_currentSearchText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void UpdateStatusFilterVisuals()
+    {
+        SetFilterVisual(ActiveFilterButton, ActiveFilterLabel, _showActive);
+        SetFilterVisual(InactiveFilterButton, InactiveFilterLabel, _showInactive);
+    }
+
+    private static void SetFilterVisual(Border border, Label label, bool isSelected)
+    {
+        if (border is null || label is null)
+            return;
+
+        if (isSelected)
+        {
+            border.BackgroundColor = Color.FromArgb("#005BA5");
+            border.StrokeThickness = 0;
+            label.TextColor = Colors.White;
+            label.FontAttributes = FontAttributes.Bold;
         }
         else
         {
-            foreach (var user in _allUsers)
-            {
-                if (user.DisplayName.ToLower().Contains(searchText) || 
-                    user.Email.ToLower().Contains(searchText))
-                {
-                    _filteredUsers.Add(user);
-                }
-            }
+            border.BackgroundColor = Colors.White;
+            border.StrokeThickness = 1;
+            border.Stroke = Color.FromArgb("#D1D5DB");
+            label.TextColor = Color.FromArgb("#374151");
+            label.FontAttributes = FontAttributes.None;
+        }
+    }
+
+    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _currentSearchText = e.NewTextValue?.Trim() ?? string.Empty;
+        ApplyFilters();
+    }
+
+    private async void OnStatusChipTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Parameter is not User user)
+            return;
+
+        var currentStatus = User.NormalizeStatus(user.Status);
+        string? targetStatus = currentStatus switch
+        {
+            User.StatusActive => User.StatusInactive,
+            User.StatusInactive => User.StatusActive,
+            _ => null
+        };
+
+        if (targetStatus is null)
+        {
+            await DisplayAlert("Unavailable", "This status cannot be changed from here.", "OK");
+            return;
+        }
+
+        string actionText = targetStatus == User.StatusActive ? "activate" : "mark as inactive";
+        bool confirm = await DisplayAlert("Change Status",
+            $"Do you want to {actionText} {user.DisplayName}?",
+            "Yes", "No");
+
+        if (!confirm)
+            return;
+
+        if (targetStatus == User.StatusActive)
+        {
+            user.ArchiveReason = null;
+        }
+
+        try
+        {
+            user.Status = targetStatus;
+            await _userController.UpdateUserAsync(user, user.DisplayName, user.Email, user.Role, user.PhoneNumber, user.Address);
+            ApplyFilters();
+            await DisplayAlert("Success", $"User status updated to {targetStatus}.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to update status: {ex.Message}", "OK");
         }
     }
 
@@ -103,6 +235,18 @@ public partial class AdminUsersPage : ContentPage
         ConfirmButton.Text = "Add User";
         PasswordEntry.IsEnabled = true;
         AddUserModal.IsVisible = true;
+    }
+
+    private void HandlePendingAction()
+    {
+        if (_pendingAction == "new")
+        {
+            _pendingAction = null;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                OnAddUserClicked(this, EventArgs.Empty);
+            });
+        }
     }
 
     private void OnCloseModalTapped(object? sender, EventArgs e)
@@ -244,15 +388,51 @@ public partial class AdminUsersPage : ContentPage
         }
     }
 
-    private async void OnDeleteUserTapped(object? sender, EventArgs e)
+    private async void OnArchiveUserTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Delete User", 
-            "Are you sure you want to delete this user? This action cannot be undone.", 
-            "Delete", "Cancel");
-        
-        if (confirm)
+        if (sender is not Label label || label.BindingContext is not User user)
+            return;
+
+        bool confirm = await DisplayAlert("Archive User", 
+            $"Archive {user.DisplayName}? They will no longer be able to sign in, but their data is preserved.", 
+            "Archive", "Cancel");
+
+        if (!confirm)
+            return;
+
+        string? reason = await DisplayPromptAsync("Archive Reason",
+            "Please provide a reason for archiving this user.",
+            placeholder: "Reason for archiving",
+            maxLength: 200);
+
+        if (reason is null)
+            return; // user cancelled prompt
+
+        reason = reason.Trim();
+        if (string.IsNullOrWhiteSpace(reason))
         {
-            await DisplayAlert("Success", "User has been deleted.", "OK");
+            await DisplayAlert("Required", "Please enter a reason for archiving.", "OK");
+            return;
+        }
+
+        user.ArchiveReason = reason;
+
+        try
+        {
+            var (success, message) = await _userController.DeleteUserAsync(user, reason);
+            if (success)
+            {
+                await LoadUsersAsync();
+                await DisplayAlert("Archived", $"{message}\nReason: {reason}", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Error", message, "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to archive user: {ex.Message}", "OK");
         }
     }
 

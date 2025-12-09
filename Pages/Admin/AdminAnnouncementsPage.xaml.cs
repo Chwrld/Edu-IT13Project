@@ -7,7 +7,7 @@ using Microsoft.Maui.ApplicationModel;
 
 namespace MauiAppIT13.Pages.Admin;
 
-public partial class AdminAnnouncementsPage : ContentPage
+public partial class AdminAnnouncementsPage : ContentPage, IQueryAttributable
 {
     private readonly AnnouncementService _announcementService;
     private readonly AuthManager _authManager;
@@ -16,6 +16,7 @@ public partial class AdminAnnouncementsPage : ContentPage
     private Announcement? _editingAnnouncement;
     private bool _isLoading;
     private string _searchText = string.Empty;
+    private string? _pendingAction;
 
     public AdminAnnouncementsPage()
     {
@@ -32,6 +33,15 @@ public partial class AdminAnnouncementsPage : ContentPage
     {
         base.OnAppearing();
         await LoadAnnouncementsAsync();
+        HandlePendingAction();
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("action", out var action))
+        {
+            _pendingAction = action?.ToString()?.ToLowerInvariant();
+        }
     }
 
     private async Task LoadAnnouncementsAsync()
@@ -114,6 +124,18 @@ public partial class AdminAnnouncementsPage : ContentPage
         VisibilityPicker.SelectedIndex = 0;
         PublishedSwitch.IsToggled = true;
         AnnouncementModal.IsVisible = true;
+    }
+
+    private void HandlePendingAction()
+    {
+        if (_pendingAction == "new")
+        {
+            _pendingAction = null;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                OnNewAnnouncementClicked(this, EventArgs.Empty);
+            });
+        }
     }
 
     private void OnCloseModalClicked(object? sender, EventArgs e) => HideModal();

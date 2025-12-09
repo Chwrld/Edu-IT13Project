@@ -49,9 +49,16 @@ public class StatusColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool isActive)
+        if (value is string status)
         {
-            return isActive ? Color.FromArgb("#D1FAE5") : Color.FromArgb("#FEE2E2");
+            var normalized = User.NormalizeStatus(status);
+            return normalized switch
+            {
+                User.StatusActive => Color.FromArgb("#D1FAE5"),
+                User.StatusInactive => Color.FromArgb("#FEF3C7"),
+                User.StatusArchived => Color.FromArgb("#FEE2E2"),
+                _ => Color.FromArgb("#F3F4F6")
+            };
         }
         return Color.FromArgb("#F3F4F6");
     }
@@ -64,9 +71,16 @@ public class StatusTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool isActive)
+        if (value is string status)
         {
-            return isActive ? "Active" : "Inactive";
+            var normalized = User.NormalizeStatus(status);
+            return normalized switch
+            {
+                User.StatusActive => "Active",
+                User.StatusInactive => "Inactive",
+                User.StatusArchived => "Archived",
+                _ => "Unknown"
+            };
         }
         return "Unknown";
     }
@@ -79,9 +93,16 @@ public class StatusTextColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool isActive)
+        if (value is string status)
         {
-            return isActive ? Color.FromArgb("#065F46") : Color.FromArgb("#991B1B");
+            var normalized = User.NormalizeStatus(status);
+            return normalized switch
+            {
+                User.StatusActive => Color.FromArgb("#065F46"),
+                User.StatusInactive => Color.FromArgb("#92400E"),
+                User.StatusArchived => Color.FromArgb("#991B1B"),
+                _ => Color.FromArgb("#374151")
+            };
         }
         return Color.FromArgb("#374151");
     }

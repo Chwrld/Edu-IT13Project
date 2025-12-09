@@ -90,6 +90,79 @@ public class TicketService
         }
     }
 
+    public async Task<ObservableCollection<Ticket>> GetTeacherTicketsAsync(Guid teacherId, int limit = 25)
+    {
+        try
+        {
+            Debug.WriteLine($"TicketService: Loading tickets for teacher {teacherId}");
+            var tickets = new ObservableCollection<Ticket>();
+
+            const string sql = @"
+                SELECT TOP (@Limit)
+                    t.ticket_id,
+                    t.ticket_number,
+                    t.title,
+                    t.description,
+                    t.status,
+                    t.priority,
+                    t.created_at,
+                    t.created_by,
+                    t.updated_at,
+                    t.updated_by,
+                    t.student_id,
+                    t.assigned_to_id,
+                    u_student.display_name as student_name,
+                    u_assigned.display_name as assigned_to_name
+                FROM support_tickets t
+                LEFT JOIN users u_student ON t.created_by = u_student.user_id
+                LEFT JOIN users u_assigned ON t.assigned_to_id = u_assigned.user_id
+                WHERE t.assigned_to_id = @TeacherId OR t.created_by = @TeacherId
+                ORDER BY COALESCE(t.updated_at, t.created_at) DESC";
+
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            await using var command = new SqlCommand(sql, connection);
+            command.CommandTimeout = 8;
+            command.Parameters.AddWithValue("@TeacherId", teacherId);
+            command.Parameters.AddWithValue("@Limit", limit);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var ticket = new Ticket
+                {
+                    Id = reader.GetGuid(0),
+                    TicketNumber = reader.GetString(1),
+                    Title = reader.GetString(2),
+                    Description = reader.GetString(3),
+                    Status = reader.GetString(4),
+                    Priority = reader.GetString(5),
+                    CreatedAt = reader.GetDateTime(6),
+                    CreatedBy = reader.GetGuid(7),
+                    UpdatedAt = reader.IsDBNull(8) ? null : reader.GetDateTime(8),
+                    UpdatedBy = reader.IsDBNull(9) ? null : reader.GetGuid(9),
+                    StudentId = reader.IsDBNull(10) ? Guid.Empty : reader.GetGuid(10),
+                    AssignedToId = reader.IsDBNull(11) ? null : reader.GetGuid(11),
+                    CreatedByName = reader.IsDBNull(12) ? "Unknown" : reader.GetString(12),
+                    AssignedToName = reader.IsDBNull(13) ? "Unassigned" : reader.GetString(13),
+                    StatusColor = GetStatusColor(reader.GetString(4)),
+                    PriorityColor = GetPriorityColor(reader.GetString(5))
+                };
+
+                tickets.Add(ticket);
+            }
+
+            Debug.WriteLine($"TicketService: Loaded {tickets.Count} tickets for teacher");
+            return tickets;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"TicketService: Error loading teacher tickets - {ex.GetType().Name}: {ex.Message}");
+            return new ObservableCollection<Ticket>();
+        }
+    }
+
     public async Task<ObservableCollection<Ticket>> GetAllTicketsAsync(int limit = 100)
     {
         try

@@ -184,11 +184,31 @@
                             Padding="20,20,20,15" 
                             BackgroundColor="White"
                             StrokeThickness="0">
-                        <Label Text="Messages" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
-                               FontFamily="MontserratBold"
-                               TextColor="#2C3E50"/>
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Label Text="Messages" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"
+                                   FontFamily="MontserratBold"
+                                   TextColor="#2C3E50"
+                                   VerticalOptions="Center"/>
+                            <Border Grid.Column="1"
+                                    BackgroundColor="#0891B2"
+                                    Padding="14,8"
+                                    StrokeThickness="0"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18"/>
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnComposeMessageTapped"/>
+                                </Border.GestureRecognizers>
+                                <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                    <Label Text="＋" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                                    <Label Text="New Message" TextColor="White" FontSize="13"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
                     </Border>
 
                     <!-- Search Bar -->
@@ -401,6 +421,170 @@
                 </Grid>
             </Border>
 
+        </Grid>
+
+        <!-- Compose Overlay -->
+        <Grid x:Name="ComposeOverlay"
+              Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
+              IsVisible="False">
+            <BoxView Color="#80000000"
+                     InputTransparent="False">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnComposeOverlayTapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border x:Name="ComposeCard"
+                    WidthRequest="600"
+                    BackgroundColor="White"
+                    StrokeThickness="0"
+                    Padding="30"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="20">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Start a new conversation"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#1F2937"/>
+                            <Label Text="Choose a teacher and send a direct message."
+                                   FontSize="13"
+                                   TextColor="#6B7280"/>
+                        </VerticalStackLayout>
+                        <Border Grid.Column="1"
+                                BackgroundColor="#F3F4F6"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                StrokeThickness="0"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnComposeOverlayTapped"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="✕"
+                                   FontSize="14"
+                                   TextColor="#4B5563"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+
+                    <Label x:Name="ComposeEmptyStateLabel"
+                           Text="No available teachers to message right now."
+                           TextColor="#6B7280"
+                           FontSize="13"
+                           IsVisible="False"/>
+
+                    <CollectionView x:Name="ComposeRecipientsCollectionView"
+                                    HeightRequest="220"
+                                    SelectionMode="Single"
+                                    SelectionChanged="OnComposeRecipientSelectionChanged"
+                                    IsVisible="True">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="14"
+                                        Margin="0,0,0,10"
+                                        StrokeThickness="1">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnComposeRecipientTapped"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#F9FAFB"/>
+                                                    <Setter Property="Stroke" Value="#E5E7EB"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="#E0F2FE"/>
+                                                    <Setter Property="Stroke" Value="#0891B2"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                                        <Border BackgroundColor="{Binding AvatarColor}"
+                                                WidthRequest="48"
+                                                HeightRequest="48"
+                                                StrokeThickness="0"
+                                                VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <Ellipse/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding Initials}"
+                                                   TextColor="White"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding DisplayName}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#111827"/>
+                                            <Label Text="{Binding Role}"
+                                                   FontSize="12"
+                                                   TextColor="#6B7280"/>
+                                            <Label Text="{Binding Email}"
+                                                   FontSize="12"
+                                                   TextColor="#4B5563"/>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="2"
+                                               Text="Select"
+                                               FontSize="12"
+                                               TextColor="#0891B2"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Border BackgroundColor="#F3F4F6"
+                            Padding="12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Editor x:Name="ComposeMessageEditor"
+                                Placeholder="Type your message..."
+                                AutoSize="TextChanges"
+                                BackgroundColor="Transparent"
+                                TextColor="#1F2937"/>
+                    </Border>
+
+                    <Label x:Name="ComposeErrorLabel"
+                           TextColor="#DC2626"
+                           FontSize="12"
+                           IsVisible="False"/>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Button Text="Cancel"
+                                Grid.Column="0"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#1F2937"
+                                Clicked="OnComposeCancelClicked"/>
+                        <Button Text="Send Message"
+                                Grid.Column="1"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                Clicked="OnComposeSendClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
         </Grid>
     </Grid>
 </ContentPage>

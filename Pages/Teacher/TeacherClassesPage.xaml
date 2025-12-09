@@ -212,7 +212,7 @@
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
                         <Label x:Name="AllFilterLabel"
-                               Text="All Classes" 
+                               Text="All" 
                                TextColor="White" 
                                FontSize="13"
                                FontAttributes="Bold"/>
@@ -239,38 +239,21 @@
                                 CommandParameter="Active"/>
                         </Border.GestureRecognizers>
                     </Border>
-                    <Border x:Name="UpcomingFilter"
+                    <Border x:Name="InactiveFilter"
                             BackgroundColor="#E5E7EB"
                             Padding="12,8"
                             StrokeThickness="0">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="6"/>
                         </Border.StrokeShape>
-                        <Label x:Name="UpcomingFilterLabel"
-                               Text="Upcoming" 
+                        <Label x:Name="InactiveFilterLabel"
+                               Text="Inactive" 
                                TextColor="#6B7280" 
                                FontSize="13"/>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Tapped="OnFilterTapped"
-                                CommandParameter="Upcoming"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                    <Border x:Name="CompletedFilter"
-                            BackgroundColor="#E5E7EB"
-                            Padding="12,8"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="CompletedFilterLabel"
-                               Text="Completed" 
-                               TextColor="#6B7280" 
-                               FontSize="13"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="OnFilterTapped"
-                                CommandParameter="Completed"/>
+                                CommandParameter="Inactive"/>
                         </Border.GestureRecognizers>
                     </Border>
                 </HorizontalStackLayout>

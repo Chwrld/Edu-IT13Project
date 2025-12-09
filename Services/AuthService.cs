@@ -31,7 +31,7 @@ public sealed class AuthService
             return AuthResult.Failed("Invalid email or password.");
         }
 
-        if (!user.IsActive)
+        if (!string.Equals(user.Status, User.StatusActive, StringComparison.OrdinalIgnoreCase))
         {
             _activityLogger.LogWarning($"Authentication blocked for inactive user: {email}");
             return AuthResult.Failed("Your account is currently inactive. Please contact support.");

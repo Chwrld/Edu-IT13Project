@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MauiAppIT13.Models"
              x:Class="MauiAppIT13.Pages.Admin.AdminHomePage"
              BackgroundColor="#F5F7FA">
 
@@ -236,11 +237,13 @@
                                 <Label Grid.Column="1"
                                        Text="👥" FontSize="20"/>
                             </Grid>
-                            <Label Text="1,248" 
+                            <Label x:Name="TotalUsersValueLabel"
+                                   Text="1,248" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="↑ 12% this month" 
+                            <Label x:Name="TotalUsersChangeLabel"
+                                   Text="↑ 12% this month" 
                                    FontSize="11" 
                                    TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
@@ -264,11 +267,13 @@
                                 <Label Grid.Column="1"
                                        Text="🎫" FontSize="20"/>
                             </Grid>
-                            <Label Text="47" 
+                            <Label x:Name="ActiveTicketsValueLabel"
+                                   Text="47" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="23 pending review" 
+                            <Label x:Name="ActiveTicketsSubLabel"
+                                   Text="23 pending review" 
                                    FontSize="11" 
                                    TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
@@ -292,11 +297,13 @@
                                 <Label Grid.Column="1"
                                        Text="📢" FontSize="20"/>
                             </Grid>
-                            <Label Text="12" 
+                            <Label x:Name="AnnouncementsValueLabel"
+                                   Text="12" 
                                    FontSize="32" 
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
-                            <Label Text="This week" 
+                            <Label x:Name="AnnouncementsSubLabel"
+                                   Text="This week" 
                                    FontSize="11" 
                                    TextColor="#9CA3AF"/>
                         </VerticalStackLayout>
@@ -331,162 +338,58 @@
                                    FontSize="12" 
                                    TextColor="#6B7280"
                                    Margin="0,-10,0,0"/>
+                            <VerticalStackLayout x:Name="RecentActivityList"
+                                                 Spacing="12"
+                                                 BindableLayout.ItemsSource="{Binding RecentActivities}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:AdminActivityItem">
+                                        <Border BackgroundColor="#EFF6FF"
+                                                Padding="12"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="6"/>
+                                            </Border.StrokeShape>
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                                <Border Grid.Column="0"
+                                                        BackgroundColor="{Binding AccentColor}"
+                                                        WidthRequest="40"
+                                                        HeightRequest="40"
+                                                        StrokeThickness="0">
+                                                    <Border.StrokeShape>
+                                                        <Ellipse/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding Icon}" 
+                                                           FontSize="16"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                                    <Label Text="{Binding Title}" 
+                                                           FontSize="13" 
+                                                           FontAttributes="Bold"
+                                                           TextColor="#2C3E50"/>
+                                                    <Label Text="{Binding Description}" 
+                                                           FontSize="12" 
+                                                           TextColor="#6B7280"
+                                                           LineBreakMode="TailTruncation"/>
+                                                </VerticalStackLayout>
+                                                <Label Grid.Column="2" 
+                                                       Text="{Binding RelativeTime}" 
+                                                       FontSize="11" 
+                                                       TextColor="#9CA3AF"
+                                                       VerticalOptions="Start"
+                                                       HorizontalTextAlignment="End"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
 
-                            <!-- Activity 1 -->
-                            <Border BackgroundColor="#EFF6FF"
-                                    Padding="12"
-                                    StrokeThickness="0">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border Grid.Column="0"
-                                            BackgroundColor="#B7D6F0"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <Ellipse/>
-                                        </Border.StrokeShape>
-                                        <Label Text="🎫" 
-                                               FontSize="16"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                                        <Label Text="New Support Ticket" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Student reported login issue - Ticket #1247" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"
-                                               LineBreakMode="TailTruncation"/>
-                                    </VerticalStackLayout>
-                                    <Label Grid.Column="2" 
-                                           Text="5 min ago" 
-                                           FontSize="11" 
-                                           TextColor="#9CA3AF"
-                                           VerticalOptions="Start"/>
-                                </Grid>
-                            </Border>
-
-                            <!-- Activity 2 -->
-                            <Border BackgroundColor="#EFF6FF"
-                                    Padding="12"
-                                    StrokeThickness="0">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border Grid.Column="0"
-                                            BackgroundColor="#FFC4E6DA"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <Ellipse/>
-                                        </Border.StrokeShape>
-                                        <Label Text="✅" 
-                                               FontSize="16"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                                        <Label Text="New User Registration" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Sarah Johnson registered as a student" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"
-                                               LineBreakMode="TailTruncation"/>
-                                    </VerticalStackLayout>
-                                    <Label Grid.Column="2" 
-                                           Text="15 min ago" 
-                                           FontSize="11" 
-                                           TextColor="#9CA3AF"
-                                           VerticalOptions="Start"/>
-                                </Grid>
-                            </Border>
-
-                            <!-- Activity 3 -->
-                            <Border BackgroundColor="#EFF6FF"
-                                    Padding="12"
-                                    StrokeThickness="0">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border Grid.Column="0"
-                                            BackgroundColor="#FFBFD2F1"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <Ellipse/>
-                                        </Border.StrokeShape>
-                                        <Label Text="📢" 
-                                               FontSize="16"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                                        <Label Text="Announcement Published" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="'Semester Schedule Update' sent to all users" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"
-                                               LineBreakMode="TailTruncation"/>
-                                    </VerticalStackLayout>
-                                    <Label Grid.Column="2" 
-                                           Text="1 hour ago" 
-                                           FontSize="11" 
-                                           TextColor="#9CA3AF"
-                                           VerticalOptions="Start"/>
-                                </Grid>
-                            </Border>
-
-                            <!-- Activity 4 -->
-                            <Border BackgroundColor="#EFF6FF"
-                                    Padding="12"
-                                    StrokeThickness="0">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="6"/>
-                                </Border.StrokeShape>
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                    <Border Grid.Column="0"
-                                            BackgroundColor="#FFF1E4CD"
-                                            WidthRequest="40"
-                                            HeightRequest="40"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <Ellipse/>
-                                        </Border.StrokeShape>
-                                        <Label Text="⚠️" 
-                                               FontSize="16"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
-                                        <Label Text="System Maintenance" 
-                                               FontSize="13" 
-                                               FontAttributes="Bold"
-                                               TextColor="#2C3E50"/>
-                                        <Label Text="Database backup completed successfully" 
-                                               FontSize="12" 
-                                               TextColor="#6B7280"
-                                               LineBreakMode="TailTruncation"/>
-                                    </VerticalStackLayout>
-                                    <Label Grid.Column="2" 
-                                           Text="3 hours ago" 
-                                           FontSize="11" 
-                                           TextColor="#9CA3AF"
-                                           VerticalOptions="Start"/>
-                                </Grid>
-                            </Border>
+                            <Label x:Name="RecentActivityEmptyLabel"
+                                   Text="No recent activity yet"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   IsVisible="False"/>
 
                         </VerticalStackLayout>
                     </Border>
@@ -562,15 +465,23 @@
                                            FontSize="11" 
                                            TextColor="#6B7280"
                                            LineBreakMode="WordWrap"/>
-                                    <Button Text="Download"
-                                            BackgroundColor="White"
-                                            TextColor="#005BA5"
-                                            FontSize="11"
-                                            HeightRequest="32"
-                                            CornerRadius="6"
-                                            BorderColor="#005BA5"
-                                            BorderWidth="1"
-                                            Clicked="OnDownloadDataClicked"/>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="Generates ticket summary and teacher-class-student CSV files."
+                                               FontSize="10"
+                                               TextColor="#6B7280"
+                                               LineBreakMode="WordWrap"/>
+                                        <Button Grid.Column="1"
+                                                Text="Download"
+                                                BackgroundColor="White"
+                                                TextColor="#005BA5"
+                                                FontSize="11"
+                                                Padding="16,8"
+                                                CornerRadius="6"
+                                                BorderColor="#005BA5"
+                                                BorderWidth="1"
+                                                Clicked="OnDownloadDataClicked"/>
+                                    </Grid>
                                 </VerticalStackLayout>
                             </Border>
 
