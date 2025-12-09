@@ -20,6 +20,7 @@ public partial class TeacherClassDetailsPage : ContentPage
     private readonly ObservableCollection<ClassAssignment> _assignments = new();
     private readonly ObservableCollection<StudentGradeSummary> _gradeSummaries = new();
     private readonly ObservableCollection<Announcement> _announcements = new();
+    private readonly ObservableCollection<AssignmentSubmission> _submissions = new();
     private readonly List<ClassStudent> _allStudents = new();
     private readonly List<ClassAssignment> _allAssignments = new();
     private readonly List<StudentGradeSummary> _allGradeSummaries = new();
@@ -30,6 +31,7 @@ public partial class TeacherClassDetailsPage : ContentPage
     private readonly DbConnection? _dbConnection;
     private Guid _classId;
     private bool _hasAppeared;
+    private ClassAssignment? _selectedAssignment;
 
     public string? ClassIdQuery
     {
@@ -124,6 +126,7 @@ public partial class TeacherClassDetailsPage : ContentPage
         AssignmentsCollectionView.ItemsSource = _assignments;
         GradesCollectionView.ItemsSource = _gradeSummaries;
         AnnouncementsCollectionView.ItemsSource = _announcements;
+        SubmissionsCollectionView.ItemsSource = _submissions;
     }
 
     protected override void OnAppearing()
@@ -412,6 +415,134 @@ public partial class TeacherClassDetailsPage : ContentPage
                 ApplyAnnouncementsFilter(SearchEntry?.Text);
                 break;
         }
+    }
+
+    private async void OnEditGradesClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+        {
+            return;
+        }
+
+        if (_gradeService is null)
+        {
+            await DisplayAlert("Grades", "Grade service unavailable. Please try again later.", "OK");
+            return;
+        }
+
+        var isCurrentlyEditing = button.Text == "Save Grades";
+
+        if (!isCurrentlyEditing)
+        {
+            // Enable editing mode for all entries
+            SetAllGradeEntriesEnabled(true);
+            button.Text = "Save Grades";
+            button.BackgroundColor = Color.FromArgb("#3B82F6"); // Blue color for save
+            return;
+        }
+
+        // Validate and save all grades
+        var confirm = await DisplayAlert(
+            "Save All Changes",
+            "Save all updated grades?",
+            "Save",
+            "Cancel");
+
+        if (!confirm)
+        {
+            return;
+        }
+
+        try
+        {
+            bool allSuccess = true;
+            foreach (var grade in _gradeSummaries)
+            {
+                if (!TryParseScore(grade.AssignmentsScore.ToString(), out var assignments) ||
+                    !TryParseScore(grade.ActivitiesScore.ToString(), out var activities) ||
+                    !TryParseScore(grade.ExamsScore.ToString(), out var exams) ||
+                    !TryParseScore(grade.ProjectsScore.ToString(), out var projects))
+                {
+                    await DisplayAlert("Grades", $"Invalid scores for {grade.StudentName}. Scores must be numbers between 0 and 100.", "OK");
+                    return;
+                }
+
+                var updated = await _gradeService.UpdateStudentGradeAsync(
+                    grade.GradeId,
+                    assignments,
+                    activities,
+                    exams,
+                    projects);
+
+                if (!updated)
+                {
+                    allSuccess = false;
+                }
+            }
+
+            SetAllGradeEntriesEnabled(false);
+            button.Text = "Edit Grades";
+            button.BackgroundColor = Color.FromArgb("#059669"); // Green color for edit
+
+            await LoadGradesAsync();
+            
+            if (allSuccess)
+            {
+                await DisplayAlert("Grades", "All grades updated successfully.", "Great!");
+            }
+            else
+            {
+                await DisplayAlert("Grades", "Some grades could not be updated. Please try again.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Grades", $"Failed to update grades: {ex.Message}", "OK");
+        }
+    }
+
+    private void SetAllGradeEntriesEnabled(bool enabled)
+    {
+        if (GradesCollectionView?.Handler?.PlatformView is null)
+        {
+            return;
+        }
+
+        // Find all Entry controls in the grades collection view
+        var entries = FindAllEntriesInView(GradesCollectionView);
+        foreach (var entry in entries)
+        {
+            entry.IsEnabled = enabled;
+        }
+    }
+
+    private static List<Entry> FindAllEntriesInView(VisualElement view)
+    {
+        var entries = new List<Entry>();
+        
+        if (view is Entry entry)
+        {
+            entries.Add(entry);
+            return entries;
+        }
+
+        if (view is Layout layout)
+        {
+            foreach (var child in layout.Children.OfType<VisualElement>())
+            {
+                entries.AddRange(FindAllEntriesInView(child));
+            }
+        }
+        else if (view is ScrollView scrollView && scrollView.Content is VisualElement scrollContent)
+        {
+            entries.AddRange(FindAllEntriesInView(scrollContent));
+        }
+        else if (view is ContentView contentView && contentView.Content is VisualElement content)
+        {
+            entries.AddRange(FindAllEntriesInView(content));
+        }
+
+        return entries;
     }
 
     private async void OnSingleGradeEditClicked(object sender, EventArgs e)
@@ -787,4 +918,71 @@ public partial class TeacherClassDetailsPage : ContentPage
             await Shell.Current.GoToAsync("//MainPage");
         }
     }
+
+    // Assignment Submissions Modal
+    private async void OnAssignmentTapped(object sender, TappedEventArgs e)
+    {
+        try
+        {
+            if (e.Parameter is not ClassAssignment assignment)
+            {
+                return;
+            }
+
+            _selectedAssignment = assignment;
+            
+            // Update modal header
+            SubmissionsAssignmentTitle.Text = assignment.Title;
+            SubmissionsAssignmentInfo.Text = $"{assignment.SubmittedCount}/{assignment.TotalStudents} submissions • Due: {assignment.DeadlineDisplay}";
+
+            // Load submissions
+            if (_assignmentService != null)
+            {
+                var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(assignment.Id, assignment.TotalPoints);
+                
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    _submissions.Clear();
+                    foreach (var submission in submissions)
+                    {
+                        _submissions.Add(submission);
+                    }
+                });
+            }
+
+            // Show modal
+            AssignmentSubmissionsOverlay.IsVisible = true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading assignment submissions: {ex.Message}");
+            await DisplayAlert("Error", "Failed to load assignment submissions.", "OK");
+        }
+    }
+
+    private void OnCloseSubmissionsModal(object sender, EventArgs e)
+    {
+        AssignmentSubmissionsOverlay.IsVisible = false;
+        _selectedAssignment = null;
+        _submissions.Clear();
+    }
+
+    private async void OnViewSubmissionClicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is AssignmentSubmission submission)
+        {
+            var details = $"Student: {submission.StudentName} ({submission.StudentNumber})\\n" +
+                         $"Submitted: {submission.SubmittedAtDisplay}\\n" +
+                         $"Score: {submission.ScoreDisplay}\\n" +
+                         $"Status: {submission.Status}";
+            
+            if (!string.IsNullOrEmpty(submission.Notes))
+            {
+                details += $"\\n\\nNotes: {submission.Notes}";
+            }
+
+            await DisplayAlert("Submission Details", details, "OK");
+        }
+    }
 }
+

@@ -175,4 +175,59 @@ public class ClassService
 
         return students;
     }
+
+    public async Task<ObservableCollection<ClassModel>> GetStudentClassesAsync(Guid studentId)
+    {
+        var classes = new ObservableCollection<ClassModel>();
+
+        if (_dbConnection is not SqlServerDbConnection sqlConnection)
+        {
+            Debug.WriteLine("ClassService: DbConnection is not SqlServerDbConnection");
+            return classes;
+        }
+
+        const string sql = @"
+            SELECT DISTINCT
+                c.course_id,
+                c.course_code,
+                c.course_name,
+                c.schedule,
+                c.credits
+            FROM courses c
+            INNER JOIN students s ON s.adviser_id = c.created_by
+            WHERE s.student_id = @StudentId
+              AND SUBSTRING(s.student_number, 5, 3) = SUBSTRING(c.course_code, 3, 3)
+            ORDER BY c.course_name";
+
+        await using var connection = sqlConnection.GetConnection() as SqlConnection;
+        if (connection is null)
+        {
+            Debug.WriteLine("ClassService: Unable to create SQL connection");
+            return classes;
+        }
+
+        await connection.OpenAsync();
+        await using var command = new SqlCommand(sql, connection);
+        command.CommandTimeout = 10;
+        command.Parameters.AddWithValue("@StudentId", studentId);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var courseCode = reader.GetString(1);
+            var classKey = courseCode.Length >= 5 ? courseCode.Substring(2, 3) : string.Empty;
+
+            classes.Add(new ClassModel
+            {
+                Id = reader.GetGuid(0),
+                Code = courseCode,
+                Name = reader.GetString(2),
+                Schedule = reader.IsDBNull(3) ? "To be scheduled" : reader.GetString(3),
+                Credits = reader.GetInt32(4),
+                ClassKey = classKey
+            });
+        }
+
+        return classes;
+    }
 }

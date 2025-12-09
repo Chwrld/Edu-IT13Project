@@ -126,4 +126,72 @@ VALUES (@Id, @CourseId, @Title, @Description, @DeadlineUtc, @TotalPoints, @Creat
         var rows = await command.ExecuteNonQueryAsync();
         return rows > 0 ? assignmentId : null;
     }
+
+    public async Task<IReadOnlyList<AssignmentSubmission>> GetAssignmentSubmissionsAsync(Guid assignmentId, int maxScore = 100)
+    {
+        var submissions = new List<AssignmentSubmission>();
+        if (assignmentId == Guid.Empty)
+        {
+            return submissions;
+        }
+
+        if (_dbConnection is not SqlServerDbConnection sqlConnection)
+        {
+            Debug.WriteLine("AssignmentService: DbConnection is not SqlServerDbConnection");
+            return submissions;
+        }
+
+        const string sql = @"
+SELECT 
+    sub.submission_id,
+    sub.assignment_id,
+    sub.student_id,
+    sub.submitted_at,
+    sub.score,
+    sub.status,
+    sub.notes,
+    s.student_number,
+    u.first_name,
+    u.last_name
+FROM assignment_submissions sub
+INNER JOIN students s ON s.student_id = sub.student_id
+INNER JOIN users u ON u.user_id = s.user_id
+WHERE sub.assignment_id = @AssignmentId
+ORDER BY sub.submitted_at DESC";
+
+        await using var connection = sqlConnection.GetConnection() as SqlConnection;
+        if (connection is null)
+        {
+            Debug.WriteLine("AssignmentService: Unable to create SQL connection");
+            return submissions;
+        }
+
+        await connection.OpenAsync();
+        await using var command = new SqlCommand(sql, connection);
+        command.CommandTimeout = 10;
+        command.Parameters.AddWithValue("@AssignmentId", assignmentId);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var firstName = reader.IsDBNull(8) ? "" : reader.GetString(8);
+            var lastName = reader.IsDBNull(9) ? "" : reader.GetString(9);
+            
+            submissions.Add(new AssignmentSubmission
+            {
+                SubmissionId = reader.GetGuid(0),
+                AssignmentId = reader.GetGuid(1),
+                StudentId = reader.GetGuid(2),
+                SubmittedAt = reader.GetDateTime(3),
+                Score = reader.IsDBNull(4) ? null : reader.GetInt32(4),
+                Status = reader.GetString(5),
+                Notes = reader.IsDBNull(6) ? null : reader.GetString(6),
+                StudentNumber = reader.GetString(7),
+                StudentName = $"{firstName} {lastName}".Trim(),
+                MaxScore = maxScore
+            });
+        }
+
+        return submissions;
+    }
 }

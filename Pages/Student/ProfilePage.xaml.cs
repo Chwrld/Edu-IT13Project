@@ -88,6 +88,11 @@ public partial class ProfilePage : ContentPage
         await Shell.Current.GoToAsync("//MessagesPage");
     }
 
+    private async void OnClassesTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new StudentClassesPage(), false);
+    }
+
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//AnnouncementsPage");

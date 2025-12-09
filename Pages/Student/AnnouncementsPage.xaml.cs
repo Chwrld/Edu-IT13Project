@@ -138,6 +138,11 @@ public partial class AnnouncementsPage : ContentPage
         ApplyFilters();
     }
 
+    private async void OnClassesTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new StudentClassesPage(), false);
+    }
+
     private async void OnAnnouncementTapped(object? sender, TappedEventArgs e)
     {
         if (e.Parameter is not Announcement announcement)
@@ -165,22 +170,22 @@ public partial class AnnouncementsPage : ContentPage
 
     private async void OnProfileTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ProfilePage());
+        await Navigation.PushAsync(new ProfilePage(), false);
     }
 
     private async void OnHomeTapped(object? sender, EventArgs e)
     {
-        await Navigation.PopAsync();
+        await Navigation.PopAsync(false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MessagesPage());
+        await Navigation.PushAsync(new MessagesPage(), false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TicketsPage());
+        await Navigation.PushAsync(new TicketsPage(), false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

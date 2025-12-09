@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:MauiAppIT13.Models"
+             x:Class="MauiAppIT13.Pages.Student.StudentClassDetailPage"
+             BackgroundColor="#F5F7FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top Navigation Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                BackgroundColor="#0891B2"
+                StrokeThickness="0">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+                <!-- Logo -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="White" 
+                            WidthRequest="32" 
+                            HeightRequest="32"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="S" 
+                               TextColor="#0891B2" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Label Text="StudentHub" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Back to Classes -->
+                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                    <Label Text="← Back to Classes" 
+                           FontSize="14" 
+                           TextColor="White"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackToClassesTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Left Sidebar -->
+        <Border Grid.Row="1" Grid.Column="0" 
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="10">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- Top Menu Items -->
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+                    <!-- Home Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="Home" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Classes Menu Item (Active) -->
+                    <Border BackgroundColor="#0891B2" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="Classes" 
+                                   TextColor="White" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Messages Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="Messages" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMessagesTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Announcements Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="Announcements" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAnnouncementsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Tickets Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="Tickets" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTicketsTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Spacer -->
+                <BoxView Grid.Row="1" Color="Transparent"/>
+
+                <!-- Bottom Menu Items -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <!-- Profile Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="Profile" 
+                                   TextColor="#6B7280" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnProfileTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Logout Menu Item -->
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="Logout" 
+                                   TextColor="#EF4444" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
+            <VerticalStackLayout Spacing="25">
+                
+                <!-- Class Header -->
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="ClassTitleLabel"
+                           Text="Class Name"
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"/>
+                    <HorizontalStackLayout Spacing="15">
+                        <Label x:Name="ClassCodeLabel"
+                               Text="CODE-000" 
+                               FontSize="14" 
+                               FontAttributes="Bold"
+                               TextColor="#0891B2"/>
+                        <Label Text="•" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                        <Label x:Name="ClassTermLabel"
+                               Text="AY 0000-0000 • 1st Sem" 
+                               FontSize="14" 
+                               TextColor="#6B7280"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Tab Navigation -->
+                <HorizontalStackLayout Spacing="10" x:Name="TabBar">
+                    <Border x:Name="AssignmentsTab"
+                            BackgroundColor="#0891B2"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Assignments" 
+                               TextColor="White" 
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAssignmentsTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <Border x:Name="GradesTab"
+                            BackgroundColor="#E5E7EB"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <Label Text="Grades" 
+                               TextColor="#6B7280" 
+                               FontSize="14"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGradesTabTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Tab Content Container -->
+                <VerticalStackLayout x:Name="TabContent" Spacing="15">
+                    
+                    <!-- Assignments Tab Content (Default) -->
+                    <VerticalStackLayout x:Name="AssignmentsContent" Spacing="15">
+                        <Label Text="Assignments" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <CollectionView x:Name="AssignmentsCollectionView"
+                                        SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <VerticalStackLayout Spacing="6" Padding="20" BackgroundColor="White">
+                                    <Label Text="No assignments yet"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           TextColor="#2C3E50"/>
+                                    <Label Text="Check back later for new assignments."
+                                           FontSize="13"
+                                           HorizontalOptions="Center"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ClassAssignment">
+                                    <Border BackgroundColor="White"
+                                            StrokeThickness="1"
+                                            Stroke="#E5E7EB"
+                                            Padding="20"
+                                            Margin="0,0,0,10">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="8">
+                                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                                <Label Text="{Binding Title}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="#2C3E50"
+                                                       HorizontalOptions="StartAndExpand"/>
+                                                <Border BackgroundColor="#FEF3C7"
+                                                        Padding="8,4"
+                                                        StrokeThickness="0"
+                                                        HorizontalOptions="End">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="20"/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding DeadlineBadge}"
+                                                           FontSize="12"
+                                                           TextColor="#B45309"/>
+                                                </Border>
+                                            </HorizontalStackLayout>
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="13"
+                                                   TextColor="#6B7280"/>
+                                            <HorizontalStackLayout Spacing="15">
+                                                <Label Text="{Binding DeadlineDisplay}"
+                                                       FontSize="12"
+                                                       TextColor="#F59E0B"/>
+                                                <Label Text="{Binding TotalPoints, StringFormat='Points: {0}'}"
+                                                       FontSize="12"
+                                                       TextColor="#4B5563"/>
+                                            </HorizontalStackLayout>
+                                            <Button Text="View Assignment"
+                                                    BackgroundColor="#0891B2"
+                                                    TextColor="White"
+                                                    FontSize="13"
+                                                    Padding="12,8"
+                                                    CornerRadius="6"
+                                                    HorizontalOptions="Start"
+                                                    Clicked="OnViewAssignmentClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- Grades Tab Content (Hidden by default) -->
+                    <VerticalStackLayout x:Name="GradesContent" IsVisible="False" Spacing="15">
+                        <Label Text="My Grades" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"/>
+
+                        <!-- Grades Summary Card -->
+                        <Border BackgroundColor="White"
+                                StrokeThickness="1"
+                                Stroke="#E5E7EB"
+                                Padding="20">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" 
+                                  ColumnDefinitions="*,Auto"
+                                  RowSpacing="12">
+                                
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="Assignments" 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       x:Name="AssignmentsGradeLabel"
+                                       Text="--" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#0891B2"/>
+
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Text="Activities" 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       x:Name="ActivitiesGradeLabel"
+                                       Text="--" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#0891B2"/>
+
+                                <Label Grid.Row="2" Grid.Column="0"
+                                       Text="Exams" 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="2" Grid.Column="1"
+                                       x:Name="ExamsGradeLabel"
+                                       Text="--" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#0891B2"/>
+
+                                <Label Grid.Row="3" Grid.Column="0"
+                                       Text="Projects" 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="3" Grid.Column="1"
+                                       x:Name="ProjectsGradeLabel"
+                                       Text="--" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#0891B2"/>
+
+                                <BoxView Grid.Row="4" Grid.ColumnSpan="2"
+                                         HeightRequest="1"
+                                         Color="#E5E7EB"
+                                         Margin="0,5"/>
+
+                                <Label Grid.Row="5" Grid.Column="0"
+                                       Text="Final Average" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+                                <Label Grid.Row="5" Grid.Column="1"
+                                       x:Name="FinalAverageLabel"
+                                       Text="--" 
+                                       FontSize="20" 
+                                       FontAttributes="Bold"
+                                       TextColor="#059669"/>
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Assignment Submission Modal -->
+        <Grid x:Name="AssignmentModalOverlay"
+              Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
+              IsVisible="False"
+              BackgroundColor="#80000000">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnCloseAssignmentModalTapped"/>
+            </Grid.GestureRecognizers>
+
+            <Border BackgroundColor="White"
+                    WidthRequest="600"
+                    MaximumHeightRequest="700"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    StrokeThickness="0"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer/>
+                </Border.GestureRecognizers>
+
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <!-- Modal Header -->
+                    <Border Grid.Row="0"
+                            BackgroundColor="#0891B2"
+                            Padding="25,20"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label x:Name="ModalAssignmentTitle"
+                                       Text="Assignment Title"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label x:Name="ModalAssignmentDeadline"
+                                       Text="Due: Dec 15, 2025"
+                                       FontSize="13"
+                                       TextColor="White"
+                                       Opacity="0.9"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="✕"
+                                   FontSize="24"
+                                   TextColor="White"
+                                   VerticalOptions="Start">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseAssignmentModalTapped"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                    </Border>
+
+                    <!-- Modal Content -->
+                    <ScrollView Grid.Row="1" Padding="25,20">
+                        <VerticalStackLayout Spacing="20">
+                            <!-- Assignment Description -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Description"
+                                       FontSize="14"
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+                                <Label x:Name="ModalAssignmentDescription"
+                                       Text="Assignment description will appear here..."
+                                       FontSize="13"
+                                       TextColor="#6B7280"/>
+                            </VerticalStackLayout>
+
+                            <!-- Assignment Details -->
+                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="Points:"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       x:Name="ModalAssignmentPoints"
+                                       Text="100"
+                                       FontSize="13"
+                                       TextColor="#2C3E50"/>
+
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Text="Status:"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="#6B7280"/>
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       Text="Not Submitted"
+                                       FontSize="13"
+                                       TextColor="#F59E0B"/>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" Color="#E5E7EB"/>
+
+                            <!-- Submission Form -->
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="Submit Your Work"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"/>
+
+                                <!-- File/Link Input -->
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="Submission Link or File Path"
+                                           FontSize="13"
+                                           TextColor="#6B7280"/>
+                                    <Entry x:Name="SubmissionLinkEntry"
+                                           Placeholder="Enter Google Drive link, GitHub URL, or file path..."
+                                           FontSize="13"
+                                           BackgroundColor="#F9FAFB"/>
+                                </VerticalStackLayout>
+
+                                <!-- Comments -->
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="Comments (Optional)"
+                                           FontSize="13"
+                                           TextColor="#6B7280"/>
+                                    <Editor x:Name="SubmissionCommentsEditor"
+                                            Placeholder="Add any notes or comments about your submission..."
+                                            FontSize="13"
+                                            HeightRequest="100"
+                                            BackgroundColor="#F9FAFB"/>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Modal Footer -->
+                    <Border Grid.Row="2"
+                            BackgroundColor="#F9FAFB"
+                            Padding="25,15"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="0,0,12,12"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                            <Button Text="Cancel"
+                                    BackgroundColor="#E5E7EB"
+                                    TextColor="#6B7280"
+                                    FontSize="14"
+                                    Padding="20,10"
+                                    CornerRadius="6"
+                                    Clicked="OnCancelSubmissionClicked"/>
+                            <Button Text="Submit Assignment"
+                                    BackgroundColor="#0891B2"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    Padding="20,10"
+                                    CornerRadius="6"
+                                    Clicked="OnSubmitAssignmentClicked"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+        
+    </Grid>
+</ContentPage>

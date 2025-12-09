@@ -136,6 +136,11 @@ public partial class MessagesPage : ContentPage
         }
     }
 
+    private async void OnClassesTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new StudentClassesPage(), false);
+    }
+
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
         try

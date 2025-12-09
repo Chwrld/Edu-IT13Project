@@ -1,11 +1,13 @@
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
 
 namespace MauiAppIT13.Pages.Student;
 
 [SupportedOSPlatform("windows10.0.17763.0")]
 [SupportedOSPlatform("android21.0")]
+[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 public partial class TicketsPage : ContentPage
 {
     private readonly TicketService _ticketService;
@@ -96,6 +98,11 @@ public partial class TicketsPage : ContentPage
         {
             System.Diagnostics.Debug.WriteLine($"TicketsPage: Error navigating to messages - {ex.Message}");
         }
+    }
+
+    private async void OnClassesTapped(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new StudentClassesPage(), false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
