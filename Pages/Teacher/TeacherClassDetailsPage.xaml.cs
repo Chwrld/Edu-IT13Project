@@ -969,20 +969,78 @@ public partial class TeacherClassDetailsPage : ContentPage
 
     private async void OnViewSubmissionClicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.CommandParameter is AssignmentSubmission submission)
+        if (sender is not Button button || button.CommandParameter is not AssignmentSubmission submission)
         {
-            var details = $"Student: {submission.StudentName} ({submission.StudentNumber})\\n" +
-                         $"Submitted: {submission.SubmittedAtDisplay}\\n" +
-                         $"Score: {submission.ScoreDisplay}\\n" +
-                         $"Status: {submission.Status}";
-            
-            if (!string.IsNullOrEmpty(submission.Notes))
+            return;
+        }
+
+        if (_selectedAssignment is null)
+        {
+            await DisplayAlert("Error", "Assignment information not available.", "OK");
+            return;
+        }
+
+        // Check if student has submitted
+        if (!submission.HasSubmitted || submission.SubmissionId == Guid.Empty)
+        {
+            await DisplayAlert("No Submission", $"{submission.StudentName} has not submitted this assignment yet.", "OK");
+            return;
+        }
+
+        // Open grading modal
+        var gradingModal = new GradeSubmissionModal(
+            submission,
+            _selectedAssignment.Title,
+            SaveSubmissionGradeAsync);
+
+        await Navigation.PushModalAsync(gradingModal);
+    }
+
+    private async Task<bool> SaveSubmissionGradeAsync(Guid submissionId, int score, string? notes)
+    {
+        try
+        {
+            if (_assignmentService is null)
             {
-                details += $"\\n\\nNotes: {submission.Notes}";
+                await DisplayAlert("Error", "Assignment service unavailable.", "OK");
+                return false;
             }
 
-            await DisplayAlert("Submission Details", details, "OK");
+            var success = await _assignmentService.UpdateSubmissionGradeAsync(submissionId, score, notes);
+
+            if (success)
+            {
+                await DisplayAlert("Success", "Grade saved successfully!", "OK");
+                
+                // Reload submissions to reflect updated grades
+                if (_selectedAssignment is not null)
+                {
+                    var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(
+                        _selectedAssignment.Id, 
+                        _selectedAssignment.TotalPoints);
+                    
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        _submissions.Clear();
+                        foreach (var submission in submissions)
+                        {
+                            _submissions.Add(submission);
+                        }
+                    });
+                }
+                
+                return true;
+            }
+            else
+            {
+                await DisplayAlert("Error", "Failed to save grade. Please try again.", "OK");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to save grade: {ex.Message}", "OK");
+            return false;
         }
     }
 }
-

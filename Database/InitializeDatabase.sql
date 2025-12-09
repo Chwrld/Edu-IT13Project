@@ -139,6 +139,7 @@ CREATE TABLE dbo.assignment_submissions (
     score INT NULL,
     status NVARCHAR(20) NOT NULL DEFAULT 'submitted',
     notes NVARCHAR(MAX),
+    submission_content NVARCHAR(MAX),
     FOREIGN KEY (assignment_id) REFERENCES dbo.class_assignments(assignment_id),
     FOREIGN KEY (student_id) REFERENCES dbo.students(student_id),
     CONSTRAINT uq_assignment_student UNIQUE (assignment_id, student_id)
@@ -670,29 +671,31 @@ BEGIN
 
             IF @StudentIndex % 5 <> 0
             BEGIN
-                INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes)
+                INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes, submission_content)
                 VALUES (
                     NEWID(),
                     @AssignmentIntroId,
                     @StudentUserId,
                     DATEADD(DAY, -(@StudentIndex % 3), @Now),
                     30 + (@StudentIndex % 21),
-                    'submitted',
-                    NULL
+                    'graded',
+                    'Good work on the introduction brief!',
+                    'Attached is my one-page brief outlining the project goals, key constraints, and team structure for this course.'
                 );
             END
 
             IF @StudentIndex % 3 <> 0
             BEGIN
-                INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes)
+                INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes, submission_content)
                 VALUES (
                     NEWID(),
                     @AssignmentProjectId,
                     @StudentUserId,
                     DATEADD(DAY, -(@StudentIndex % 2), @Now),
                     70 + (@StudentIndex % 26),
-                    'submitted',
-                    NULL
+                    'graded',
+                    'Excellent analysis and proposed improvements!',
+                    'Case Study Analysis: I have reviewed the assigned case study and identified key areas for improvement. My two proposals focus on optimizing the development workflow and enhancing user experience.'
                 );
             END
 

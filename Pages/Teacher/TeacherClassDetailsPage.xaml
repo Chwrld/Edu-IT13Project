@@ -780,7 +780,7 @@
                                                     <Border.StrokeShape>
                                                         <RoundRectangle CornerRadius="12"/>
                                                     </Border.StrokeShape>
-                                                    <Label Text="{Binding Status}" 
+                                                    <Label Text="{Binding StatusDisplay}" 
                                                            TextColor="White"
                                                            FontSize="11"
                                                            FontAttributes="Bold"/>
@@ -794,7 +794,8 @@
                                                         TextColor="White"
                                                         CornerRadius="6"
                                                         CommandParameter="{Binding .}"
-                                                        Clicked="OnViewSubmissionClicked"/>
+                                                        Clicked="OnViewSubmissionClicked"
+                                                        IsEnabled="{Binding HasSubmitted}"/>
                                             </Grid>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
