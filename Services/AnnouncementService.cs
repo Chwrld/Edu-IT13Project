@@ -46,6 +46,7 @@ public class AnnouncementService
                 a.announcement_id,
                 a.title,
                 a.content,
+                a.course_id,
                 a.author_id,
                 a.visibility,
                 a.is_published,
@@ -76,8 +77,8 @@ public class AnnouncementService
                     Id = reader.GetGuid(0),
                     Title = reader.GetString(1),
                     Content = reader.GetString(2),
-                    AuthorId = reader.GetGuid(3),
-                    CourseId = reader.IsDBNull(4) ? null : reader.GetGuid(4),
+                    CourseId = reader.IsDBNull(3) ? null : reader.GetGuid(3),
+                    AuthorId = reader.GetGuid(4),
                     Visibility = reader.GetString(5),
                     IsPublished = reader.GetBoolean(6),
                     CreatedAt = reader.GetDateTime(7),
@@ -92,6 +93,8 @@ public class AnnouncementService
                 };
                 announcements.Add(announcement);
             }
+
+            Debug.WriteLine($"AnnouncementService: Loaded {announcements.Count} announcements (limit {limit}) from DB: {_connectionString}");
         }
         catch (Exception ex)
         {

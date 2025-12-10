@@ -87,10 +87,13 @@ public partial class TeacherAnnouncementsPage : ContentPage
     private static bool TeacherCanViewAnnouncement(Announcement announcement, Guid teacherId)
     {
         var visibility = (announcement.Visibility ?? "all").ToLowerInvariant();
+
+        // Always allow owner to see their own announcements (including drafts)
         if (IsAnnouncementOwnedByTeacher(announcement, teacherId))
             return true;
 
-        return visibility is "all" or "advisers";
+        // Teachers should see institution-wide plus student-facing announcements as well
+        return visibility is "all" or "advisers" or "students";
     }
 
     private static bool IsAnnouncementOwnedByTeacher(Announcement announcement, Guid teacherId) =>

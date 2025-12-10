@@ -924,39 +924,85 @@ public partial class TeacherClassDetailsPage : ContentPage
     {
         try
         {
-            if (e.Parameter is not ClassAssignment assignment)
+            System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped called, Parameter type: {e?.Parameter?.GetType().Name}");
+            
+            if (e?.Parameter is not ClassAssignment assignment)
             {
+                System.Diagnostics.Debug.WriteLine("OnAssignmentTapped: Parameter is not ClassAssignment");
                 return;
             }
 
+            System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Assignment ID = {assignment.Id}, Title = {assignment.Title}");
+            
             _selectedAssignment = assignment;
             
-            // Update modal header
-            SubmissionsAssignmentTitle.Text = assignment.Title;
-            SubmissionsAssignmentInfo.Text = $"{assignment.SubmittedCount}/{assignment.TotalStudents} submissions • Due: {assignment.DeadlineDisplay}";
-
-            // Load submissions
-            if (_assignmentService != null)
+            try
             {
-                var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(assignment.Id, assignment.TotalPoints);
-                
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    _submissions.Clear();
-                    foreach (var submission in submissions)
-                    {
-                        _submissions.Add(submission);
-                    }
-                });
+                // Update modal header
+                SubmissionsAssignmentTitle.Text = assignment.Title;
+                SubmissionsAssignmentInfo.Text = $"{assignment.SubmittedCount}/{assignment.TotalStudents} submissions • Due: {assignment.DeadlineDisplay}";
+            }
+            catch (Exception labelEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error updating labels: {labelEx.Message}");
+                throw;
             }
 
-            // Show modal
+            // Show modal first
             AssignmentSubmissionsOverlay.IsVisible = true;
+
+            // Load submissions asynchronously
+            if (_assignmentService != null)
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Loading submissions for assignment {assignment.Id}");
+                    var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(assignment.Id, assignment.TotalPoints);
+                    System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Loaded {submissions.Count} submissions");
+                    
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        _submissions.Clear();
+                        foreach (var submission in submissions)
+                        {
+                            _submissions.Add(submission);
+                        }
+                        
+                        // Hide loading indicator and show submissions list
+                        SubmissionsLoadingIndicator.IsVisible = false;
+                        SubmissionsScrollView.IsVisible = true;
+                    });
+                }
+                catch (Exception submissionEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error fetching submissions: {submissionEx.GetType().Name}: {submissionEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {submissionEx.StackTrace}");
+                    
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        SubmissionsLoadingIndicator.IsVisible = false;
+                    });
+                    
+                    await DisplayAlert("Error", $"Failed to load submissions: {submissionEx.Message}", "OK");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("AssignmentService is null");
+                
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    SubmissionsLoadingIndicator.IsVisible = false;
+                });
+                
+                await DisplayAlert("Error", "Assignment service not available", "OK");
+            }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading assignment submissions: {ex.Message}");
-            await DisplayAlert("Error", "Failed to load assignment submissions.", "OK");
+            System.Diagnostics.Debug.WriteLine($"Error loading assignment submissions: {ex.GetType().Name}: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            await DisplayAlert("Error", $"Failed to load assignment submissions: {ex.Message}", "OK");
         }
     }
 

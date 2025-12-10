@@ -361,6 +361,12 @@
                                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
                                                 <HorizontalStackLayout Spacing="10"
                                                                        VerticalOptions="Center">
+                                                    <Label Text="{Binding AuthorName, StringFormat='By: {0}'}"
+                                                           FontSize="12"
+                                                           TextColor="#6B7280"/>
+                                                    <Label Text="•"
+                                                           FontSize="12"
+                                                           TextColor="#9CA3AF"/>
                                                     <Label Text="{Binding VisibilityLabel, StringFormat='To: {0}'}"
                                                            FontSize="12"
                                                            TextColor="#6B7280"/>

@@ -173,6 +173,55 @@ public sealed class SqlServerDbConnection : DbConnection
         }
     }
 
+    public override async Task<Student?> GetStudentByUserIdAsync(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            return null;
+
+        const string sql = @"
+SELECT TOP (1)
+    student_id,
+    student_number,
+    program,
+    year_level,
+    gpa,
+    status,
+    adviser_id,
+    created_at
+FROM students
+WHERE student_id = @UserId";
+
+        try
+        {
+            await using var connection = CreateConnection();
+            await connection.OpenAsync();
+            await using var command = new SqlCommand(sql, connection);
+            command.CommandTimeout = 5;
+            command.Parameters.AddWithValue("@UserId", userId);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            if (!await reader.ReadAsync())
+                return null;
+
+            return new Student
+            {
+                StudentId = reader.GetGuid(0),
+                StudentNumber = reader.GetString(1),
+                Program = reader.IsDBNull(2) ? null : reader.GetString(2),
+                YearLevel = reader.IsDBNull(3) ? null : reader.GetString(3),
+                GPA = reader.IsDBNull(4) ? null : reader.GetDecimal(4),
+                Status = reader.GetString(5),
+                AdviserID = reader.IsDBNull(6) ? null : reader.GetGuid(6),
+                CreatedAt = reader.GetDateTime(7)
+            };
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"GetStudentByUserIdAsync failed: {ex.Message}");
+            return null;
+        }
+    }
+
     private static User MapUser(SqlDataReader reader)
     {
         return new User

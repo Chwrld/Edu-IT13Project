@@ -14,6 +14,7 @@ public abstract class DbConnection
     public abstract Task<User?> GetUserByEmailAsync(string email);
     public abstract Task<IReadOnlyCollection<User>> GetUsersAsync();
     public abstract Task SaveUserAsync(User user);
+    public virtual Task<Student?> GetStudentByUserIdAsync(Guid userId) => throw new NotImplementedException("GetStudentByUserIdAsync not implemented for this connection type");
     public virtual IDbConnection GetConnection() => throw new NotImplementedException("GetConnection not implemented for this connection type");
 }
 

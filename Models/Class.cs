@@ -57,10 +57,14 @@ public sealed class ClassAssignment
     public int TotalPoints { get; set; }
     public int SubmittedCount { get; set; }
     public int TotalStudents { get; set; }
+    public bool StudentHasSubmitted { get; set; } = false;
 
     public string DeadlineDisplay => Deadline.ToLocalTime().ToString("MMM dd, yyyy • hh:mm tt");
     public string SubmissionSummary => $"📝 {SubmittedCount}/{TotalStudents} Submitted";
     public string DeadlineBadge => $"📅 Due {Deadline.ToLocalTime():MMM dd}";
+    public string SubmissionStatus => StudentHasSubmitted ? "✓ Submitted" : "○ Not Submitted";
+    public string SubmissionStatusColor => StudentHasSubmitted ? "#D1FAE5" : "#FEE2E2";
+    public string SubmissionStatusTextColor => StudentHasSubmitted ? "#059669" : "#DC2626";
 }
 
 public sealed class StudentGradeSummary

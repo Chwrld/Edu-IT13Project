@@ -13,6 +13,7 @@ public class AssignmentSubmission
     public int? Score { get; set; }
     public string Status { get; set; } = "submitted";
     public string? Notes { get; set; }
+    public string? SubmissionContent { get; set; }
     public bool HasSubmitted { get; set; } = true;
 
     // Display properties

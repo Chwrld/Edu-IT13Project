@@ -336,6 +336,12 @@
                                                    TextColor="#2C3E50"
                                                    LineBreakMode="WordWrap"/>
                                             <HorizontalStackLayout Spacing="8">
+                                                <Label Text="{Binding AuthorName, StringFormat='By: {0}'}"
+                                                       FontSize="12"
+                                                       TextColor="#6B7280"/>
+                                                <Label Text="•"
+                                                       FontSize="12"
+                                                       TextColor="#6B7280"/>
                                                 <Label Text="{Binding VisibilityLabel}"
                                                        FontSize="12"
                                                        TextColor="#6B7280"/>
