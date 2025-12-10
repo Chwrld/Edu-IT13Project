@@ -454,6 +454,14 @@
                                     CornerRadius="8"
                                     Clicked="OnViewReportsClicked"/>
 
+                            <!-- Action 4: Sync Test -->
+                            <Button Text="🔄 Test Sync to Remote"
+                                    BackgroundColor="#8B5CF6"
+                                    TextColor="White"
+                                    FontSize="13"
+                                    CornerRadius="8"
+                                    Clicked="OnSyncToRemoteClicked"/>
+
                             
                             <!-- Divider -->
                             <BoxView HeightRequest="1" 

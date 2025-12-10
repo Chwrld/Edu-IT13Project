@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Versioning;
@@ -16,6 +17,7 @@ public partial class AdminHomePage : ContentPage
     private readonly ReportsService _reportsService;
     private readonly ReportExportService _reportExportService;
     private readonly AdminDataExportService _adminDataExportService;
+    private readonly SyncService _syncService;
     private bool _isLoading;
 
     public ObservableCollection<AdminActivityItem> RecentActivities { get; } = new();
@@ -31,6 +33,8 @@ public partial class AdminHomePage : ContentPage
             ?? throw new InvalidOperationException("ReportExportService is not registered.");
         _adminDataExportService = AppServiceProvider.GetService<AdminDataExportService>()
             ?? throw new InvalidOperationException("AdminDataExportService is not registered.");
+        _syncService = AppServiceProvider.GetService<SyncService>()
+            ?? throw new InvalidOperationException("SyncService is not registered.");
         BindingContext = this;
     }
 
@@ -144,6 +148,50 @@ public partial class AdminHomePage : ContentPage
     private async void OnDownloadDataClicked(object sender, EventArgs e)
     {
         await ExportDashboardDataAsync();
+    }
+
+    private async void OnSyncToRemoteClicked(object sender, EventArgs e)
+    {
+        await TestSyncAsync();
+    }
+
+    private async Task TestSyncAsync()
+    {
+        try
+        {
+            await DisplayAlert("Sync Test", "Testing connection to remote database...", "OK");
+
+            // Check if online
+            bool isOnline = await _syncService.IsOnlineAsync();
+            Debug.WriteLine($"[SyncTest] Online status: {isOnline}");
+
+            if (!isOnline)
+            {
+                await DisplayAlert("Offline", "Remote server is not accessible. Using local database only.", "OK");
+                return;
+            }
+
+            await DisplayAlert("Online", "Remote server is accessible. Starting sync...", "OK");
+
+            // Perform sync
+            bool success = await _syncService.SyncToRemoteAsync();
+            
+            if (success)
+            {
+                await DisplayAlert("Sync Success", "✅ Data successfully synced to remote database!\n\nCheck WebMySQL to verify data.", "OK");
+                Debug.WriteLine("[SyncTest] Sync completed successfully");
+            }
+            else
+            {
+                await DisplayAlert("Sync Failed", "❌ Sync failed. Check debug output for details.", "OK");
+                Debug.WriteLine("[SyncTest] Sync failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[SyncTest] Error: {ex.Message}");
+            await DisplayAlert("Error", $"Sync test error: {ex.Message}", "OK");
+        }
     }
 
     private async Task ExportDashboardDataAsync()
