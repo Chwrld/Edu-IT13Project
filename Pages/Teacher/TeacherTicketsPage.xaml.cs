@@ -366,27 +366,27 @@ public partial class TeacherTicketsPage : ContentPage
 
     private async void OnDashboardTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherHomePage");
+        await Shell.Current.GoToAsync("//TeacherHomePage", animate: false);
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage", animate: false);
     }
 
     private async void OnFacultyTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherProfilePage");
+        await Shell.Current.GoToAsync("//TeacherProfilePage", animate: false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

@@ -194,17 +194,21 @@ ORDER BY
                 var studentId = reader.GetGuid(0);
                 var studentNumber = reader.GetString(1);
                 var displayName = reader.IsDBNull(2) ? "" : reader.GetString(2);
-                var hasSubmission = !reader.IsDBNull(4);
+
+                // Column order from SQL:
+                // 0: student_id, 1: student_number, 2: display_name, 3: submission_id,
+                // 4: submitted_at, 5: score, 6: status, 7: notes
+                var hasSubmission = !reader.IsDBNull(3);
                 
                 submissions.Add(new AssignmentSubmission
                 {
-                    SubmissionId = hasSubmission ? reader.GetGuid(4) : Guid.Empty,
+                    SubmissionId = hasSubmission ? reader.GetGuid(3) : Guid.Empty,
                     AssignmentId = assignmentId,
                     StudentId = studentId,
-                    SubmittedAt = hasSubmission ? reader.GetDateTime(5) : DateTime.MinValue,
-                    Score = hasSubmission && !reader.IsDBNull(6) ? reader.GetInt32(6) : null,
-                    Status = hasSubmission ? reader.GetString(7) : "not submitted",
-                    Notes = hasSubmission && !reader.IsDBNull(8) ? reader.GetString(8) : null,
+                    SubmittedAt = hasSubmission ? reader.GetDateTime(4) : DateTime.MinValue,
+                    Score = hasSubmission && !reader.IsDBNull(5) ? reader.GetInt32(5) : null,
+                    Status = hasSubmission ? reader.GetString(6) : "not submitted",
+                    Notes = hasSubmission && !reader.IsDBNull(7) ? reader.GetString(7) : null,
                     StudentNumber = studentNumber,
                     StudentName = displayName,
                     MaxScore = maxScore,

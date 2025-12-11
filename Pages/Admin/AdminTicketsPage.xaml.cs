@@ -304,14 +304,26 @@ public partial class AdminTicketsPage : ContentPage
         await DisplayAlert("Success", "Ticket marked as resolved.", "OK");
     }
 
-    private async void OnChangeStatusClicked(object? sender, EventArgs e)
+    private async void OnChangeStatusClicked(object? sender, TappedEventArgs e)
     {
         Ticket? ticketToUpdate = null;
 
-        if (sender is Button button && button.CommandParameter is Ticket fromButton)
+        // Primary: tap gesture parameter
+        if (e?.Parameter is Ticket tappedTicket)
+        {
+            ticketToUpdate = tappedTicket;
+        }
+        // Legacy: button CommandParameter
+        else if (sender is Button button && button.CommandParameter is Ticket fromButton)
         {
             ticketToUpdate = fromButton;
         }
+        // Fallback: BindingContext of sender
+        else if (sender is Element element && element.BindingContext is Ticket boundTicket)
+        {
+            ticketToUpdate = boundTicket;
+        }
+        // Last fallback: selected ticket from detail view
         else if (_selectedTicket != null)
         {
             ticketToUpdate = _selectedTicket;

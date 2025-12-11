@@ -80,27 +80,27 @@ public partial class ProfilePage : ContentPage
 
     private async void OnHomeTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//HomePage");
+        await Shell.Current.GoToAsync("//HomePage", animate: false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//MessagesPage");
+        await Shell.Current.GoToAsync("//MessagesPage", animate: false);
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//AnnouncementsPage");
+        await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TicketsPage");
+        await Shell.Current.GoToAsync("//TicketsPage", animate: false);
     }
 
     private void OnEditProfileClicked(object? sender, EventArgs e)
@@ -214,7 +214,7 @@ public partial class ProfilePage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage", animate: false);
         }
     }
 

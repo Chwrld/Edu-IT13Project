@@ -93,32 +93,32 @@ public partial class StudentClassesPage : ContentPage
 
     private async void OnHomeTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new HomePage(), false);
+        await Shell.Current.GoToAsync("//HomePage");
     }
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MessagesPage(), false);
+        await Shell.Current.GoToAsync("//MessagesPage");
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        await Shell.Current.GoToAsync("//StudentClassesPage");
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AnnouncementsPage(), false);
+        await Shell.Current.GoToAsync("//AnnouncementsPage");
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TicketsPage(), false);
+        await Shell.Current.GoToAsync("//TicketsPage");
     }
 
     private async void OnProfileTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ProfilePage(), false);
+        await Shell.Current.GoToAsync("//ProfilePage");
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)
@@ -132,7 +132,7 @@ public partial class StudentClassesPage : ContentPage
         if (confirm)
         {
             _authManager.ClearAuthentication();
-            await Navigation.PopToRootAsync();
+            await Shell.Current.GoToAsync("//MainPage");
         }
     }
 }

@@ -3,13 +3,13 @@
     - Creates all schema objects (tables, constraints, indexes)
     - Does NOT drop existing database (safe for remote)
     - Does NOT seed data (use SyncService to sync from local)
-    - Run this on: db34874.databaseasp.net
+    - Run this on: db34895.public.databaseasp.net
 */
 
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 
-USE [db34874];
+USE [db34895];
 GO
 
 -- Drop existing tables if they exist (in reverse dependency order)

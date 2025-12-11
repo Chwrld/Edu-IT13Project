@@ -67,6 +67,7 @@ namespace MauiAppIT13
             builder.Services.AddSingleton<AdminDashboardService>();
             builder.Services.AddSingleton<AdminDataExportService>();
             builder.Services.AddSingleton<SyncService>();
+            builder.Services.AddSingleton<DeltaSyncService>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

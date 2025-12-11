@@ -391,22 +391,22 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private async void OnDashboardTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherHomePage");
+        await Shell.Current.GoToAsync("//TeacherHomePage", animate: false);
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+        await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
@@ -415,7 +415,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
         if (confirm)
         {
             _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage", animate: false);
         }
     }
 }

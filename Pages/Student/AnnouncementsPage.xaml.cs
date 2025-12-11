@@ -50,7 +50,8 @@ public partial class AnnouncementsPage : ContentPage
         _isLoading = true;
         try
         {
-            var announcements = await _announcementService.GetAnnouncementsAsync(150);
+            var currentUserId = _authManager.CurrentUser?.Id;
+            var announcements = await _announcementService.GetAnnouncementsAsync(150, currentUserId);
             var visibleAnnouncements = announcements
                 .Where(a => a.IsPublished &&
                     (a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase) ||
@@ -140,7 +141,7 @@ public partial class AnnouncementsPage : ContentPage
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
     }
 
     private async void OnAnnouncementTapped(object? sender, TappedEventArgs e)
@@ -170,22 +171,22 @@ public partial class AnnouncementsPage : ContentPage
 
     private async void OnProfileTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ProfilePage(), false);
+        await Shell.Current.GoToAsync("//ProfilePage", animate: false);
     }
 
     private async void OnHomeTapped(object? sender, EventArgs e)
     {
-        await Navigation.PopAsync(false);
+        await Shell.Current.GoToAsync("//HomePage", animate: false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MessagesPage(), false);
+        await Shell.Current.GoToAsync("//MessagesPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TicketsPage(), false);
+        await Shell.Current.GoToAsync("//TicketsPage", animate: false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

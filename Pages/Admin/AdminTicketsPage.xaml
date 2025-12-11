@@ -44,15 +44,11 @@
                 </HorizontalStackLayout>
                 
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}" 
-                           FontSize="20"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}" 
-                           TextColor="White"
-                           FontSize="12"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="2"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End" />
             </Grid>
         </Border>
 
@@ -166,17 +162,21 @@
                 <VerticalStackLayout Grid.Row="2" Spacing="5">
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
-                            StrokeThickness="0">
+                            StrokeThickness="0"
+                            InputTransparent="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" InputTransparent="True">
                             <Label Text="🔒" FontSize="18"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Logout Button at Bottom -->
@@ -394,7 +394,7 @@
                         <CollectionView.Header>
                             <Grid BackgroundColor="#F9FAFB" 
                                   Padding="20,12"
-                                  ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*">
+                                  ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1*">
                                 <Label Grid.Column="0" 
                                        Text="Ticket #" 
                                        FontSize="13" 
@@ -421,11 +421,6 @@
                                        FontAttributes="Bold"
                                        TextColor="#374151"/>
                                 <Label Grid.Column="5" 
-                                       Text="Assigned To" 
-                                       FontSize="13" 
-                                       FontAttributes="Bold"
-                                       TextColor="#374151"/>
-                                <Label Grid.Column="6" 
                                        Text="Actions" 
                                        FontSize="13" 
                                        FontAttributes="Bold"
@@ -444,7 +439,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="20,16"
-                                      ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1.2*,1*"
+                                      ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1*"
                                       BackgroundColor="White">
 
                                     <Label Grid.Column="0" 
@@ -463,41 +458,35 @@
                                            TextColor="#6B7280"
                                            VerticalOptions="Center"/>
 
-                                    <Button Grid.Column="3"
-                                            Text="{Binding Status}"
-                                            Padding="12,8"
-                                            FontSize="12"
-                                            FontAttributes="Bold"
+                                    <Border Grid.Column="3"
                                             BackgroundColor="{Binding StatusColor}"
-                                            TextColor="White"
-                                            CornerRadius="6"
-                                            HorizontalOptions="Center"
-                                            VerticalOptions="Center"
-                                            CommandParameter="{Binding .}"
-                                            Clicked="OnChangeStatusClicked"/>
-
-                                    <Border Grid.Column="4"
-                                            BackgroundColor="{Binding PriorityColor}"
-                                            Padding="8,4"
+                                            Padding="10,6"
                                             StrokeThickness="0"
-                                            VerticalOptions="Center">
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="Start">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="6"/>
                                         </Border.StrokeShape>
-                                        <Label Text="{Binding Priority}"
-                                               FontSize="12" 
-                                               TextColor="White"
+                                        <Label Text="{Binding Status}"
+                                               FontSize="12"
                                                FontAttributes="Bold"
+                                               TextColor="White"
                                                HorizontalOptions="Center"/>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnChangeStatusClicked"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
                                     </Border>
 
-                                    <Label Grid.Column="5" 
-                                           Text="{Binding AssignedToName}" 
-                                           FontSize="14" 
-                                           TextColor="#6B7280"
-                                           VerticalOptions="Center"/>
+                                    <Label Grid.Column="4"
+                                           Text="{Binding Priority}"
+                                           FontSize="12" 
+                                           TextColor="{Binding PriorityTextColor}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Start"/>
 
-                                    <HorizontalStackLayout Grid.Column="6" Spacing="10" VerticalOptions="Center">
+                                    <HorizontalStackLayout Grid.Column="5" Spacing="10" VerticalOptions="Center">
                                         <Button Text="View"
                                                 Padding="14,6"
                                                 FontSize="12"

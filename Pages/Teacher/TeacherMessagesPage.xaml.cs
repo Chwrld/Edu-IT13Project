@@ -53,12 +53,12 @@ public partial class TeacherMessagesPage : ContentPage
 
     private async void OnDashboardTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherHomePage");
+        await Shell.Current.GoToAsync("//TeacherHomePage", animate: false);
     }
 
     private async void OnClassesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnNewMessageClicked(object sender, EventArgs e)
@@ -71,12 +71,12 @@ public partial class TeacherMessagesPage : ContentPage
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+        await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
     }
 
     private void OnAllTabTapped(object sender, EventArgs e)
@@ -271,7 +271,7 @@ public partial class TeacherMessagesPage : ContentPage
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (confirm)
         {
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("//MainPage", animate: false);
         }
     }
 
