@@ -57,7 +57,7 @@ public class SyncService
         {
             var isOnline = await IsOnlineAsync();
             if (!isOnline)
-            {
+            {   
                 Debug.WriteLine("SyncService: Cannot sync - offline");
                 return false;
             }
