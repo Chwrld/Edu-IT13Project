@@ -18,6 +18,8 @@ public partial class TeacherHomePage : ContentPage
     private readonly MessageService _messageService;
     private readonly AuthManager _authManager;
     private readonly DbConnection _dbConnection;
+    private readonly SyncService _syncService;
+    private readonly DeltaSyncService _deltaSyncService;
     private bool _isLoading;
 
     public ObservableCollection<Conversation> RecentMessages { get; } = new();
@@ -92,6 +94,10 @@ public partial class TeacherHomePage : ContentPage
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
         _dbConnection = AppServiceProvider.GetService<DbConnection>()
             ?? throw new InvalidOperationException("DbConnection not found");
+        _syncService = AppServiceProvider.GetService<SyncService>()
+            ?? throw new InvalidOperationException("SyncService is not registered.");
+        _deltaSyncService = AppServiceProvider.GetService<DeltaSyncService>()
+            ?? throw new InvalidOperationException("DeltaSyncService is not registered.");
 
         BindingContext = this;
     }
@@ -261,27 +267,27 @@ public partial class TeacherHomePage : ContentPage
 
     private async void OnClassesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+        await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
     }
 
     private async void OnFacultyTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherProfilePage");
+        await Shell.Current.GoToAsync("//TeacherProfilePage", animate: false);
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)
@@ -301,6 +307,106 @@ public partial class TeacherHomePage : ContentPage
         storage = value;
         OnPropertyChanged(propertyName);
         return true;
+    }
+
+    private async void OnSyncClicked(object sender, EventArgs e)
+    {
+        await ShowSyncProgressAsync();
+    }
+
+    private async Task ShowSyncProgressAsync()
+    {
+        try
+        {
+            // Show modal
+            SyncProgressOverlay.IsVisible = true;
+            SyncProgressBar.Progress = 0;
+            SyncPercentageLabel.Text = "0%";
+            SyncStatusLabel.Text = "Checking connection...";
+            SyncResultLabel.IsVisible = false;
+            SyncCloseButton.IsVisible = false;
+            Step1Icon.Text = "⏳";
+            Step2Icon.Text = "⏳";
+            Step3Icon.Text = "⏳";
+
+            // Step 1: Check connection (20%)
+            await UpdateProgress(0.2, "Checking connection...", "Step 1");
+            bool isOnline = await _syncService.IsOnlineAsync();
+            Debug.WriteLine($"[TeacherSync] Online status: {isOnline}");
+
+            if (!isOnline)
+            {
+                Step1Icon.Text = "❌";
+                SyncStatusLabel.Text = "Remote server not accessible";
+                SyncResultContainer.IsVisible = false;
+                SyncCloseButton.IsVisible = true;
+                return;
+            }
+
+            Step1Icon.Text = "✅";
+
+            // Step 2: Delta sync (only changed records) (60%)
+            await UpdateProgress(0.6, "Syncing changed records to remote database...", "Step 2");
+            var (success, recordsSynced) = await _deltaSyncService.DeltaSyncToRemoteAsync();
+
+            if (!success)
+            {
+                Step2Icon.Text = "❌";
+                SyncStatusLabel.Text = "Sync failed";
+                SyncResultLabel.Text = "❌ Delta sync failed. Check debug output for details.";
+                SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
+                SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
+                SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
+                SyncResultContainer.IsVisible = true;
+                SyncCloseButton.IsVisible = true;
+                return;
+            }
+
+            Step2Icon.Text = "✅";
+
+            // Step 3: Finalize (100%)
+            await UpdateProgress(1.0, "Sync complete!", "Step 3");
+            Step3Icon.Text = "✅";
+            
+            SyncStatusLabel.Text = "Sync completed successfully";
+            SyncResultLabel.Text = $"✅ Successfully synced {recordsSynced} changed records to remote database!";
+            SyncResultContainer.BackgroundColor = Color.FromArgb("#F0FDF4");
+            SyncResultContainer.Stroke = Color.FromArgb("#86EFAC");
+            SyncResultLabel.TextColor = Color.FromArgb("#10B981");
+            SyncResultContainer.IsVisible = true;
+            SyncCloseButton.IsVisible = true;
+            Debug.WriteLine($"[TeacherSync] Sync completed successfully - {recordsSynced} records synced");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[TeacherSync] Error: {ex.Message}");
+            Step1Icon.Text = "❌";
+            Step2Icon.Text = "❌";
+            Step3Icon.Text = "❌";
+            SyncStatusLabel.Text = "Error occurred";
+            SyncResultLabel.Text = $"❌ Error: {ex.Message}";
+            SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
+            SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
+            SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
+            SyncResultContainer.IsVisible = true;
+            SyncCloseButton.IsVisible = true;
+        }
+    }
+
+    private async Task UpdateProgress(double progress, string status, string step)
+    {
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            SyncProgressBar.Progress = progress;
+            SyncPercentageLabel.Text = $"{(int)(progress * 100)}%";
+            SyncStatusLabel.Text = status;
+        });
+        await Task.Delay(300);
+    }
+
+    private void OnSyncCloseClicked(object sender, EventArgs e)
+    {
+        SyncProgressOverlay.IsVisible = false;
     }
 
     public sealed class TicketDashboardItem

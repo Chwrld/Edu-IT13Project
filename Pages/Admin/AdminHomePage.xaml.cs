@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Versioning;
@@ -16,6 +17,8 @@ public partial class AdminHomePage : ContentPage
     private readonly ReportsService _reportsService;
     private readonly ReportExportService _reportExportService;
     private readonly AdminDataExportService _adminDataExportService;
+    private readonly SyncService _syncService;
+    private readonly DeltaSyncService _deltaSyncService;
     private bool _isLoading;
 
     public ObservableCollection<AdminActivityItem> RecentActivities { get; } = new();
@@ -31,6 +34,10 @@ public partial class AdminHomePage : ContentPage
             ?? throw new InvalidOperationException("ReportExportService is not registered.");
         _adminDataExportService = AppServiceProvider.GetService<AdminDataExportService>()
             ?? throw new InvalidOperationException("AdminDataExportService is not registered.");
+        _syncService = AppServiceProvider.GetService<SyncService>()
+            ?? throw new InvalidOperationException("SyncService is not registered.");
+        _deltaSyncService = AppServiceProvider.GetService<DeltaSyncService>()
+            ?? throw new InvalidOperationException("DeltaSyncService is not registered.");
         BindingContext = this;
     }
 
@@ -144,6 +151,103 @@ public partial class AdminHomePage : ContentPage
     private async void OnDownloadDataClicked(object sender, EventArgs e)
     {
         await ExportDashboardDataAsync();
+    }
+
+    private async void OnSyncToRemoteClicked(object sender, EventArgs e)
+    {
+        await ShowSyncProgressAsync();
+    }
+
+    private async Task ShowSyncProgressAsync()
+    {
+        try
+        {
+            // Show modal
+            SyncProgressOverlay.IsVisible = true;
+            SyncProgressBar.Progress = 0;
+            SyncPercentageLabel.Text = "0%";
+            SyncStatusLabel.Text = "Checking connection...";
+            SyncResultLabel.IsVisible = false;
+            SyncCloseButton.IsVisible = false;
+            Step1Icon.Text = "⏳";
+            Step2Icon.Text = "⏳";
+            Step3Icon.Text = "⏳";
+
+            // Step 1: Check connection (20%)
+            await UpdateProgress(0.2, "Checking connection...", "Step 1");
+            bool isOnline = await _syncService.IsOnlineAsync();
+            Debug.WriteLine($"[SyncTest] Online status: {isOnline}");
+
+            if (!isOnline)
+            {
+                Step1Icon.Text = "❌";
+                SyncStatusLabel.Text = "Remote server not accessible";
+                SyncResultContainer.IsVisible = false;
+                SyncCloseButton.IsVisible = true;
+                return;
+            }
+
+            Step1Icon.Text = "✅";
+
+            // Step 2: Delta sync (only changed records) (60%)
+            await UpdateProgress(0.6, "Syncing changed records to remote database...", "Step 2");
+            var (success, recordsSynced) = await _deltaSyncService.DeltaSyncToRemoteAsync();
+
+            if (!success)
+            {
+                Step2Icon.Text = "❌";
+                SyncStatusLabel.Text = "Sync failed";
+                SyncResultLabel.Text = "❌ Delta sync failed. Check debug output for details.";
+                SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
+                SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
+                SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
+                SyncResultContainer.IsVisible = true;
+                SyncCloseButton.IsVisible = true;
+                return;
+            }
+
+            Step2Icon.Text = "✅";
+
+            // Step 3: Finalize (100%)
+            await UpdateProgress(1.0, "Sync complete!", "Step 3");
+            Step3Icon.Text = "✅";
+            
+            SyncStatusLabel.Text = "Sync completed successfully";
+            SyncResultLabel.Text = $"✅ Successfully synced {recordsSynced} changed records to remote database!";
+            SyncResultContainer.BackgroundColor = Color.FromArgb("#F0FDF4");
+            SyncResultContainer.Stroke = Color.FromArgb("#86EFAC");
+            SyncResultLabel.TextColor = Color.FromArgb("#10B981");
+            SyncResultContainer.IsVisible = true;
+            SyncCloseButton.IsVisible = true;
+            Debug.WriteLine($"[DeltaSync] Sync completed successfully - {recordsSynced} records synced");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[SyncTest] Error: {ex.Message}");
+            Step1Icon.Text = "❌";
+            Step2Icon.Text = "❌";
+            Step3Icon.Text = "❌";
+            SyncStatusLabel.Text = "Error occurred";
+            SyncResultLabel.Text = $"❌ Error: {ex.Message}";
+            SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
+            SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
+            SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
+            SyncResultContainer.IsVisible = true;
+            SyncCloseButton.IsVisible = true;
+        }
+    }
+
+    private async Task UpdateProgress(double progress, string status, string step)
+    {
+        SyncProgressBar.Progress = progress;
+        SyncPercentageLabel.Text = $"{(int)(progress * 100)}%";
+        SyncStatusLabel.Text = status;
+        await Task.Delay(300); // Small delay for visual feedback
+    }
+
+    private void OnSyncCloseClicked(object sender, EventArgs e)
+    {
+        SyncProgressOverlay.IsVisible = false;
     }
 
     private async Task ExportDashboardDataAsync()

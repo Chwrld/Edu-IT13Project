@@ -45,16 +45,11 @@
                 </HorizontalStackLayout>
 
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}"
-                           FontSize="18"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}"
-                           TextColor="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusColorConverter}}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="2"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End" />
             </Grid>
         </Border>
 

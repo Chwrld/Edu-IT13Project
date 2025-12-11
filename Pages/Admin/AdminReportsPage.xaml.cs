@@ -16,6 +16,7 @@ public partial class AdminReportsPage : ContentPage
     private bool _isLoading;
     private bool _exportPdfSelected;
     private bool _exportCsvSelected;
+    private ReportExportData? _currentReportData;
 
     public AdminReportsPage()
     {
@@ -69,26 +70,24 @@ public partial class AdminReportsPage : ContentPage
 
     private async void OnGenerateReportClicked(object? sender, EventArgs e)
     {
-        string reportType = ReportTypePicker.SelectedItem?.ToString() ?? "Unknown";
-
         if (_currentMetrics is null)
         {
             await DisplayAlert("Generate Report", "Analytics are still loading. Please try again in a moment.", "OK");
             return;
         }
 
-        var message = $"Report \"{reportType}\" for {_currentPeriod} prepared.\n" +
-                      $"Total Tickets: {_currentMetrics.TotalTicketsCurrent:N0}\n" +
-                      $"Active Users: {_currentMetrics.ActiveUsersTotal:N0}\n" +
-                      $"Avg Response: {FormatDuration(_currentMetrics.AvgResponseMinutesCurrent)}";
-
-        var exports = await ExportSelectedFormatsAsync();
-        if (exports.Count > 0)
+        try
         {
-            message += "\n\nExports:\n" + string.Join('\n', exports.Select(path => $"• {path}"));
-        }
+            var category = GetSelectedCategory();
+            var reportData = await _reportsService.BuildReportAsync(category, _currentPeriod, _currentMetrics);
+            _currentReportData = reportData;
 
-        await DisplayAlert("Generate Report", message, "OK");
+            await ShowPrintPreviewAsync(reportData);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Generate Report", $"Failed to generate report: {ex.Message}", "OK");
+        }
     }
 
     private async Task LoadMetricsAsync()
@@ -287,6 +286,125 @@ public partial class AdminReportsPage : ContentPage
             button.BackgroundColor = Colors.White;
             button.TextColor = Color.FromArgb("#005BA5");
             button.BorderColor = Color.FromArgb("#D1D5DB");
+        }
+    }
+
+    private async void OnPrintClicked(object? sender, EventArgs e)
+    {
+        if (_currentMetrics is null)
+        {
+            await DisplayAlert("Print Report", "Analytics are still loading. Please try again in a moment.", "OK");
+            return;
+        }
+
+        try
+        {
+            var category = GetSelectedCategory();
+            var reportData = await _reportsService.BuildReportAsync(category, _currentPeriod, _currentMetrics);
+            _currentReportData = reportData;
+            
+            await ShowPrintPreviewAsync(reportData);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Print Report", $"Failed to generate report: {ex.Message}", "OK");
+        }
+    }
+
+    private async Task ShowPrintPreviewAsync(ReportExportData reportData)
+    {
+        // Update preview header
+        PreviewReportTitleLabel.Text = reportData.ReportTitle;
+        PreviewReportDetailsLabel.Text = $"Period: {reportData.PeriodStartUtc:MMM d, yyyy} - {reportData.PeriodEndUtc:MMM d, yyyy}";
+
+        // Clear and populate preview content
+        PreviewContentLayout.Children.Clear();
+
+        // Add report title
+        PreviewContentLayout.Children.Add(new Label
+        {
+            Text = reportData.ReportTitle,
+            FontSize = 16,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = Color.FromArgb("#1F2937"),
+            Margin = new Thickness(0, 0, 0, 10)
+        });
+
+        // Add period info
+        PreviewContentLayout.Children.Add(new Label
+        {
+            Text = $"Period: {reportData.PeriodStartUtc:MMM d, yyyy} - {reportData.PeriodEndUtc:MMM d, yyyy}",
+            FontSize = 12,
+            TextColor = Color.FromArgb("#6B7280"),
+            Margin = new Thickness(0, 0, 0, 15)
+        });
+
+        // Add table headers
+        var headerLayout = new HorizontalStackLayout { Spacing = 10, Margin = new Thickness(0, 0, 0, 10) };
+        foreach (var header in reportData.Headers)
+        {
+            headerLayout.Children.Add(new Label
+            {
+                Text = header,
+                FontSize = 12,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.FromArgb("#374151"),
+                HorizontalOptions = LayoutOptions.FillAndExpand
+            });
+        }
+        PreviewContentLayout.Children.Add(headerLayout);
+
+        // Add table rows
+        foreach (var row in reportData.Rows)
+        {
+            var rowLayout = new HorizontalStackLayout { Spacing = 10, Margin = new Thickness(0, 0, 0, 8) };
+            foreach (var cell in row)
+            {
+                rowLayout.Children.Add(new Label
+                {
+                    Text = cell,
+                    FontSize = 11,
+                    TextColor = Color.FromArgb("#1F2937"),
+                    HorizontalOptions = LayoutOptions.FillAndExpand
+                });
+            }
+            PreviewContentLayout.Children.Add(rowLayout);
+        }
+
+        // Show the preview modal
+        PrintPreviewOverlay.IsVisible = true;
+    }
+
+    private void OnPrintPreviewCancelClicked(object? sender, EventArgs e)
+    {
+        PrintPreviewOverlay.IsVisible = false;
+        _currentReportData = null;
+    }
+
+    private async void OnPrintPreviewConfirmClicked(object? sender, EventArgs e)
+    {
+        if (_currentReportData is null)
+            return;
+
+        try
+        {
+            PrintPreviewOverlay.IsVisible = false;
+
+            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EduCRM", "Reports");
+            var pdfPath = await _reportExportService.ExportPdfAsync(_currentReportData, directory);
+
+            var message = $"Report exported successfully!\n\n" +
+                          $"Total Tickets: {_currentReportData.Metrics.TotalTicketsCurrent:N0}\n" +
+                          $"Active Users: {_currentReportData.Metrics.ActiveUsersTotal:N0}\n" +
+                          $"Avg Response: {FormatDuration(_currentReportData.Metrics.AvgResponseMinutesCurrent)}\n\n" +
+                          $"Path: {pdfPath}";
+
+            await DisplayAlert("Export Successful", message, "OK");
+            _currentReportData = null;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Export Failed", $"Failed to export report: {ex.Message}", "OK");
         }
     }
 }

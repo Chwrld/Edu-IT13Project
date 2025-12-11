@@ -55,15 +55,11 @@
                 </HorizontalStackLayout>
                 
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}" 
-                           FontSize="20"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}" 
-                           TextColor="White"
-                           FontSize="12"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="2"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End" />
             </Grid>
         </Border>
 
@@ -177,17 +173,21 @@
                 <VerticalStackLayout Grid.Row="2" Spacing="5">
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
-                            StrokeThickness="0">
+                            StrokeThickness="0"
+                            InputTransparent="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" InputTransparent="True">
                             <Label Text="🔒" FontSize="18"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Logout Button at Bottom -->

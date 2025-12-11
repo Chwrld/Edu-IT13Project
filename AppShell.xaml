@@ -98,6 +98,10 @@
         Route="AnnouncementsPage" />
     
     <ShellContent
+        ContentTemplate="{DataTemplate student:StudentClassesPage}"
+        Route="StudentClassesPage" />
+
+    <ShellContent
         ContentTemplate="{DataTemplate student:TicketsPage}"
         Route="TicketsPage" />
     

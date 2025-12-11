@@ -89,7 +89,20 @@ public partial class StudentClassDetailPage : ContentPage
 
         try
         {
-            var assignments = await _assignmentService.GetClassAssignmentsAsync(_classId);
+            // Get current student ID
+            var currentUser = _authManager.CurrentUser;
+            Guid? studentId = null;
+            
+            if (currentUser?.Id != null)
+            {
+                var student = await _dbConnection.GetStudentByUserIdAsync(currentUser.Id);
+                if (student != null)
+                {
+                    studentId = student.StudentId;
+                }
+            }
+
+            var assignments = await _assignmentService.GetClassAssignmentsAsync(_classId, studentId);
             
             _assignments.Clear();
             foreach (var assignment in assignments)
@@ -178,7 +191,7 @@ public partial class StudentClassDetailPage : ContentPage
         GradesContent.IsVisible = true;
     }
 
-    private void OnViewAssignmentClicked(object sender, EventArgs e)
+    private async void OnViewAssignmentClicked(object sender, EventArgs e)
     {
         if (sender is not Button button || button.CommandParameter is not ClassAssignment assignment)
         {
@@ -193,9 +206,40 @@ public partial class StudentClassDetailPage : ContentPage
         ModalAssignmentDeadline.Text = $"Due: {assignment.DeadlineDisplay}";
         ModalAssignmentPoints.Text = assignment.TotalPoints.ToString();
 
-        // Clear previous submission data
-        SubmissionLinkEntry.Text = string.Empty;
-        SubmissionCommentsEditor.Text = string.Empty;
+        // Check if student already submitted
+        bool hasSubmitted = assignment.StudentHasSubmitted;
+        
+        if (hasSubmitted)
+        {
+            // Fetch the actual submission data
+            var currentUser = _authManager.CurrentUser;
+            if (currentUser?.Id != null && _assignmentService != null)
+            {
+                var student = await _dbConnection.GetStudentByUserIdAsync(currentUser.Id);
+                if (student != null)
+                {
+                    var submission = await _assignmentService.GetStudentSubmissionAsync(assignment.Id, student.StudentId);
+                    if (submission != null)
+                    {
+                        // Show read-only view with actual submission data
+                        SubmissionLinkEntry.IsEnabled = false;
+                        SubmissionCommentsEditor.IsEnabled = false;
+                        SubmissionLinkEntry.Text = submission.SubmissionContent ?? "No submission link provided";
+                        SubmissionCommentsEditor.Text = submission.Notes ?? "No comments provided";
+                        SubmitButton.IsVisible = false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Show editable form
+            SubmissionLinkEntry.IsEnabled = true;
+            SubmissionCommentsEditor.IsEnabled = true;
+            SubmissionLinkEntry.Text = string.Empty;
+            SubmissionCommentsEditor.Text = string.Empty;
+            SubmitButton.IsVisible = true;
+        }
 
         // Show modal
         AssignmentModalOverlay.IsVisible = true;
@@ -243,21 +287,56 @@ public partial class StudentClassDetailPage : ContentPage
 
         try
         {
-            // TODO: Implement actual submission logic here
-            // await _assignmentService.SubmitAssignmentAsync(_currentAssignment.Id, submissionLink, comments);
+            if (_assignmentService is null)
+            {
+                await DisplayAlert("Error", "Assignment service unavailable. Please try again later.", "OK");
+                return;
+            }
 
+            var currentUser = _authManager.CurrentUser;
+            if (currentUser?.Id == null)
+            {
+                await DisplayAlert("Error", "Unable to determine your account. Please re-login.", "OK");
+                return;
+            }
+
+            // Get student ID from database
+            var student = await _dbConnection?.GetStudentByUserIdAsync(currentUser.Id)!;
+            if (student is null)
+            {
+                await DisplayAlert("Error", "Unable to find your student profile. Please contact support.", "OK");
+                return;
+            }
+
+            var submissionId = await _assignmentService.SubmitAssignmentAsync(
+                _currentAssignment.Id,
+                student.StudentId,
+                submissionLink,
+                comments);
+
+            if (!submissionId.HasValue)
+            {
+                await DisplayAlert("Error", "Failed to submit assignment. Please try again.", "OK");
+                return;
+            }
+
+            // Close modal immediately
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                AssignmentModalOverlay.IsVisible = false;
+                SubmissionLinkEntry.Text = string.Empty;
+                SubmissionCommentsEditor.Text = string.Empty;
+                _currentAssignment = null;
+            });
+
+            // Show success message
             await DisplayAlert(
                 "Success",
                 "Your assignment has been submitted successfully!",
                 "OK");
 
-            // Close modal
-            AssignmentModalOverlay.IsVisible = false;
-            _currentAssignment = null;
-
-            // Clear form
-            SubmissionLinkEntry.Text = string.Empty;
-            SubmissionCommentsEditor.Text = string.Empty;
+            // Reload assignments to show updated status
+            await LoadAssignmentsAsync();
         }
         catch (Exception ex)
         {

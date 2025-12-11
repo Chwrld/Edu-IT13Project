@@ -307,6 +307,17 @@
                                                        FontAttributes="Bold"
                                                        TextColor="#2C3E50"
                                                        HorizontalOptions="StartAndExpand"/>
+                                                <Border BackgroundColor="{Binding SubmissionStatusColor}"
+                                                        Padding="8,4"
+                                                        StrokeThickness="0"
+                                                        HorizontalOptions="End">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="20"/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{Binding SubmissionStatus}"
+                                                           FontSize="12"
+                                                           TextColor="{Binding SubmissionStatusTextColor}"/>
+                                                </Border>
                                                 <Border BackgroundColor="#FEF3C7"
                                                         Padding="8,4"
                                                         StrokeThickness="0"
@@ -548,6 +559,8 @@
                                     <Entry x:Name="SubmissionLinkEntry"
                                            Placeholder="Enter Google Drive link, GitHub URL, or file path..."
                                            FontSize="13"
+                                           TextColor="#1F2937"
+                                           PlaceholderColor="#9CA3AF"
                                            BackgroundColor="#F9FAFB"/>
                                 </VerticalStackLayout>
 
@@ -559,6 +572,8 @@
                                     <Editor x:Name="SubmissionCommentsEditor"
                                             Placeholder="Add any notes or comments about your submission..."
                                             FontSize="13"
+                                            TextColor="#1F2937"
+                                            PlaceholderColor="#9CA3AF"
                                             HeightRequest="100"
                                             BackgroundColor="#F9FAFB"/>
                                 </VerticalStackLayout>
@@ -582,7 +597,8 @@
                                     Padding="20,10"
                                     CornerRadius="6"
                                     Clicked="OnCancelSubmissionClicked"/>
-                            <Button Text="Submit Assignment"
+                            <Button x:Name="SubmitButton"
+                                    Text="Submit Assignment"
                                     BackgroundColor="#0891B2"
                                     TextColor="White"
                                     FontSize="14"

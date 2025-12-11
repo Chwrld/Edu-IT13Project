@@ -24,6 +24,21 @@ public class RoleColorConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+public class NetworkStatusBackgroundConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool isConnected)
+        {
+            return isConnected ? Color.FromArgb("#E8FBF4") : Color.FromArgb("#FDEBEC");
+        }
+        return Color.FromArgb("#FDEBEC");
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 public class RoleTextColorConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

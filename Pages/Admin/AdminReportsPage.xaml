@@ -45,15 +45,11 @@
                 </HorizontalStackLayout>
                 
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}" 
-                           FontSize="20"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}" 
-                           TextColor="White"
-                           FontSize="12"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="2"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End" />
             </Grid>
         </Border>
 
@@ -167,17 +163,21 @@
                 <VerticalStackLayout Grid.Row="2" Spacing="5">
                     <Border BackgroundColor="Transparent" 
                             Padding="15,12"
-                            StrokeThickness="0">
+                            StrokeThickness="0"
+                            InputTransparent="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <HorizontalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" InputTransparent="True">
                             <Label Text="🔒" FontSize="18"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Logout Button -->
@@ -422,15 +422,17 @@ Includes every ticket regardless of status.">
                             </Border>
 
                             <!-- Generate Button -->
-                            <Button Text="📥 Generate Report"
-                                    BackgroundColor="#005BA5"
-                                    TextColor="White"
-                                    FontSize="14"
-                                    FontAttributes="Bold"
-                                    CornerRadius="6"
-                                    HeightRequest="44"
-                                    Margin="0,8,0,0"
-                                    Clicked="OnGenerateReportClicked"/>
+                            <HorizontalStackLayout Spacing="10" Margin="0,8,0,0">
+                                <Button Text="📥 Generate Report"
+                                        BackgroundColor="#005BA5"
+                                        TextColor="White"
+                                        FontSize="14"
+                                        FontAttributes="Bold"
+                                        CornerRadius="6"
+                                        HeightRequest="44"
+                                        HorizontalOptions="FillAndExpand"
+                                        Clicked="OnGenerateReportClicked"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
 
                         <!-- Right Side - Report Preview -->
@@ -609,6 +611,75 @@ Includes every ticket regardless of status.">
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Print Preview Modal -->
+        <Border x:Name="PrintPreviewOverlay"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#00000080"
+                IsVisible="False"
+                StrokeThickness="0">
+            <Grid VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="800" HeightRequest="600">
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="30">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <!-- Header -->
+                        <VerticalStackLayout Grid.Row="0" Spacing="10">
+                            <Label Text="Export Preview" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"
+                                   TextColor="#1F2937"/>
+                            <Label x:Name="PreviewReportTitleLabel"
+                                   Text="Report Title" 
+                                   FontSize="16" 
+                                   TextColor="#374151"/>
+                            <Label x:Name="PreviewReportDetailsLabel"
+                                   Text="Details" 
+                                   FontSize="12" 
+                                   TextColor="#6B7280"
+                                   LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+
+                        <!-- Preview Content -->
+                        <ScrollView Grid.Row="1" Margin="0,20,0,20">
+                            <VerticalStackLayout x:Name="PreviewContentLayout" Spacing="10">
+                                <!-- Report data will be populated here -->
+                                <Label Text="Loading preview..." 
+                                       FontSize="14" 
+                                       TextColor="#6B7280"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </ScrollView>
+
+                        <!-- Footer Buttons -->
+                        <HorizontalStackLayout Grid.Row="2" Spacing="10" HorizontalOptions="End">
+                            <Button Text="Cancel"
+                                    BackgroundColor="#E5E7EB"
+                                    TextColor="#374151"
+                                    FontSize="13"
+                                    FontAttributes="Bold"
+                                    CornerRadius="6"
+                                    Padding="20,10"
+                                    Clicked="OnPrintPreviewCancelClicked"/>
+                            <Button Text="📥 Export"
+                                    BackgroundColor="#10B981"
+                                    TextColor="White"
+                                    FontSize="13"
+                                    FontAttributes="Bold"
+                                    CornerRadius="6"
+                                    Padding="20,10"
+                                    Clicked="OnPrintPreviewConfirmClicked"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentPage>

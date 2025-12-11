@@ -224,4 +224,10 @@ public partial class TicketsPage : ContentPage
             await Shell.Current.GoToAsync("//MainPage");
         }
     }
+
+    private void OnCreateTicketClicked(object? sender, EventArgs e)
+    {
+        // Show the create ticket modal
+        ModalOverlay.IsVisible = true;
+    }
 }

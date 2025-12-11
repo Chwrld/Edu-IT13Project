@@ -20,7 +20,7 @@
         <Border Grid.Row="0" Grid.ColumnSpan="2" 
                 BackgroundColor="#0891B2"
                 StrokeThickness="0">
-            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto">
+            <Grid Padding="20,0" ColumnDefinitions="Auto,*,Auto,Auto">
                 <!-- Logo -->
                 <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
                     <Border BackgroundColor="White" 
@@ -44,16 +44,25 @@
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
                 
+                <!-- Sync Button -->
+                <Button Grid.Column="2"
+                        Text="🔄 Sync"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="14"
+                        Padding="12,8"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Clicked="OnSyncClicked"
+                        x:Name="SyncButton"/>
+                
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="5" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}" 
-                           FontSize="20"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}" 
-                           TextColor="White"
-                           FontSize="12"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="3"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End"
+                             Margin="10,0,0,0" />
             </Grid>
         </Border>
 
@@ -547,5 +556,82 @@
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Sync Progress Modal -->
+        <AbsoluteLayout Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                        x:Name="SyncProgressOverlay"
+                        IsVisible="False"
+                        BackgroundColor="#00000080">
+            <Border AbsoluteLayout.LayoutBounds="0.5, 0.5, 400, 350"
+                    AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional"
+                    BackgroundColor="White"
+                    Stroke="#E5E7EB"
+                    StrokeThickness="1"
+                    Padding="30"
+                    StrokeShape="RoundRectangle 16,16,16,16">
+                <VerticalStackLayout Spacing="20">
+                    <!-- Header with Icon -->
+                    <HorizontalStackLayout Spacing="12" VerticalOptions="Start">
+                        <Border BackgroundColor="#E0F2FE"
+                                WidthRequest="48"
+                                HeightRequest="48"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12,12,12,12">
+                            <Label Text="🔄" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Syncing to Remote Database" FontSize="16" FontAttributes="Bold" TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <!-- Divider -->
+                    <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
+
+                    <!-- Status Message -->
+                    <Label x:Name="SyncStatusLabel" Text="Checking connection..." FontSize="14" TextColor="#6B7280"/>
+
+                    <!-- Progress Bar -->
+                    <VerticalStackLayout Spacing="8">
+                        <ProgressBar x:Name="SyncProgressBar" Progress="0" ProgressColor="#0891B2" HeightRequest="6"/>
+                        <Label x:Name="SyncPercentageLabel" Text="0%" FontSize="12" TextColor="#9CA3AF" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- Steps -->
+                    <VerticalStackLayout Spacing="8" Padding="0,10">
+                        <HorizontalStackLayout Spacing="10">
+                            <Label x:Name="Step1Icon" Text="⏳" FontSize="16" WidthRequest="24"/>
+                            <Label Text="Checking connection..." FontSize="13" TextColor="#6B7280" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label x:Name="Step2Icon" Text="⏳" FontSize="16" WidthRequest="24"/>
+                            <Label Text="Syncing tables..." FontSize="13" TextColor="#6B7280" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="10">
+                            <Label x:Name="Step3Icon" Text="⏳" FontSize="16" WidthRequest="24"/>
+                            <Label Text="Finalizing..." FontSize="13" TextColor="#6B7280" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Result Container -->
+                    <Border x:Name="SyncResultContainer"
+                            IsVisible="False"
+                            Padding="12"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8,8,8,8">
+                        <Label x:Name="SyncResultLabel" FontSize="13" TextColor="#1F2937"/>
+                    </Border>
+
+                    <!-- Close Button -->
+                    <Button x:Name="SyncCloseButton"
+                            Text="Close"
+                            BackgroundColor="#0891B2"
+                            TextColor="White"
+                            FontSize="14"
+                            Padding="0,12"
+                            IsVisible="False"
+                            Clicked="OnSyncCloseClicked"/>
+                </VerticalStackLayout>
+            </Border>
+        </AbsoluteLayout>
     </Grid>
 </ContentPage>

@@ -15,6 +15,76 @@
             <utils:NetworkStatusConverter x:Key="NetworkStatusConverter" />
             <utils:NetworkStatusTextConverter x:Key="NetworkStatusTextConverter" />
             <utils:NetworkStatusColorConverter x:Key="NetworkStatusColorConverter" />
+            <utils:NetworkStatusBackgroundConverter x:Key="NetworkStatusBackgroundConverter" />
+
+            <!-- Network Status Badge -->
+            <ControlTemplate x:Key="NetworkStatusBadgeTemplate">
+                <Border Padding="10,6"
+                        BackgroundColor="{Binding IsConnected, Converter={StaticResource NetworkStatusBackgroundConverter}}"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14" />
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Border WidthRequest="28"
+                                HeightRequest="28"
+                                BackgroundColor="White"
+                                StrokeThickness="0"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Grid WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center">
+                                <!-- WiFi arcs -->
+                                <Path Data="M2 10 Q12 2 22 10"
+                                      Stroke="#111111"
+                                      StrokeThickness="2"
+                                      StrokeLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Fill="Transparent"
+                                      Margin="0,0,0,4" />
+                                <Path Data="M5 13 Q12 7 19 13"
+                                      Stroke="#111111"
+                                      StrokeThickness="2"
+                                      StrokeLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Fill="Transparent"
+                                      Margin="0,2,0,2" />
+                                <Path Data="M8 16 Q12 12 16 16"
+                                      Stroke="#111111"
+                                      StrokeThickness="2"
+                                      StrokeLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      Fill="Transparent"
+                                      Margin="0,4,0,0" />
+                                <Ellipse WidthRequest="4" HeightRequest="4" Fill="#111111" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,2" />
+
+                                <!-- Slash for offline -->
+                                <Path Data="M4 20 L20 4"
+                                      Stroke="#DC2626"
+                                      StrokeThickness="2.5"
+                                      StrokeLineCap="Round"
+                                      StrokeLineJoin="Round"
+                                      IsVisible="True">
+                                    <Path.Triggers>
+                                        <DataTrigger TargetType="Path"
+                                                     Binding="{Binding IsConnected}"
+                                                     Value="True">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Path.Triggers>
+                                </Path>
+                            </Grid>
+                        </Border>
+                        <Label Text="{Binding IsConnected, Converter={StaticResource NetworkStatusTextConverter}}"
+                               TextColor="{Binding IsConnected, Converter={StaticResource NetworkStatusColorConverter}}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+            </ControlTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -44,16 +44,11 @@
                 </HorizontalStackLayout>
 
                 <!-- Network Status Indicator -->
-                <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusConverter}}"
-                           FontSize="18"
-                           VerticalOptions="Center"/>
-                    <Label Text="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusTextConverter}}"
-                           TextColor="{Binding Source={x:Static utils:NetworkMonitor.Instance}, Path=IsConnected, Converter={StaticResource NetworkStatusColorConverter}}"
-                           FontSize="14"
-                           FontAttributes="Bold"
-                           VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                <ContentView Grid.Column="2"
+                             BindingContext="{x:Static utils:NetworkMonitor.Instance}"
+                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="End" />
             </Grid>
         </Border>
 
@@ -316,6 +311,32 @@
                                 SelectionMode="Single"
                                 SelectionChangedCommand="{Binding SelectionChangedCommand}"
                                 SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Spacing="20" Padding="40" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="📋" FontSize="80" HorizontalOptions="Center"/>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="No Support Tickets Yet"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="#2C3E50"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="You haven't created any support tickets. Create one if you need help!"
+                                       FontSize="14"
+                                       TextColor="#6B7280"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                            <Button Text="+ Create First Ticket"
+                                    BackgroundColor="#0891B2"
+                                    TextColor="White"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    Padding="20,12"
+                                    CornerRadius="8"
+                                    HorizontalOptions="Center"
+                                    Clicked="OnCreateTicketClicked"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
                     </CollectionView.ItemsLayout>

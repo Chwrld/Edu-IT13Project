@@ -688,8 +688,27 @@
                                 Clicked="OnCloseSubmissionsModal"/>
                     </Grid>
 
+                    <!-- Loading Indicator -->
+                    <VerticalStackLayout x:Name="SubmissionsLoadingIndicator"
+                                        Grid.Row="1"
+                                        Spacing="15"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        IsVisible="True">
+                        <ActivityIndicator IsRunning="True"
+                                          IsVisible="True"
+                                          Color="#059669"
+                                          Scale="1.5"/>
+                        <Label Text="Loading submissions..."
+                               FontSize="14"
+                               TextColor="#6B7280"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
                     <!-- Submissions List -->
-                    <ScrollView Grid.Row="1">
+                    <ScrollView Grid.Row="1"
+                               x:Name="SubmissionsScrollView"
+                               IsVisible="False">
                         <VerticalStackLayout Spacing="15">
                             <Border BackgroundColor="White"
                                     StrokeThickness="1"

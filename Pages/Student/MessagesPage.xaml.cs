@@ -116,7 +116,7 @@ public partial class MessagesPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//ProfilePage");
+            await Shell.Current.GoToAsync("//ProfilePage", animate: false);
         }
         catch (Exception ex)
         {
@@ -128,7 +128,7 @@ public partial class MessagesPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//HomePage");
+            await Shell.Current.GoToAsync("//HomePage", animate: false);
         }
         catch (Exception ex)
         {
@@ -138,14 +138,21 @@ public partial class MessagesPage : ContentPage
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        try
+        {
+            await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"MessagesPage: Error navigating to classes - {ex.Message}");
+        }
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
         try
         {
-            await Shell.Current.GoToAsync("//AnnouncementsPage");
+            await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
         }
         catch (Exception ex)
         {
@@ -157,7 +164,7 @@ public partial class MessagesPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//TicketsPage");
+            await Shell.Current.GoToAsync("//TicketsPage", animate: false);
         }
         catch (Exception ex)
         {

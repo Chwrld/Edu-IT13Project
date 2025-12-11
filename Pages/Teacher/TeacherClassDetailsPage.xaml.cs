@@ -40,9 +40,8 @@ public partial class TeacherClassDetailsPage : ContentPage
         {
             if (Guid.TryParse(value, out var parsed))
             {
-                var shouldReload = _classId != parsed;
                 _classId = parsed;
-                if (_hasAppeared && shouldReload)
+                if (_hasAppeared)
                 {
                     _ = LoadClassAsync();
                 }
@@ -268,32 +267,37 @@ public partial class TeacherClassDetailsPage : ContentPage
 
     private async void OnBackToClassesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnDashboardTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherHomePage");
+        await Shell.Current.GoToAsync("//TeacherHomePage", animate: false);
     }
 
     private async void OnClassesMenuTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherClassesPage");
+        await Shell.Current.GoToAsync("//TeacherClassesPage", animate: false);
     }
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherMessagesPage");
+        await Shell.Current.GoToAsync("//TeacherMessagesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage");
+        await Shell.Current.GoToAsync("//TeacherAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TeacherTicketsPage");
+        await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
+    }
+
+    private async void OnStudentsTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherStudentDetailsPage", animate: false);
     }
 
     // Search functionality
@@ -924,39 +928,91 @@ public partial class TeacherClassDetailsPage : ContentPage
     {
         try
         {
-            if (e.Parameter is not ClassAssignment assignment)
+            System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped called, Parameter type: {e?.Parameter?.GetType().Name}");
+            
+            if (e?.Parameter is not ClassAssignment assignment)
             {
+                System.Diagnostics.Debug.WriteLine("OnAssignmentTapped: Parameter is not ClassAssignment");
                 return;
             }
 
+            System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Assignment ID = {assignment.Id}, Title = {assignment.Title}");
+            
             _selectedAssignment = assignment;
             
-            // Update modal header
-            SubmissionsAssignmentTitle.Text = assignment.Title;
-            SubmissionsAssignmentInfo.Text = $"{assignment.SubmittedCount}/{assignment.TotalStudents} submissions • Due: {assignment.DeadlineDisplay}";
-
-            // Load submissions
-            if (_assignmentService != null)
+            try
             {
-                var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(assignment.Id, assignment.TotalPoints);
-                
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    _submissions.Clear();
-                    foreach (var submission in submissions)
-                    {
-                        _submissions.Add(submission);
-                    }
-                });
+                // Update modal header
+                SubmissionsAssignmentTitle.Text = assignment.Title;
+                SubmissionsAssignmentInfo.Text = $"{assignment.SubmittedCount}/{assignment.TotalStudents} submissions • Due: {assignment.DeadlineDisplay}";
+            }
+            catch (Exception labelEx)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error updating labels: {labelEx.Message}");
+                throw;
             }
 
             // Show modal
             AssignmentSubmissionsOverlay.IsVisible = true;
+            SubmissionsScrollView.IsVisible = true;
+
+            // Load submissions asynchronously
+            if (_assignmentService != null)
+            {
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Loading submissions for assignment {assignment.Id}");
+                    var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(assignment.Id, assignment.TotalPoints);
+                    System.Diagnostics.Debug.WriteLine($"OnAssignmentTapped: Loaded {submissions.Count} submissions");
+                    
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        _submissions.Clear();
+                        foreach (var submission in submissions)
+                        {
+                            _submissions.Add(submission);
+                        }
+                    });
+                }
+                catch (Exception submissionEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error fetching submissions: {submissionEx.GetType().Name}: {submissionEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {submissionEx.StackTrace}");
+                    
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        SubmissionsScrollView.IsVisible = false;
+                        AssignmentSubmissionsOverlay.IsVisible = false;
+                    });
+                    
+                    await DisplayAlert("Error", $"Failed to load submissions: {submissionEx.Message}", "OK");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("AssignmentService is null");
+                
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    SubmissionsScrollView.IsVisible = false;
+                    AssignmentSubmissionsOverlay.IsVisible = false;
+                });
+                
+                await DisplayAlert("Error", "Assignment service not available", "OK");
+            }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading assignment submissions: {ex.Message}");
-            await DisplayAlert("Error", "Failed to load assignment submissions.", "OK");
+            System.Diagnostics.Debug.WriteLine($"Error loading assignment submissions: {ex.GetType().Name}: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                AssignmentSubmissionsOverlay.IsVisible = false;
+                SubmissionsScrollView.IsVisible = false;
+            });
+            
+            await DisplayAlert("Error", $"Failed to load assignment submissions: {ex.Message}", "OK");
         }
     }
 
@@ -1012,22 +1068,35 @@ public partial class TeacherClassDetailsPage : ContentPage
             {
                 await DisplayAlert("Success", "Grade saved successfully!", "OK");
                 
-                // Reload submissions to reflect updated grades
-                if (_selectedAssignment is not null)
+                // Update the in-memory list instead of reloading
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    var submissions = await _assignmentService.GetAssignmentSubmissionsAsync(
-                        _selectedAssignment.Id, 
-                        _selectedAssignment.TotalPoints);
-                    
-                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    var existing = _submissions.FirstOrDefault(s => s.SubmissionId == submissionId);
+                    if (existing is not null)
                     {
-                        _submissions.Clear();
-                        foreach (var submission in submissions)
+                        var index = _submissions.IndexOf(existing);
+                        if (index >= 0)
                         {
-                            _submissions.Add(submission);
+                            var updated = new AssignmentSubmission
+                            {
+                                SubmissionId = existing.SubmissionId,
+                                AssignmentId = existing.AssignmentId,
+                                StudentId = existing.StudentId,
+                                StudentName = existing.StudentName,
+                                StudentNumber = existing.StudentNumber,
+                                SubmittedAt = existing.SubmittedAt,
+                                Score = score,
+                                Status = "graded",
+                                Notes = notes,
+                                SubmissionContent = existing.SubmissionContent,
+                                HasSubmitted = existing.HasSubmitted,
+                                MaxScore = existing.MaxScore
+                            };
+
+                            _submissions[index] = updated;
                         }
-                    });
-                }
+                    }
+                });
                 
                 return true;
             }
