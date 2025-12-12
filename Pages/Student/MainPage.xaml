@@ -35,19 +35,11 @@
                 <VerticalStackLayout Spacing="25">
                     
                     <!-- Logo Icon -->
-                    <Border BackgroundColor="#DBEAFE"
-                            WidthRequest="60"
-                            HeightRequest="60"
-                            HorizontalOptions="Center"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="30"/>
-                        </Border.StrokeShape>
-                        <Label Text="🎓"
-                               FontSize="32"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Border>
+                    <Image Source="educrm_log.png"
+                           WidthRequest="80"
+                           HeightRequest="80"
+                           HorizontalOptions="Center"
+                           Aspect="AspectFit"/>
                     
                     <!-- Logo and Title -->
                     <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
