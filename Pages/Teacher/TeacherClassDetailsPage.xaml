@@ -73,7 +73,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -92,7 +92,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Classes" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -111,7 +111,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -130,7 +130,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -149,7 +149,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -173,7 +173,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#2C3E50"/>
                             <Label Text="Faculty" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
@@ -188,7 +188,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -370,30 +370,42 @@
                                             </VerticalStackLayout>
 
                                             <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
-                                                <Button Text="💬 Message"
+                                                <Button Text="Message"
                                                         BackgroundColor="#3B82F6"
                                                         TextColor="White"
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
                                                         Clicked="OnMessageStudentClicked"
-                                                        CommandParameter="{Binding .}"/>
-                                                <Button Text="📝 View Concerns"
+                                                        CommandParameter="{Binding .}">
+                                                    <Button.ImageSource>
+                                                        <FontImageSource Glyph="&#xe625;" FontFamily="MaterialIcons" Size="16" Color="White"/>
+                                                    </Button.ImageSource>
+                                                </Button>
+                                                <Button Text="View Concerns"
                                                         BackgroundColor="#F59E0B"
                                                         TextColor="White"
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
                                                         Clicked="OnViewConcernsClicked"
-                                                        CommandParameter="{Binding .}"/>
-                                                <Button Text="📊 View Details"
+                                                        CommandParameter="{Binding .}">
+                                                    <Button.ImageSource>
+                                                        <FontImageSource Glyph="&#xf847;" FontFamily="MaterialIcons" Size="16" Color="White"/>
+                                                    </Button.ImageSource>
+                                                </Button>
+                                                <Button Text="View Details"
                                                         BackgroundColor="#059669"
                                                         TextColor="White"
                                                         FontSize="12"
                                                         Padding="10,5"
                                                         CornerRadius="5"
                                                         Clicked="OnViewStudentDetailsClicked"
-                                                        CommandParameter="{Binding .}"/>
+                                                        CommandParameter="{Binding .}">
+                                                    <Button.ImageSource>
+                                                        <FontImageSource Glyph="&#xe85e;" FontFamily="MaterialIcons" Size="16" Color="White"/>
+                                                    </Button.ImageSource>
+                                                </Button>
                                             </HorizontalStackLayout>
                                         </Grid>
                                     </Border>
@@ -512,7 +524,8 @@
                                     <Label Grid.Column="3" Text="Exams" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="4" Text="Projects" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
                                     <Label Grid.Column="5" Text="Final Avg" FontSize="13" FontAttributes="Bold" TextColor="#2C3E50"/>
-                                    <Button Grid.Column="6" 
+                                    <Button x:Name="EditGradesButton"
+                                            Grid.Column="6" 
                                             Text="Edit Grades"
                                             BackgroundColor="#059669"
                                             TextColor="White"
@@ -823,6 +836,208 @@
                         </VerticalStackLayout>
                     </ScrollView>
                 </Grid>
+            </Border>
+        </Border>
+
+        <!-- Message Student Modal -->
+        <Border x:Name="MessageStudentOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="450"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label x:Name="MessageStudentTitle"
+                           Text="Message Student"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+                    <Label Text="Enter the message you want to send."
+                           FontSize="14"
+                           TextColor="#6B7280"/>
+                    <Border BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#D1D5DB"
+                            Padding="12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Editor x:Name="MessageContentEditor"
+                                Placeholder="Type your message here..."
+                                HeightRequest="120"
+                                MaxLength="500"
+                                TextColor="#1F2937"
+                                PlaceholderColor="#9CA3AF"/>
+                    </Border>
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                        <Button Text="OK"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                Padding="25,10"
+                                CornerRadius="6"
+                                Clicked="OnMessageOkClicked"/>
+                        <Button Text="Cancel"
+                                BackgroundColor="#4B5563"
+                                TextColor="White"
+                                Padding="25,10"
+                                CornerRadius="6"
+                                Clicked="OnMessageCancelClicked"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+        <!-- Student Concerns Modal -->
+        <Border x:Name="StudentConcernsOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="500"
+                    MaximumHeightRequest="600"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label x:Name="ConcernsTitle"
+                           Text="Student Concerns"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+                    <ScrollView MaximumHeightRequest="400">
+                        <VerticalStackLayout x:Name="ConcernsContainer" Spacing="10"/>
+                    </ScrollView>
+                    <Button Text="Close"
+                            BackgroundColor="#4B5563"
+                            TextColor="White"
+                            Padding="25,10"
+                            CornerRadius="6"
+                            HorizontalOptions="Center"
+                            Clicked="OnCloseConcernsClicked"/>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+        <!-- Student Details Modal -->
+        <Border x:Name="StudentDetailsOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Student Details"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+                    <VerticalStackLayout Spacing="8">
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="Name:"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#4B5563"/>
+                            <Label x:Name="DetailStudentName"
+                                   FontSize="14"
+                                   TextColor="#1F2937"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="Student #:"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#4B5563"/>
+                            <Label x:Name="DetailStudentNumber"
+                                   FontSize="14"
+                                   TextColor="#1F2937"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="Email:"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#4B5563"/>
+                            <Label x:Name="DetailStudentEmail"
+                                   FontSize="14"
+                                   TextColor="#1F2937"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="Status:"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#4B5563"/>
+                            <Label x:Name="DetailStudentStatus"
+                                   FontSize="14"
+                                   TextColor="#1F2937"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    <Button Text="Close"
+                            BackgroundColor="#4B5563"
+                            TextColor="White"
+                            Padding="25,10"
+                            CornerRadius="6"
+                            HorizontalOptions="Center"
+                            Clicked="OnCloseDetailsClicked"/>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+        <!-- Save All Changes Confirmation Overlay -->
+        <Border x:Name="SaveGradesOverlay"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Save All Changes"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+                    <Label Text="Save all updated grades?"
+                           FontSize="14"
+                           TextColor="#6B7280"/>
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                        <Button Text="Save"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                Padding="25,10"
+                                CornerRadius="6"
+                                Clicked="OnSaveGradesConfirmClicked"/>
+                        <Button Text="Cancel"
+                                BackgroundColor="#4B5563"
+                                TextColor="White"
+                                Padding="25,10"
+                                CornerRadius="6"
+                                Clicked="OnSaveGradesCancelClicked"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
             </Border>
         </Border>
         

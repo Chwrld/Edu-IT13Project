@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Classes" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -106,7 +106,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -125,7 +125,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -144,7 +144,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Tickets" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -165,7 +165,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#2C3E50"/>
                             <Label Text="Faculty" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
@@ -184,7 +184,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -245,7 +245,10 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="🔴" FontSize="16"/>
+                                       Text="&#xf5d2;" 
+                                       FontFamily="MaterialIcons"
+                                       FontSize="16"
+                                       TextColor="#EF4444"/>
                             </Grid>
                             <Label x:Name="OpenCountLabel"
                                    Text="0" 
@@ -271,7 +274,10 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="⏳" FontSize="16"/>
+                                       Text="&#xf0e7;" 
+                                       FontFamily="MaterialIcons"
+                                       FontSize="16"
+                                       TextColor="#F59E0B"/>
                             </Grid>
                             <Label x:Name="InProgressCountLabel"
                                    Text="0" 
@@ -297,7 +303,10 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="✅" FontSize="16"/>
+                                       Text="&#xe86c;" 
+                                       FontFamily="MaterialIcons"
+                                       FontSize="16"
+                                       TextColor="#10B981"/>
                             </Grid>
                             <Label x:Name="ResolvedCountLabel"
                                    Text="0" 
@@ -327,8 +336,10 @@
                             </Border.StrokeShape>
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                                 <Label Grid.Column="0" 
-                                       Text="🔍" 
-                                       FontSize="16"
+                                       Text="&#xe8b6;" 
+                                       FontFamily="MaterialIcons"
+                                       FontSize="18"
+                                       TextColor="#6B7280"
                                        VerticalOptions="Center"/>
                                 <Entry Grid.Column="1"
                                        x:Name="SearchEntry"
@@ -348,35 +359,38 @@
                                 BackgroundColor="#059669"
                                 TextColor="White"
                                 FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
+                                CornerRadius="8"
+                                Padding="16,8"
                                 Clicked="OnFilterAllClicked"/>
+
                         <Button Grid.Column="2"
                                 x:Name="FilterOpenBtn"
                                 Text="Open"
                                 BackgroundColor="#F3F4F6"
                                 TextColor="#6B7280"
                                 FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
+                                CornerRadius="8"
+                                Padding="16,8"
                                 Clicked="OnFilterOpenClicked"/>
+
                         <Button Grid.Column="3"
                                 x:Name="FilterInProgressBtn"
                                 Text="In Progress"
                                 BackgroundColor="#F3F4F6"
                                 TextColor="#6B7280"
                                 FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
+                                CornerRadius="8"
+                                Padding="16,8"
                                 Clicked="OnFilterInProgressClicked"/>
+
                         <Button Grid.Column="4"
                                 x:Name="FilterResolvedBtn"
                                 Text="Resolved"
                                 BackgroundColor="#F3F4F6"
                                 TextColor="#6B7280"
                                 FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
+                                CornerRadius="8"
+                                Padding="16,8"
                                 Clicked="OnFilterResolvedClicked"/>
                     </Grid>
                 </Border>
@@ -786,6 +800,77 @@
                         </Grid>
                     </VerticalStackLayout>
 
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+        <!-- Custom White Alert Dialog Overlay -->
+        <Border x:Name="CustomAlertOverlay"
+                Grid.RowSpan="2" Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False"
+                ZIndex="1000">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAlertOverlayTapped"/>
+            </Border.GestureRecognizers>
+            
+            <Border BackgroundColor="White"
+                    Padding="24"
+                    WidthRequest="400"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,4"/>
+                </Border.Shadow>
+                
+                <VerticalStackLayout Spacing="16">
+                    <!-- Alert Title -->
+                    <Label x:Name="AlertTitle"
+                           Text="Alert"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#111827"
+                           HorizontalTextAlignment="Start"/>
+                    
+                    <!-- Alert Message -->
+                    <Label x:Name="AlertMessage"
+                           Text="This is an alert message"
+                           FontSize="14"
+                           TextColor="#4B5563"
+                           LineBreakMode="WordWrap"
+                           HorizontalTextAlignment="Start"/>
+                    
+                    <!-- Buttons -->
+                    <Grid x:Name="AlertButtonsContainer" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
+                        <!-- Primary Button (OK) -->
+                        <Button x:Name="AlertPrimaryButton"
+                                Grid.Column="1"
+                                Text="OK"
+                                BackgroundColor="#059669"
+                                TextColor="White"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                HeightRequest="44"
+                                Clicked="OnAlertPrimaryClicked"/>
+                        
+                        <!-- Secondary Button (Cancel) - Hidden by default -->
+                        <Button x:Name="AlertSecondaryButton"
+                                Grid.Column="0"
+                                Text="Cancel"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#6B7280"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                HeightRequest="44"
+                                IsVisible="False"
+                                Clicked="OnAlertSecondaryClicked"/>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
         </Border>

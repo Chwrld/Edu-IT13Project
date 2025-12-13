@@ -49,18 +49,13 @@
                             FontAttributes="Bold"
                             TextColor="#111827"
                             HorizontalOptions="Center"/>
-                        <Label 
-                            Text="Communication &amp; Engagement System"
-                            FontSize="11"
-                            TextColor="#9CA3AF"
-                            HorizontalOptions="Center"/>
                     </VerticalStackLayout>
 
                     <!-- Subtitle -->
                     <Label
                         Text="Sign in to manage your campus services"
                         FontSize="13"
-                        TextColor="#6B7280"
+                        TextColor="#FF424242"
                         HorizontalTextAlignment="Center"
                         Margin="0,-5,0,0"/>
 
@@ -133,7 +128,7 @@
                     <Label 
                         Text="Use your assigned credentials to access School Portal"
                         FontSize="12"
-                        TextColor="#9CA3AF"
+                        TextColor="#FF424242"
                         HorizontalTextAlignment="Center"
                         Margin="0,5,0,0"/>
 

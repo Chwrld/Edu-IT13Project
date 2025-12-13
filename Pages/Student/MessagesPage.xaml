@@ -37,7 +37,7 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="StudentHub" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"

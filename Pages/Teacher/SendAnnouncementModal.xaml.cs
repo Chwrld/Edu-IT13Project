@@ -35,17 +35,24 @@ public partial class SendAnnouncementModal : ContentPage
         await Navigation.PopModalAsync();
     }
 
+    private void OnCloseValidationErrorTapped(object sender, EventArgs e)
+    {
+        ValidationErrorOverlay.IsVisible = false;
+    }
+
     private async void OnSendClicked(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(SubjectEntry.Text))
         {
-            await DisplayAlert("Validation Error", "Please enter a subject.", "OK");
+            ValidationErrorMessage.Text = "Please enter a subject.";
+            ValidationErrorOverlay.IsVisible = true;
             return;
         }
 
         if (string.IsNullOrWhiteSpace(MessageEditor.Text))
         {
-            await DisplayAlert("Validation Error", "Please enter a message.", "OK");
+            ValidationErrorMessage.Text = "Please enter a message.";
+            ValidationErrorOverlay.IsVisible = true;
             return;
         }
 

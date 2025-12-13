@@ -445,17 +445,13 @@ public partial class TeacherClassDetailsPage : ContentPage
             return;
         }
 
-        // Validate and save all grades
-        var confirm = await DisplayAlert(
-            "Save All Changes",
-            "Save all updated grades?",
-            "Save",
-            "Cancel");
+        // Show confirmation dialog
+        SaveGradesOverlay.IsVisible = true;
+    }
 
-        if (!confirm)
-        {
-            return;
-        }
+    private async void OnSaveGradesConfirmClicked(object sender, EventArgs e)
+    {
+        SaveGradesOverlay.IsVisible = false;
 
         try
         {
@@ -467,8 +463,7 @@ public partial class TeacherClassDetailsPage : ContentPage
                     !TryParseScore(grade.ExamsScore.ToString(), out var exams) ||
                     !TryParseScore(grade.ProjectsScore.ToString(), out var projects))
                 {
-                    await DisplayAlert("Grades", $"Invalid scores for {grade.StudentName}. Scores must be numbers between 0 and 100.", "OK");
-                    return;
+                    continue;
                 }
 
                 var updated = await _gradeService.UpdateStudentGradeAsync(
@@ -485,24 +480,20 @@ public partial class TeacherClassDetailsPage : ContentPage
             }
 
             SetAllGradeEntriesEnabled(false);
-            button.Text = "Edit Grades";
-            button.BackgroundColor = Color.FromArgb("#059669"); // Green color for edit
+            EditGradesButton.Text = "Edit Grades";
+            EditGradesButton.BackgroundColor = Color.FromArgb("#059669"); // Green color for edit
 
             await LoadGradesAsync();
-            
-            if (allSuccess)
-            {
-                await DisplayAlert("Grades", "All grades updated successfully.", "Great!");
-            }
-            else
-            {
-                await DisplayAlert("Grades", "Some grades could not be updated. Please try again.", "OK");
-            }
         }
         catch (Exception ex)
         {
             await DisplayAlert("Grades", $"Failed to update grades: {ex.Message}", "OK");
         }
+    }
+
+    private void OnSaveGradesCancelClicked(object sender, EventArgs e)
+    {
+        SaveGradesOverlay.IsVisible = false;
     }
 
     private void SetAllGradeEntriesEnabled(bool enabled)
@@ -736,6 +727,8 @@ public partial class TeacherClassDetailsPage : ContentPage
     }
 
     // Student Actions
+    private ClassStudent? _selectedStudent;
+
     private async void OnMessageStudentClicked(object sender, EventArgs e)
     {
         if ((sender as Button)?.CommandParameter is not ClassStudent student)
@@ -744,28 +737,41 @@ public partial class TeacherClassDetailsPage : ContentPage
         var teacher = await GetCurrentTeacherAsync();
         if (teacher is null)
         {
-            await DisplayAlert("Messaging", "Unable to determine your account. Please re-login.", "OK");
+            // Show error - unable to determine teacher account
             return;
         }
 
-        var content = await DisplayPromptAsync(
-            $"Message {student.DisplayName}",
-            "Enter the message you want to send.",
-            maxLength: 500,
-            keyboard: Keyboard.Chat);
+        _selectedStudent = student;
+        MessageStudentTitle.Text = $"Message {student.DisplayName}";
+        MessageContentEditor.Text = string.Empty;
+        MessageStudentOverlay.IsVisible = true;
+    }
 
-        if (string.IsNullOrWhiteSpace(content))
+    private async void OnMessageOkClicked(object sender, EventArgs e)
+    {
+        var content = MessageContentEditor.Text?.Trim();
+        if (string.IsNullOrWhiteSpace(content) || _selectedStudent is null)
+        {
+            MessageStudentOverlay.IsVisible = false;
             return;
+        }
 
-        var success = await _messageService.SendMessageAsync(teacher.Id, student.StudentId, content.Trim());
-        if (success)
+        var teacher = await GetCurrentTeacherAsync();
+        if (teacher is null)
         {
-            await DisplayAlert("Messaging", "Message sent successfully.", "Great!");
+            MessageStudentOverlay.IsVisible = false;
+            return;
         }
-        else
-        {
-            await DisplayAlert("Messaging", "Failed to send the message. Please try again.", "OK");
-        }
+
+        MessageStudentOverlay.IsVisible = false;
+        var success = await _messageService.SendMessageAsync(teacher.Id, _selectedStudent.StudentId, content);
+        // Success feedback handled elsewhere or silently
+    }
+
+    private void OnMessageCancelClicked(object sender, EventArgs e)
+    {
+        MessageStudentOverlay.IsVisible = false;
+        MessageContentEditor.Text = string.Empty;
     }
 
     private async void OnViewConcernsClicked(object sender, EventArgs e)
@@ -774,22 +780,81 @@ public partial class TeacherClassDetailsPage : ContentPage
             return;
 
         var tickets = await _ticketService.GetStudentTicketsAsync(student.StudentId);
+        
+        ConcernsTitle.Text = tickets.Count == 0 
+            ? "Student Concerns" 
+            : $"Concerns for {student.DisplayName}";
+        
+        ConcernsContainer.Children.Clear();
+        
         if (tickets.Count == 0)
         {
-            await DisplayAlert("Student Concerns", $"No concerns recorded for {student.DisplayName}.", "Close");
-            return;
+            ConcernsContainer.Children.Add(new Label
+            {
+                Text = $"No concerns recorded for {student.DisplayName}.",
+                FontSize = 14,
+                TextColor = Color.FromArgb("#6B7280"),
+                Margin = new Thickness(0, 10)
+            });
         }
+        else
+        {
+            foreach (var ticket in tickets.Take(10))
+            {
+                var border = new Border
+                {
+                    BackgroundColor = Color.FromArgb("#F9FAFB"),
+                    Padding = new Thickness(15, 12),
+                    StrokeThickness = 0,
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+                border.StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 8 };
+                
+                var stack = new VerticalStackLayout { Spacing = 4 };
+                stack.Children.Add(new Label
+                {
+                    Text = ticket.Title,
+                    FontSize = 14,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("#1F2937")
+                });
+                stack.Children.Add(new HorizontalStackLayout
+                {
+                    Spacing = 10,
+                    Children =
+                    {
+                        new Label
+                        {
+                            Text = ticket.Status.ToUpperInvariant(),
+                            FontSize = 12,
+                            TextColor = Color.FromArgb("#059669")
+                        },
+                        new Label
+                        {
+                            Text = "•",
+                            FontSize = 12,
+                            TextColor = Color.FromArgb("#9CA3AF")
+                        },
+                        new Label
+                        {
+                            Text = ticket.Priority,
+                            FontSize = 12,
+                            TextColor = Color.FromArgb("#F59E0B")
+                        }
+                    }
+                });
+                
+                border.Content = stack;
+                ConcernsContainer.Children.Add(border);
+            }
+        }
+        
+        StudentConcernsOverlay.IsVisible = true;
+    }
 
-        var ticketSummaries = tickets
-            .Select(t => $"{t.Title} • {t.Status.ToUpperInvariant()} ({t.Priority})")
-            .Take(10)
-            .ToArray();
-
-        await DisplayActionSheet(
-            $"Concerns for {student.DisplayName}",
-            "Close",
-            null,
-            ticketSummaries);
+    private void OnCloseConcernsClicked(object sender, EventArgs e)
+    {
+        StudentConcernsOverlay.IsVisible = false;
     }
 
     private async void OnViewStudentDetailsClicked(object sender, EventArgs e)
@@ -797,13 +862,19 @@ public partial class TeacherClassDetailsPage : ContentPage
         if ((sender as Button)?.CommandParameter is not ClassStudent student)
             return;
 
-        var details =
-            $"Name: {student.DisplayName}\n" +
-            $"Student #: {student.StudentNumber}\n" +
-            $"Email: {student.Email}\n" +
-            $"Status: {student.Status}";
+        DetailStudentName.Text = student.DisplayName;
+        DetailStudentNumber.Text = student.StudentNumber;
+        DetailStudentEmail.Text = student.Email;
+        DetailStudentStatus.Text = student.Status;
+        
+        StudentDetailsOverlay.IsVisible = true;
+        
+        await Task.CompletedTask;
+    }
 
-        await DisplayAlert("Student Details", details, "Close");
+    private void OnCloseDetailsClicked(object sender, EventArgs e)
+    {
+        StudentDetailsOverlay.IsVisible = false;
     }
 
     private async Task<User?> GetCurrentTeacherAsync()

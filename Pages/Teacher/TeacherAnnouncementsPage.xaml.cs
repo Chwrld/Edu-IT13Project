@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Versioning;
 using MauiAppIT13.Models;
@@ -25,29 +24,42 @@ public partial class TeacherAnnouncementsPage : ContentPage
     public TeacherAnnouncementsPage()
     {
         InitializeComponent();
+        
         _announcementService = AppServiceProvider.GetService<AnnouncementService>()
             ?? throw new InvalidOperationException("AnnouncementService not found");
+            
         _authManager = AppServiceProvider.GetService<AuthManager>()
             ?? throw new InvalidOperationException("AuthManager not found");
-
+        
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await LoadAnnouncementsAsync();
+        try
+        {
+            await LoadAnnouncementsAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Failed to load announcements: {ex.Message}", "OK");
+        }
     }
 
     private async Task LoadAnnouncementsAsync()
     {
         if (_isLoading)
+        {
             return;
+        }
 
         var currentUser = _authManager.CurrentUser;
+        
         if (currentUser == null)
         {
-            await DisplayAlert("Authentication Required", "Please log in again to manage announcements.", "OK");
+            await DisplayAlert("Authentication Required", "Your session has expired. Please return to home and try again.", "OK");
+            await Shell.Current.GoToAsync("//TeacherHomePage", animate: false);
             return;
         }
 
@@ -75,8 +87,10 @@ public partial class TeacherAnnouncementsPage : ContentPage
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"TeacherAnnouncementsPage: Failed to load announcements - {ex.Message}");
-            await DisplayAlert("Error", "Failed to load announcements. Please try again.", "OK");
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await DisplayAlert("Error", $"Failed to load announcements: {ex.Message}", "OK");
+            });
         }
         finally
         {
@@ -165,46 +179,21 @@ public partial class TeacherAnnouncementsPage : ContentPage
         }
     }
 
-    private void UpdateFilterButtons(string activeFilter)
+    private void OnFilterChanged(object? sender, EventArgs e)
     {
-        _currentFilter = activeFilter;
+        if (FilterPicker.SelectedIndex == -1) return;
 
-        // Reset all buttons
-        FilterAllBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterAllBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterStudentsBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterStudentsBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterAdvisersBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterAdvisersBtn.TextColor = Color.FromArgb("#6B7280");
-
-        // Highlight active button
-        switch (activeFilter)
+        var selectedFilter = FilterPicker.SelectedIndex switch
         {
-            case "all":
-                FilterAllBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterAllBtn.TextColor = Colors.White;
-                break;
-            case "students":
-                FilterStudentsBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterStudentsBtn.TextColor = Colors.White;
-                break;
-            case "advisers":
-                FilterAdvisersBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterAdvisersBtn.TextColor = Colors.White;
-                break;
-        }
+            0 => "all",
+            1 => "students",
+            2 => "advisers",
+            _ => "all"
+        };
 
+        _currentFilter = selectedFilter;
         ApplyFilters();
     }
-
-    private void OnFilterAllClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("all");
-    }
-
-    private void OnFilterStudentsClicked(object? sender, EventArgs e) => UpdateFilterButtons("students");
-
-    private void OnFilterAdvisersClicked(object? sender, EventArgs e) => UpdateFilterButtons("advisers");
 
     private void OnNewAnnouncementClicked(object? sender, EventArgs e)
     {
@@ -339,8 +328,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"TeacherAnnouncementsPage: Error submitting announcement - {ex.Message}");
-            await DisplayAlert("Error", "Failed to save announcement. Please try again.", "OK");
+            await DisplayAlert("Error", $"Failed to save announcement: {ex.Message}", "OK");
         }
     }
 
