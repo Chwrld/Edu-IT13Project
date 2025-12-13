@@ -325,7 +325,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" ColumnSpacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <Border Grid.Column="0"
                                 BackgroundColor="#F9FAFB"
                                 Stroke="#E5E7EB"
@@ -352,46 +352,30 @@
                             </Grid>
                         </Border>
 
-                        <!-- Filter Buttons -->
-                        <Button Grid.Column="1"
-                                x:Name="FilterAllBtn"
-                                Text="All"
-                                BackgroundColor="#059669"
-                                TextColor="White"
-                                FontSize="13"
-                                CornerRadius="8"
-                                Padding="16,8"
-                                Clicked="OnFilterAllClicked"/>
-
-                        <Button Grid.Column="2"
-                                x:Name="FilterOpenBtn"
-                                Text="Open"
-                                BackgroundColor="#F3F4F6"
-                                TextColor="#6B7280"
-                                FontSize="13"
-                                CornerRadius="8"
-                                Padding="16,8"
-                                Clicked="OnFilterOpenClicked"/>
-
-                        <Button Grid.Column="3"
-                                x:Name="FilterInProgressBtn"
-                                Text="In Progress"
-                                BackgroundColor="#F3F4F6"
-                                TextColor="#6B7280"
-                                FontSize="13"
-                                CornerRadius="8"
-                                Padding="16,8"
-                                Clicked="OnFilterInProgressClicked"/>
-
-                        <Button Grid.Column="4"
-                                x:Name="FilterResolvedBtn"
-                                Text="Resolved"
-                                BackgroundColor="#F3F4F6"
-                                TextColor="#6B7280"
-                                FontSize="13"
-                                CornerRadius="8"
-                                Padding="16,8"
-                                Clicked="OnFilterResolvedClicked"/>
+                        <!-- Filter Dropdown -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                WidthRequest="160">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="FilterPicker"
+                                    SelectedIndex="0"
+                                    TextColor="#1F2937"
+                                    FontSize="13"
+                                    BackgroundColor="White"
+                                    VerticalOptions="Center"
+                                    SelectedIndexChanged="OnFilterPickerChanged">
+                                <Picker.Items>
+                                    <x:String>All</x:String>
+                                    <x:String>Open</x:String>
+                                    <x:String>In Progress</x:String>
+                                    <x:String>Resolved</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Border>
                     </Grid>
                 </Border>
 

@@ -105,66 +105,22 @@ public partial class TeacherTicketsPage : ContentPage
         }
     }
 
-    private void OnFilterAllClicked(object? sender, EventArgs e)
+    private void OnFilterPickerChanged(object? sender, EventArgs e)
     {
-        _currentFilter = "all";
-        UpdateFilterButtons();
-        ApplyFilters();
-    }
+        if (FilterPicker.SelectedIndex < 0) return;
 
-    private void OnFilterOpenClicked(object? sender, EventArgs e)
-    {
-        _currentFilter = "open";
-        UpdateFilterButtons();
-        ApplyFilters();
-    }
-
-    private void OnFilterInProgressClicked(object? sender, EventArgs e)
-    {
-        _currentFilter = "in_progress";
-        UpdateFilterButtons();
-        ApplyFilters();
-    }
-
-    private void OnFilterResolvedClicked(object? sender, EventArgs e)
-    {
-        _currentFilter = "resolved";
-        UpdateFilterButtons();
-        ApplyFilters();
-    }
-
-    private void UpdateFilterButtons()
-    {
-        // Reset all buttons to default style
-        FilterAllBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterAllBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterOpenBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterOpenBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterInProgressBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterInProgressBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterResolvedBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterResolvedBtn.TextColor = Color.FromArgb("#6B7280");
-
-        // Highlight active filter
-        switch (_currentFilter)
+        var selectedFilter = FilterPicker.SelectedItem?.ToString()?.ToLower();
+        
+        _currentFilter = selectedFilter switch
         {
-            case "all":
-                FilterAllBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterAllBtn.TextColor = Colors.White;
-                break;
-            case "open":
-                FilterOpenBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterOpenBtn.TextColor = Colors.White;
-                break;
-            case "in_progress":
-                FilterInProgressBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterInProgressBtn.TextColor = Colors.White;
-                break;
-            case "resolved":
-                FilterResolvedBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterResolvedBtn.TextColor = Colors.White;
-                break;
-        }
+            "all" => "all",
+            "open" => "open",
+            "in progress" => "in_progress",
+            "resolved" => "resolved",
+            _ => "all"
+        };
+
+        ApplyFilters();
     }
 
     private async void OnViewTicketClicked(object? sender, EventArgs e)
