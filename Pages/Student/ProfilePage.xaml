@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="&#xe88a;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Home" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Classes" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -103,7 +103,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -122,7 +122,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -141,7 +141,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -162,7 +162,7 @@
                         <RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
                     <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                         <Label Text="Logout" 
                                TextColor="#EF4444" 
                                FontSize="14"

@@ -270,7 +270,7 @@ public partial class StudentClassDetailPage : ContentPage
         // Validate submission
         if (string.IsNullOrEmpty(submissionLink))
         {
-            await DisplayAlert("Validation Error", "Please provide a submission link or file path.", "OK");
+            ValidationErrorOverlay.IsVisible = true;
             return;
         }
 
@@ -392,5 +392,10 @@ public partial class StudentClassDetailPage : ContentPage
             _authManager.ClearAuthentication();
             await Navigation.PopToRootAsync();
         }
+    }
+
+    private void OnCloseValidationErrorTapped(object sender, EventArgs e)
+    {
+        ValidationErrorOverlay.IsVisible = false;
     }
 }

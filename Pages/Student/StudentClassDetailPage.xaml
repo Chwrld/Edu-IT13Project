@@ -73,7 +73,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="&#xe88a;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Home" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -92,7 +92,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Classes" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -108,7 +108,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -127,7 +127,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -146,7 +146,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -171,7 +171,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="&#xe7fd;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Profile" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -190,7 +190,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -385,7 +385,7 @@
                                        Text="--" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
-                                       TextColor="#0891B2"/>
+                                       TextColor="#FF196B80"/>
 
                                 <Label Grid.Row="1" Grid.Column="0"
                                        Text="Activities" 
@@ -435,7 +435,7 @@
                                        Text="--" 
                                        FontSize="20" 
                                        FontAttributes="Bold"
-                                       TextColor="#059669"/>
+                                       TextColor="#FF0A865F"/>
                             </Grid>
                         </Border>
                     </VerticalStackLayout>
@@ -609,6 +609,55 @@
                         </HorizontalStackLayout>
                     </Border>
                 </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Validation Error Dialog -->
+        <Grid x:Name="ValidationErrorOverlay"
+              Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
+              IsVisible="False"
+              BackgroundColor="#80000000">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnCloseValidationErrorTapped"/>
+            </Grid.GestureRecognizers>
+
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    StrokeThickness="0"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer/>
+                </Border.GestureRecognizers>
+
+                <VerticalStackLayout Spacing="20" Padding="30">
+                    <Label Text="Validation Error"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#2C3E50"
+                           HorizontalOptions="Center"/>
+                    
+                    <Label Text="Please provide a submission link or file path."
+                           FontSize="14"
+                           TextColor="#6B7280"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="WordWrap"/>
+                    
+                    <Button Text="OK"
+                            BackgroundColor="#0891B2"
+                            TextColor="White"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            Padding="40,12"
+                            CornerRadius="6"
+                            HorizontalOptions="Center"
+                            Clicked="OnCloseValidationErrorTapped"/>
+                </VerticalStackLayout>
             </Border>
         </Grid>
         

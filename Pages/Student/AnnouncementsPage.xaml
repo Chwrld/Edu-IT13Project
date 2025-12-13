@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="&#xe88a;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Home" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Classes" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -106,7 +106,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -125,7 +125,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Announcements" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -141,7 +141,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -163,7 +163,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="&#xe7fd;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Profile" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -182,7 +182,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -257,7 +257,7 @@
                         <RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
                     <HorizontalStackLayout Spacing="10">
-                        <Label Text="🔍" FontSize="16" VerticalOptions="Center"/>
+                        <Label Text="&#xe8b6;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                         <Entry Placeholder="Search announcements..."
                                PlaceholderColor="#9CA3AF"
                                TextColor="#2C3E50"
@@ -312,13 +312,16 @@
                                                     <Setter Property="BackgroundColor" Value="#D1FAE5"/>
                                                 </DataTrigger>
                                             </Border.Triggers>
-                                            <Label Text="📢"
+                                            <Label Text="&#xe98e;"
+                                                   FontFamily="MaterialIcons"
                                                    FontSize="20"
                                                    HorizontalOptions="Center"
-                                                   VerticalOptions="Center">
+                                                   VerticalOptions="Center"
+                                                   TextColor="#0891B2">
                                                 <Label.Triggers>
                                                     <DataTrigger TargetType="Label" Binding="{Binding Visibility}" Value="students">
-                                                        <Setter Property="Text" Value="🎓"/>
+                                                        <Setter Property="Text" Value="&#xe80c;"/>
+                                                        <Setter Property="TextColor" Value="#059669"/>
                                                     </DataTrigger>
                                                 </Label.Triggers>
                                             </Label>
@@ -357,10 +360,19 @@
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="12"/>
                                             </Border.StrokeShape>
-                                            <Label Text="{Binding ViewCount, StringFormat='👁️ {0}'}"
-                                                   TextColor="#374151"
-                                                   FontSize="11"
-                                                   FontAttributes="Bold"/>
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="&#xe8f4;"
+                                                       FontFamily="MaterialIcons"
+                                                       TextColor="#374151"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       VerticalOptions="Center"/>
+                                                <Label Text="{Binding ViewCount}"
+                                                       TextColor="#374151"
+                                                       FontSize="11"
+                                                       FontAttributes="Bold"
+                                                       VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
                                         </Border>
                                     </Grid>
 

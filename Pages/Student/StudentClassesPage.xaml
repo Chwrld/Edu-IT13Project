@@ -69,7 +69,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🏠" FontSize="18"/>
+                            <Label Text="&#xe88a;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Home" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -88,7 +88,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Classes" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -104,7 +104,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -123,7 +123,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -142,7 +142,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -167,7 +167,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="&#xe7fd;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Profile" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -186,7 +186,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -220,7 +220,7 @@
                                 SelectionMode="None">
                     <CollectionView.EmptyView>
                         <VerticalStackLayout Spacing="12" Padding="40">
-                            <Label Text="📚" FontSize="48" HorizontalOptions="Center"/>
+                            <Label Text="&#xf53e;" FontFamily="MaterialIcons" FontSize="48" HorizontalOptions="Center" TextColor="#6B7280"/>
                             <Label Text="No classes yet"
                                    FontSize="18"
                                    FontAttributes="Bold"
@@ -282,13 +282,13 @@
                                     <!-- Class Info -->
                                     <HorizontalStackLayout Spacing="20">
                                         <HorizontalStackLayout Spacing="6">
-                                            <Label Text="📅" FontSize="14"/>
+                                            <Label Text="&#xebcc;" FontFamily="MaterialIcons" FontSize="14" HorizontalOptions="Center" TextColor="#6B7280"/>
                                             <Label Text="{Binding Schedule}" 
                                                    FontSize="13" 
                                                    TextColor="#6B7280"/>
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Spacing="6">
-                                            <Label Text="📊" FontSize="14"/>
+                                            <Label Text="&#xe24b;" FontFamily="MaterialIcons" FontSize="14" HorizontalOptions="Center" TextColor="#6B7280"/>
                                             <Label Text="{Binding CreditsDisplay}" 
                                                    FontSize="13" 
                                                    TextColor="#6B7280"/>
@@ -297,22 +297,30 @@
 
                                     <!-- Action Buttons -->
                                     <HorizontalStackLayout Spacing="10">
-                                        <Button Text="📝 Assignments"
+                                        <Button Text="Assignments"
                                                 BackgroundColor="#0891B2"
                                                 TextColor="White"
                                                 FontSize="13"
                                                 Padding="15,10"
                                                 CornerRadius="8"
                                                 Clicked="OnViewAssignmentsClicked"
-                                                CommandParameter="{Binding .}"/>
-                                        <Button Text="📊 Grades"
+                                                CommandParameter="{Binding .}">
+                                            <Button.ImageSource>
+                                                <FontImageSource Glyph="&#xf848;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                            </Button.ImageSource>
+                                        </Button>
+                                        <Button Text="Grades"
                                                 BackgroundColor="#059669"
                                                 TextColor="White"
                                                 FontSize="13"
                                                 Padding="15,10"
                                                 CornerRadius="8"
                                                 Clicked="OnViewGradesClicked"
-                                                CommandParameter="{Binding .}"/>
+                                                CommandParameter="{Binding .}">
+                                            <Button.ImageSource>
+                                                <FontImageSource Glyph="&#xe24b;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                            </Button.ImageSource>
+                                        </Button>
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </Border>
