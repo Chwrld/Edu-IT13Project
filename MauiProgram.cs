@@ -39,6 +39,9 @@ namespace MauiAppIT13
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("Montserrat-Regular.ttf", "MontserratRegular");
                     fonts.AddFont("Montserrat-Bold.ttf", "MontserratBold");
+                    fonts.AddFont("fa-solid-900.ttf", "FontAwesome");
+                    fonts.AddFont("fa-regular-400.ttf", "FontAwesomeReg");
+                    fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
                 });
 
             // Register configuration

@@ -69,7 +69,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -88,7 +88,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Users" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -107,7 +107,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe85e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -126,7 +126,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe8ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -145,7 +145,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="&#xe1db;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Reports" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -169,7 +169,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12" InputTransparent="True">
-                            <Label Text="🔒" FontSize="18"/>
+                            <Label Text="&#xf02e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
@@ -188,9 +188,9 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FFCA2D2D"/>
                             <Label Text="Logout" 
-                                   TextColor="#EF4444" 
+                                   TextColor="#FFCA2D2D" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
@@ -234,10 +234,10 @@ Includes every ticket regardless of status.">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <Label Text="Total Tickets" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF2A2A2B"/>
                                 <Label Text="ⓘ"
-                                       FontSize="12"
-                                       TextColor="#9CA3AF"
+                                       FontSize="14"
+                                       TextColor="#FF2A2A2B"
                                        toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected period, across every status."/>
                             </HorizontalStackLayout>
                             <Label x:Name="TotalTicketsValueLabel"
@@ -248,7 +248,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="TotalTicketsChangeLabel"
                                    Text="+12% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#10B981"/>
+                                   TextColor="#FF454645"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -266,10 +266,10 @@ Includes every ticket regardless of status.">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <Label Text="Avg Response Time" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF2A2A2B"/>
                                 <Label Text="ⓘ"
-                                       FontSize="12"
-                                       TextColor="#9CA3AF"
+                                       FontSize="14"
+                                       TextColor="#FF2A2A2B"
                                        toolTip:ToolTipProperties.Text="Average duration between ticket creation and its most recent update or resolution in the period."/>
                             </HorizontalStackLayout>
                             <Label x:Name="AvgResponseValueLabel"
@@ -280,7 +280,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="AvgResponseChangeLabel"
                                    Text="-8% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#10B981"/>
+                                   TextColor="#FF454645"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -298,10 +298,10 @@ Includes every ticket regardless of status.">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <Label Text="Resolution Rate" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF2A2A2B"/>
                                 <Label Text="ⓘ"
-                                       FontSize="12"
-                                       TextColor="#9CA3AF"
+                                       FontSize="14"
+                                       TextColor="#FF2A2A2B"
                                        toolTip:ToolTipProperties.Text="Share of tickets marked resolved/closed out of all tickets created in the selected period."/>
                             </HorizontalStackLayout>
                             <Label x:Name="ResolutionRateValueLabel"
@@ -312,7 +312,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="ResolutionRateChangeLabel"
                                    Text="+2% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#10B981"/>
+                                   TextColor="#FF454645"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -330,10 +330,10 @@ Includes every ticket regardless of status.">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <Label Text="Active Users" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF2A2A2B"/>
                                 <Label Text="ⓘ"
-                                       FontSize="12"
-                                       TextColor="#9CA3AF"
+                                       FontSize="14"
+                                       TextColor="#FF2A2A2B"
                                        toolTip:ToolTipProperties.Text="Count of accounts currently marked active plus growth within the selected period."/>
                             </HorizontalStackLayout>
                             <Label x:Name="ActiveUsersValueLabel"
@@ -344,7 +344,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="ActiveUsersChangeLabel"
                                    Text="+5% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#10B981"/>
+                                   TextColor="#FF454645"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
@@ -379,15 +379,16 @@ Includes every ticket regardless of status.">
                                         <RoundRectangle CornerRadius="6"/>
                                     </Border.StrokeShape>
                                     <Picker x:Name="ReportTypePicker"
-                                            TextColor="#1F2937"
+                                            TextColor="#FF585858"
                                             BackgroundColor="Transparent"
                                             FontSize="14"
+                                            FontFamily="Segoe UI"
                                             SelectedIndexChanged="OnReportTypeChanged">
                                         <Picker.Items>
-                                            <x:String>📊 Ticket Summary</x:String>
-                                            <x:String>📚 Student Activity</x:String>
-                                            <x:String>👨‍🏫 Adviser Performance</x:String>
-                                            <x:String>💬 Communication Analytics</x:String>
+                                            <x:String>Ticket Summary</x:String>                                           
+                                            <x:String>Student Activity</x:String>
+                                            <x:String>Adviser Performance</x:String>
+                                            <x:String>Communication Analytics</x:String>
                                         </Picker.Items>
                                         <Picker.SelectedIndex>0</Picker.SelectedIndex>
                                     </Picker>
@@ -423,7 +424,7 @@ Includes every ticket regardless of status.">
 
                             <!-- Generate Button -->
                             <HorizontalStackLayout Spacing="10" Margin="0,8,0,0">
-                                <Button Text="📥 Generate Report"
+                                <Button Text="Generate Report"
                                         BackgroundColor="#005BA5"
                                         TextColor="White"
                                         FontSize="14"
@@ -431,7 +432,11 @@ Includes every ticket regardless of status.">
                                         CornerRadius="6"
                                         HeightRequest="44"
                                         HorizontalOptions="FillAndExpand"
-                                        Clicked="OnGenerateReportClicked"/>
+                                        Clicked="OnGenerateReportClicked">
+                                    <Button.ImageSource>
+                                        <FontImageSource Glyph="&#xe85d;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                    </Button.ImageSource>
+                                </Button>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
 
@@ -524,8 +529,10 @@ Includes every ticket regardless of status.">
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" 
+                            <Label Text="&#xe473;" 
+                                   FontFamily="MaterialIcons"
                                    FontSize="24"
+                                   TextColor="#FF7A7A7A"
                                    VerticalOptions="Start"/>
                             <VerticalStackLayout Spacing="4" VerticalOptions="Center">
                                 <Label Text="Improved Response Times" 
@@ -555,8 +562,10 @@ Includes every ticket regardless of status.">
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" 
+                            <Label Text="&#xf857;" 
+                                   FontFamily="MaterialIcons"
                                    FontSize="24"
+                                   TextColor="#FF7A7A7A"
                                    VerticalOptions="Start"/>
                             <VerticalStackLayout Spacing="4" VerticalOptions="Center">
                                 <Label Text="User Engagement" 
@@ -586,7 +595,9 @@ Includes every ticket regardless of status.">
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" 
+                            <Label Text="&#xe0bf;" 
+                                   FontFamily="MaterialIcons"
+                                   TextColor="#FF7A7A7A"
                                    FontSize="24"
                                    VerticalOptions="Start"/>
                             <VerticalStackLayout Spacing="4" VerticalOptions="Center">

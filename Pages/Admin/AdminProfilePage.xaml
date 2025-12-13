@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Users" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -106,7 +106,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe85e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -125,7 +125,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe8ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -144,7 +144,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="&#xe1db;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Reports" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -167,7 +167,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12" InputTransparent="True">
-                            <Label Text="👤" FontSize="18"/>
+                            <Label Text="&#xf02e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Administrator" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -186,7 +186,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FFCA2D2D"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -213,7 +213,7 @@
                            TextColor="#2C3E50"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
-                            Text="✏ Edit Profile"
+                            Text="Edit Profile"
                             BackgroundColor="#005BA5"
                             TextColor="White"
                             FontSize="14"
@@ -221,7 +221,11 @@
                             CornerRadius="8"
                             Padding="20,12"
                             VerticalOptions="Center"
-                            Clicked="OnEditProfileClicked"/>
+                            Clicked="OnEditProfileClicked">
+                        <Button.ImageSource>
+                            <FontImageSource Glyph="&#xef49;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                        </Button.ImageSource>
+                    </Button>
                 </Grid>
 
                 <!-- Profile Card -->
@@ -326,8 +330,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📧" 
+                                    <Label Text="&#xe0be;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#005BA5"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -352,8 +358,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📱" 
+                                    <Label Text="&#xe0cd;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#005BA5"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -378,8 +386,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="🏢" 
+                                    <Label Text="&#xe0af;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#005BA5"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -410,7 +420,7 @@
                     
                     <VerticalStackLayout Spacing="18">
                         <HorizontalStackLayout Spacing="8">
-                            <Label Text="⚙️" FontSize="18"/>
+                            <Label Text="&#xe8b8;" FontFamily="MaterialIcons" FontSize="20" TextColor="#6B7280"/>
                             <Label Text="System Information" 
                                    FontSize="18" 
                                    FontAttributes="Bold"
@@ -512,7 +522,8 @@
                                        TextColor="#DBEAFE"/>
                             </VerticalStackLayout>
                             <Label Grid.Column="1"
-                                   Text="✕"
+                                   Text="&#xe5cd;"
+                                   FontFamily="MaterialIcons"
                                    FontSize="24"
                                    TextColor="White"
                                    VerticalOptions="Start"

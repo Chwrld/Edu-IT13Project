@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Users" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -106,7 +106,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe85e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Announcements" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -122,7 +122,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe8ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -141,7 +141,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="&#xe1db;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Reports" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -156,6 +156,27 @@
                 <!-- Spacer -->
                 <BoxView Grid.Row="1" Color="Transparent"/>
 
+                <!-- Administrator Profile (Above Logout) -->
+                <VerticalStackLayout Grid.Row="2" Spacing="5">
+                    <Border BackgroundColor="Transparent" 
+                            Padding="15,12"
+                            StrokeThickness="0"
+                            InputTransparent="False">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8"/>
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout Spacing="12" InputTransparent="True">
+                            <Label Text="&#xf02e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
+                            <Label Text="Administrator" 
+                                   TextColor="#2C3E50" 
+                                   FontSize="14"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdminProfileTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
                 <!-- Logout Button -->
                 <Border Grid.Row="2"
                         BackgroundColor="Transparent" 
@@ -165,7 +186,7 @@
                         <RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
                     <HorizontalStackLayout Spacing="12">
-                        <Label Text="🚪" FontSize="18"/>
+                        <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FFCA2D2D"/>
                         <Label Text="Logout" 
                                TextColor="#EF4444" 
                                FontSize="14"
@@ -175,6 +196,7 @@
                         <TapGestureRecognizer Tapped="OnLogoutTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
+                </VerticalStackLayout>
             </Grid>
         </Border>
 
@@ -195,16 +217,20 @@
                     </VerticalStackLayout>
                     
                     <Button Grid.Column="1"
-                            Text="📢 New Announcement"
-                            BackgroundColor="#005BA5"
-                            TextColor="White"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            CornerRadius="8"
-                            Padding="20,12"
-                            VerticalOptions="Center"
-                            Clicked="OnNewAnnouncementClicked"/>
-                </Grid>
+                        Text="New Announcement"
+                        BackgroundColor="#005BA5"
+                        TextColor="White"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        Padding="20,12"
+                        VerticalOptions="Center"
+                        Clicked="OnNewAnnouncementClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xe98e;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                    </Button.ImageSource>
+                </Button>
+            </Grid>
 
                 <!-- Stats -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
@@ -392,7 +418,7 @@
                                                     <Button Text="Delete"
                                                             Padding="14,6"
                                                             FontSize="12"
-                                                            BackgroundColor="#F87171"
+                                                            BackgroundColor="#FFFD5252"
                                                             TextColor="White"
                                                             CornerRadius="6"
                                                             CommandParameter="{Binding .}"

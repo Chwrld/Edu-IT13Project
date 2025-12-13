@@ -15,8 +15,7 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
     private readonly ObservableCollection<User> _allUsers = new();
     private readonly ObservableCollection<User> _filteredUsers = new();
     private User? _editingUser = null;
-    private bool _showActive = true;
-    private bool _showInactive;
+    private string _statusFilter = "All"; // "All", "Active", or "Inactive"
     private string _currentSearchText = string.Empty;
     private string? _pendingAction;
 
@@ -24,7 +23,6 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
     {
         InitializeComponent();
         _userController = AppServiceProvider.GetService<UserController>() ?? throw new InvalidOperationException("UserController not available");
-        UpdateStatusFilterVisuals();
     }
 
     protected override async void OnAppearing()
@@ -62,31 +60,12 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
         }
     }
 
-    private void OnStatusFilterTapped(object? sender, TappedEventArgs e)
+    private void OnStatusFilterChanged(object? sender, EventArgs e)
     {
-        if (e.Parameter is not string parameter)
+        if (StatusFilterPicker.SelectedIndex == -1)
             return;
 
-        var status = User.NormalizeStatus(parameter);
-
-        if (status == User.StatusActive)
-        {
-            _showActive = !_showActive;
-            if (!_showActive && !_showInactive)
-            {
-                _showActive = true; // ensure at least one filter stays enabled
-            }
-        }
-        else if (status == User.StatusInactive)
-        {
-            _showInactive = !_showInactive;
-            if (!_showInactive && !_showActive)
-            {
-                _showInactive = true;
-            }
-        }
-
-        UpdateStatusFilterVisuals();
+        _statusFilter = StatusFilterPicker.SelectedItem?.ToString() ?? "All";
         ApplyFilters();
     }
 
@@ -111,13 +90,16 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
             return false; // archived users hidden from standard lists
         }
 
-        bool matchesStatus = (normalizedStatus == User.StatusActive && _showActive) ||
-                             (normalizedStatus == User.StatusInactive && _showInactive);
-
-        if (!matchesStatus)
+        // Apply status filter
+        if (_statusFilter == "Active" && normalizedStatus != User.StatusActive)
         {
             return false;
         }
+        else if (_statusFilter == "Inactive" && normalizedStatus != User.StatusInactive)
+        {
+            return false;
+        }
+        // If "All", show both active and inactive
 
         if (string.IsNullOrWhiteSpace(_currentSearchText))
         {
@@ -126,34 +108,6 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
 
         return user.DisplayName.Contains(_currentSearchText, StringComparison.OrdinalIgnoreCase) ||
                user.Email.Contains(_currentSearchText, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private void UpdateStatusFilterVisuals()
-    {
-        SetFilterVisual(ActiveFilterButton, ActiveFilterLabel, _showActive);
-        SetFilterVisual(InactiveFilterButton, InactiveFilterLabel, _showInactive);
-    }
-
-    private static void SetFilterVisual(Border border, Label label, bool isSelected)
-    {
-        if (border is null || label is null)
-            return;
-
-        if (isSelected)
-        {
-            border.BackgroundColor = Color.FromArgb("#005BA5");
-            border.StrokeThickness = 0;
-            label.TextColor = Colors.White;
-            label.FontAttributes = FontAttributes.Bold;
-        }
-        else
-        {
-            border.BackgroundColor = Colors.White;
-            border.StrokeThickness = 1;
-            border.Stroke = Color.FromArgb("#D1D5DB");
-            label.TextColor = Color.FromArgb("#374151");
-            label.FontAttributes = FontAttributes.None;
-        }
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)

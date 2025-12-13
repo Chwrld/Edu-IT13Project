@@ -79,7 +79,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -98,7 +98,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Users" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -114,7 +114,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe85e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -133,7 +133,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe8ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -152,7 +152,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="&#xe1db;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Reports" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -179,7 +179,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12" InputTransparent="True">
-                            <Label Text="🔒" FontSize="18"/>
+                            <Label Text="&#xf02e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
@@ -198,7 +198,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FFCA2D2D"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -228,7 +228,7 @@
                 </VerticalStackLayout>
                 
                 <Button Grid.Column="1"
-                        Text="➕ Add User"
+                        Text="Add User"
                         BackgroundColor="#005BA5"
                         TextColor="White"
                         FontSize="14"
@@ -236,7 +236,11 @@
                         CornerRadius="8"
                         Padding="20,12"
                         VerticalOptions="Center"
-                        Clicked="OnAddUserClicked"/>
+                        Clicked="OnAddUserClicked">
+                    <Button.ImageSource>
+                        <FontImageSource Glyph="&#xe145;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                    </Button.ImageSource>
+                </Button>
             </Grid>
 
             <!-- User Table -->
@@ -265,8 +269,10 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                                     <Label Grid.Column="0" 
-                                           Text="🔍" 
-                                           FontSize="16"
+                                           Text="&#xe8b6;" 
+                                           FontFamily="MaterialIcons"
+                                           TextColor="#FF7A7A7A"
+                                           FontSize="24"
                                            VerticalOptions="Center"/>
                                     <Entry Grid.Column="1"
                                            x:Name="SearchEntry"
@@ -285,44 +291,19 @@
                                        FontAttributes="Bold"
                                        TextColor="#4B5563"
                                        VerticalOptions="Center"/>
-                                <HorizontalStackLayout Spacing="8">
-                                    <Border x:Name="ActiveFilterButton"
-                                            BackgroundColor="#005BA5"
-                                            Padding="14,6"
-                                            StrokeThickness="0">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8"/>
-                                        </Border.StrokeShape>
-                                        <Label x:Name="ActiveFilterLabel"
-                                               Text="Active"
-                                               FontSize="13"
-                                               TextColor="White"
-                                               FontAttributes="Bold"
-                                               HorizontalOptions="Center"/>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnStatusFilterTapped"
-                                                                  CommandParameter="active"/>
-                                        </Border.GestureRecognizers>
-                                    </Border>
-                                    <Border x:Name="InactiveFilterButton"
-                                            BackgroundColor="White"
-                                            Padding="14,6"
-                                            Stroke="#D1D5DB"
-                                            StrokeThickness="1">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8"/>
-                                        </Border.StrokeShape>
-                                        <Label x:Name="InactiveFilterLabel"
-                                               Text="Inactive"
-                                               FontSize="13"
-                                               TextColor="#374151"
-                                               HorizontalOptions="Center"/>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnStatusFilterTapped"
-                                                                  CommandParameter="inactive"/>
-                                        </Border.GestureRecognizers>
-                                    </Border>
-                                </HorizontalStackLayout>
+                                <Picker x:Name="StatusFilterPicker"
+                                        SelectedIndex="0"
+                                        BackgroundColor="#F3F4F6"
+                                        TextColor="#1F2937"
+                                        FontSize="13"
+                                        WidthRequest="150"
+                                        SelectedIndexChanged="OnStatusFilterChanged">
+                                    <Picker.Items>
+                                        <x:String>All</x:String>
+                                        <x:String>Active</x:String>
+                                        <x:String>Inactive</x:String>
+                                    </Picker.Items>
+                                </Picker>
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
@@ -419,17 +400,17 @@
                                             </Border.GestureRecognizers>
                                         </Border>
                                         <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center" HorizontalOptions="Start">
-                                            <Label Text="✏️" FontSize="16">
+                                            <Label Text="&#xe3c9;" FontFamily="MaterialIcons" FontSize="16" TextColor="#6B7280">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnEditUserTapped"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                       			        	<Label Text="🔑" FontSize="16">
+                       			        	<Label Text="&#xf51a;" FontFamily="MaterialIcons" FontSize="16" TextColor="#6B7280">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnResetPasswordTapped"/>
                                                 </Label.GestureRecognizers>
                                             </Label>
-                                            <Label Text="🗃️" FontSize="16">
+                                            <Label Text="&#xe149;" FontFamily="MaterialIcons" FontSize="16" TextColor="#6B7280">
                                                 <Label.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnArchiveUserTapped"/>
                                                 </Label.GestureRecognizers>

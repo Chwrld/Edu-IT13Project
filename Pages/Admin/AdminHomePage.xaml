@@ -69,7 +69,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FF5F5F5F"/>
                             <Label Text="Dashboard" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -85,7 +85,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👥" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Users" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -104,7 +104,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe85e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -123,7 +123,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe8ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -142,7 +142,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📈" FontSize="18"/>
+                            <Label Text="&#xe1db;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Reports" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -168,7 +168,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12" InputTransparent="True">
-                            <Label Text="🔒" FontSize="18"/>
+                            <Label Text="&#xf02e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Administrator" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
@@ -187,9 +187,9 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FFCA2D2D"/>
                             <Label Text="Logout" 
-                                   TextColor="#EF4444" 
+                                   TextColor="#FFCA2D2D" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
@@ -216,7 +216,7 @@
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Admin Dashboard" 
                                TextColor="White" 
-                               FontSize="24"
+                               FontSize="24"    
                                FontAttributes="Bold"
                                FontFamily="MontserratBold"/>
                         <Label Text="Manage your university system effectively." 
@@ -244,7 +244,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="👥" FontSize="20"/>
+                                       Text="&#xf8d9;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
                             <Label x:Name="TotalUsersValueLabel"
                                    Text="1,248" 
@@ -274,7 +274,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="🎫" FontSize="20"/>
+                                       Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
                             <Label x:Name="ActiveTicketsValueLabel"
                                    Text="47" 
@@ -304,7 +304,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="📢" FontSize="20"/>
+                                       Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
                             <Label x:Name="AnnouncementsValueLabel"
                                    Text="12" 
@@ -335,7 +335,7 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="📋" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text="&#xf8a5;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                                 <Label Text=" Recent Activity" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
@@ -414,7 +414,7 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="⚡" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text="&#xea0b;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                                 <Label Text=" Quick Actions" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
@@ -428,36 +428,53 @@
                                    Margin="0,-10,0,0"/>
 
                             <!-- Action 1 -->
-                            <Button Text="📝 Create Announcement"
+                            <Button Text="Create Announcement"
                                     BackgroundColor="#005BA5"
                                     TextColor="White"
                                     FontSize="13"
                                     CornerRadius="8"
-                                    Clicked="OnCreateAnnouncementClicked"/>
+                                    Clicked="OnCreateAnnouncementClicked">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="&#xef49;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                </Button.ImageSource>
+                            </Button>
 
                             <!-- Action 2 -->
-                            <Button Text="➕ Add New User"
+                            <Button Text="Add New User"
                                     BackgroundColor="#3B82F6"
                                     TextColor="White"
                                     FontSize="13"
                                     CornerRadius="8"
-                                    Clicked="OnAddUserClicked"/>
+                                    Clicked="OnAddUserClicked">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="&#xe7fe;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                </Button.ImageSource>
+                            </Button>
+                                    
 
                             <!-- Action 3 -->
-                            <Button Text="📊 View Reports"
+                            <Button Text="View Reports"
                                     BackgroundColor="#10B981"
                                     TextColor="White"
                                     FontSize="13"
                                     CornerRadius="8"
-                                    Clicked="OnViewReportsClicked"/>
+                                    Clicked="OnViewReportsClicked">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="&#xe85d;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                </Button.ImageSource>
+                            </Button>
 
                             <!-- Action 4: Sync Test -->
-                            <Button Text="🔄 Test Sync to Remote"
+                            <Button Text="Test Sync to Remote"
                                     BackgroundColor="#8B5CF6"
                                     TextColor="White"
                                     FontSize="13"
                                     CornerRadius="8"
-                                    Clicked="OnSyncToRemoteClicked"/>
+                                    Clicked="OnSyncToRemoteClicked">
+                                <Button.ImageSource>
+                                    <FontImageSource Glyph="&#xe627;" FontFamily="MaterialIcons" Color="White" Size="16"/>
+                                </Button.ImageSource>
+                            </Button>
 
                             
                             <!-- Divider -->
@@ -474,10 +491,8 @@
                                     <RoundRectangle CornerRadius="6"/>
                                 </Border.StrokeShape>
                                 <VerticalStackLayout Spacing="8">
-                                    <Label Text="📥 Export Data" 
-                                           FontSize="13" 
-                                           FontAttributes="Bold"
-                                           TextColor="#2C3E50"/>
+                                    <Label Text="&#xf3b2;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" 
+                                           FontAttributes="Bold"/>
                                     <Label Text="Download reports and user data in CSV format" 
                                            FontSize="11" 
                                            TextColor="#6B7280"

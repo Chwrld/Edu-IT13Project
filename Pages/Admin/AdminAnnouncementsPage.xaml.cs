@@ -298,6 +298,11 @@ public partial class AdminAnnouncementsPage : ContentPage, IQueryAttributable
         await Shell.Current.GoToAsync("AdminReportsPage", animate: false);
     }
 
+    private async void OnAdminProfileTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("AdminProfilePage", animate: false);
+    }
+
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
         bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");

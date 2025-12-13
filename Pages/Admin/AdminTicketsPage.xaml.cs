@@ -250,13 +250,23 @@ public partial class AdminTicketsPage : ContentPage
         }
     }
 
-    private void OnFilterAllClicked(object? sender, EventArgs e) => SetStatusFilter("all");
+    private void OnStatusFilterChanged(object? sender, EventArgs e)
+    {
+        if (StatusFilterPicker.SelectedIndex == -1)
+            return;
 
-    private void OnFilterOpenClicked(object? sender, EventArgs e) => SetStatusFilter("open");
-
-    private void OnFilterPendingClicked(object? sender, EventArgs e) => SetStatusFilter("in_progress");
-
-    private void OnFilterClosedClicked(object? sender, EventArgs e) => SetStatusFilter("resolved");
+        var selectedFilter = StatusFilterPicker.SelectedItem?.ToString()?.ToLowerInvariant() ?? "all";
+        
+        // Map display values to internal status values
+        _currentStatusFilter = selectedFilter switch
+        {
+            "pending" => "in_progress",
+            "closed" => "resolved",
+            _ => selectedFilter
+        };
+        
+        ApplyFilters();
+    }
 
     private async void OnViewTicketClicked(object? sender, EventArgs e)
     {
