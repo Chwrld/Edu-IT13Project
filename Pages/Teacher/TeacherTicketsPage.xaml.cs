@@ -180,7 +180,6 @@ public partial class TeacherTicketsPage : ContentPage
             DetailTicketNumberLabel.Text = ticket.TicketNumber;
             DetailStudentLabel.Text = ticket.CreatedByName;
             DetailCreatedLabel.Text = ticket.CreatedAt.ToString("M/d/yyyy h:mm tt");
-            DetailPriorityLabel.Text = ticket.Priority;
             DetailStatusLabel.Text = ticket.Status;
             DetailDescriptionLabel.Text = ticket.Description;
 
@@ -191,15 +190,6 @@ public partial class TeacherTicketsPage : ContentPage
                 "in_progress" => Color.FromArgb("#F59E0B"), // Orange
                 "resolved" => Color.FromArgb("#10B981"),    // Green
                 _ => Color.FromArgb("#6B7280")              // Gray
-            };
-
-            // Set priority text color
-            DetailPriorityLabel.TextColor = ticket.Priority.ToLower() switch
-            {
-                "low" => Color.FromArgb("#10B981"),    // Green
-                "medium" => Color.FromArgb("#F59E0B"), // Orange
-                "high" => Color.FromArgb("#EF4444"),   // Red
-                _ => Color.FromArgb("#6B7280")         // Gray
             };
 
             // Load comments
@@ -428,7 +418,6 @@ public partial class TeacherTicketsPage : ContentPage
         {
             string title = NewTicketTitleEntry.Text?.Trim() ?? string.Empty;
             string category = NewTicketCategoryPicker.SelectedIndex > 0 ? NewTicketCategoryPicker.Items[NewTicketCategoryPicker.SelectedIndex] : string.Empty;
-            string priority = "medium";
             string description = NewTicketDescriptionEditor.Text?.Trim() ?? string.Empty;
 
             // Validation
@@ -458,7 +447,7 @@ public partial class TeacherTicketsPage : ContentPage
                 return;
             }
 
-            bool success = await _ticketService.CreateTicketAsync(currentUser.Id, title, description, priority);
+            bool success = await _ticketService.CreateTicketAsync(currentUser.Id, title, description, "medium");
             
             if (success)
             {

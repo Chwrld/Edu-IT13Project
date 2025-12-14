@@ -194,9 +194,8 @@ public class ClassService
                 c.schedule,
                 c.credits
             FROM courses c
-            INNER JOIN students s ON s.adviser_id = c.created_by
-            WHERE s.student_id = @StudentId
-              AND SUBSTRING(s.student_number, 5, 3) = SUBSTRING(c.course_code, 3, 3)
+            INNER JOIN student_courses sc ON c.course_id = sc.course_id
+            WHERE sc.student_id = @StudentId
             ORDER BY c.course_name";
 
         await using var connection = sqlConnection.GetConnection() as SqlConnection;
