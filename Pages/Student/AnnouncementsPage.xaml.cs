@@ -33,7 +33,6 @@ public partial class AnnouncementsPage : ContentPage
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
-        UpdateTabStyles();
     }
 
     protected override async void OnAppearing()
@@ -106,32 +105,23 @@ public partial class AnnouncementsPage : ContentPage
         }
     }
 
-    private void UpdateTabStyles()
-    {
-        static void SetTabVisuals(Border tab, Label label, bool isActive)
-        {
-            tab.BackgroundColor = isActive ? Color.FromArgb("#0891B2") : Colors.Transparent;
-            label.TextColor = isActive ? Colors.White : Color.FromArgb("#0891B2");
-            label.FontAttributes = isActive ? FontAttributes.Bold : FontAttributes.None;
-        }
-
-        SetTabVisuals(AllTab, AllTabLabel, _currentFilter == "All");
-        SetTabVisuals(AnnouncementsTab, AnnouncementsTabLabel, _currentFilter == "Announcements");
-    }
-
     private void ChangeFilter(string filter)
     {
         if (_currentFilter == filter)
             return;
 
         _currentFilter = filter;
-        UpdateTabStyles();
         ApplyFilters();
     }
 
-    private void OnAllTabTapped(object? sender, EventArgs e) => ChangeFilter("All");
+    private void OnFilterChanged(object? sender, EventArgs e)
+    {
+        if (sender is not Picker picker || picker.SelectedIndex < 0)
+            return;
 
-    private void OnAnnouncementsTabTapped(object? sender, EventArgs e) => ChangeFilter("Announcements");
+        var filter = picker.SelectedItem?.ToString() ?? "All";
+        ChangeFilter(filter);
+    }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {

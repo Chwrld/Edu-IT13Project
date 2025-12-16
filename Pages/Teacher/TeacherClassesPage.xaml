@@ -210,61 +210,29 @@
                            TextColor="#6B7280"/>
                 </VerticalStackLayout>
 
-                <!-- Filter Tabs -->
-                <HorizontalStackLayout Spacing="10">
-                    <Border x:Name="AllFilter"
-                            BackgroundColor="#059669"
-                            Padding="12,8"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="AllFilterLabel"
-                               Text="All" 
-                               TextColor="White" 
-                               FontSize="13"
-                               FontAttributes="Bold"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="OnFilterTapped"
-                                CommandParameter="All"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                    <Border x:Name="ActiveFilter"
-                            BackgroundColor="#E5E7EB"
-                            Padding="12,8"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="ActiveFilterLabel"
-                               Text="Active" 
-                               TextColor="#6B7280" 
-                               FontSize="13"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="OnFilterTapped"
-                                CommandParameter="Active"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                    <Border x:Name="InactiveFilter"
-                            BackgroundColor="#E5E7EB"
-                            Padding="12,8"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="6"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="InactiveFilterLabel"
-                               Text="Inactive" 
-                               TextColor="#6B7280" 
-                               FontSize="13"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="OnFilterTapped"
-                                CommandParameter="Inactive"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </HorizontalStackLayout>
+                <!-- Filter Dropdown -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" 
+                           Text="Filter:" 
+                           FontSize="14" 
+                           TextColor="#6B7280" 
+                           VerticalOptions="Center"/>
+                    <Picker Grid.Column="1"
+                            x:Name="FilterPicker"
+                            Title="Select status"
+                            SelectedIndex="0"
+                            BackgroundColor="White"
+                            TextColor="#2C3E50"
+                            FontSize="14"
+                            HeightRequest="40"
+                            SelectedIndexChanged="OnFilterChanged">
+                        <Picker.Items>
+                            <x:String>All</x:String>
+                            <x:String>Active</x:String>
+                            <x:String>Inactive</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </Grid>
 
                 <!-- Classes List -->
                 <CollectionView x:Name="CoursesCollectionView"
@@ -334,7 +302,7 @@
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="4"/>
                                         </Border.StrokeShape>
-                                        <Label Text="{Binding StatusDisplay}"
+                                        <Label Text="{Binding Status}"
                                                TextColor="{Binding StatusTextColor}"
                                                FontSize="12"
                                                FontAttributes="Bold"/>

@@ -248,54 +248,29 @@
                         </Border>
                     </Border>
 
-                    <!-- Filter Tabs -->
-                    <HorizontalStackLayout Padding="20,0,20,10" Spacing="8">
-                        <Border x:Name="AllTab"
-                                BackgroundColor="#059669"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnAllTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="All" 
-                                   TextColor="White"
-                                   FontSize="13"
-                                   FontAttributes="Bold"/>
-                        </Border>
-
-                        <Border x:Name="StudentsTab"
-                                BackgroundColor="Transparent"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnStudentsTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="Students" 
-                                   TextColor="#059669"
-                                   FontSize="13"/>
-                        </Border>
-
-                        <Border x:Name="StaffTab"
-                                BackgroundColor="Transparent"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnStaffTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="Staff" 
-                                   TextColor="#059669"
-                                   FontSize="13"/>
-                        </Border>
-                    </HorizontalStackLayout>
+                    <!-- Filter Dropdown -->
+                    <Grid Padding="20,0,20,10" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="Filter:" 
+                               FontSize="14" 
+                               TextColor="#6B7280" 
+                               VerticalOptions="Center"/>
+                        <Picker Grid.Column="1"
+                                x:Name="FilterPicker"
+                                Title="Select conversation type"
+                                SelectedIndex="0"
+                                BackgroundColor="White"
+                                TextColor="#2C3E50"
+                                FontSize="14"
+                                HeightRequest="40"
+                                SelectedIndexChanged="OnFilterChanged">
+                            <Picker.Items>
+                                <x:String>All</x:String>
+                                <x:String>Students</x:String>
+                                <x:String>Staff</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </Grid>
 
                     <!-- Conversations List -->
                     <CollectionView x:Name="ConversationsCollectionView"
