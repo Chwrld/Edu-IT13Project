@@ -397,14 +397,26 @@ public partial class TeacherAnnouncementsPage : ContentPage
         await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
     }
 
+    private async void OnFacultyTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//TeacherProfilePage", animate: false);
+    }
+
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        var confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage", animate: false);
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object? sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        _authManager.ClearAuthentication();
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object? sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 }
 

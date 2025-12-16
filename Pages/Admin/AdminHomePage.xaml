@@ -30,14 +30,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="A" 
-                               TextColor="#005BA5" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
+                        <Image Source="educrm_log.png" 
+                               WidthRequest="24" 
+                               HeightRequest="24"
+                               Aspect="AspectFit"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="Admin Portal" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -62,7 +62,7 @@
                 <!-- Top Menu Items -->
                 <VerticalStackLayout Grid.Row="0" Spacing="5">
                     <!-- Dashboard Menu Item (Active) -->
-                    <Border BackgroundColor="#005BA5" 
+                    <Border BackgroundColor="Transparent" 
                             Padding="15,12"
                             StrokeThickness="0">
                         <Border.StrokeShape>
@@ -71,7 +71,7 @@
                         <HorizontalStackLayout Spacing="12">
                             <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#FF5F5F5F"/>
                             <Label Text="Dashboard" 
-                                   TextColor="White" 
+                                   TextColor="#6B7280" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
@@ -242,7 +242,7 @@
                                 <Label Grid.Column="0"
                                        Text="Total Users" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF28292B"/>
                                 <Label Grid.Column="1"
                                        Text="&#xf8d9;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
@@ -254,7 +254,7 @@
                             <Label x:Name="TotalUsersChangeLabel"
                                    Text="↑ 12% this month" 
                                    FontSize="11" 
-                                   TextColor="#9CA3AF"/>
+                                   TextColor="#FF525252"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -272,7 +272,7 @@
                                 <Label Grid.Column="0"
                                        Text="Active Tickets" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF28292B"/>
                                 <Label Grid.Column="1"
                                        Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
@@ -284,7 +284,7 @@
                             <Label x:Name="ActiveTicketsSubLabel"
                                    Text="23 pending review" 
                                    FontSize="11" 
-                                   TextColor="#9CA3AF"/>
+                                   TextColor="#FF525252"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -302,7 +302,7 @@
                                 <Label Grid.Column="0"
                                        Text="Announcements" 
                                        FontSize="13" 
-                                       TextColor="#6B7280"/>
+                                       TextColor="#FF28292B"/>
                                 <Label Grid.Column="1"
                                        Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             </Grid>
@@ -314,7 +314,7 @@
                             <Label x:Name="AnnouncementsSubLabel"
                                    Text="This week" 
                                    FontSize="11" 
-                                   TextColor="#9CA3AF"/>
+                                   TextColor="#FF525252"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -658,5 +658,60 @@
                 </VerticalStackLayout>
             </Border>
         </Grid>
+
+        <!-- Logout Confirmation Modal -->
+        <Border x:Name="LogoutModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" Padding="30,25" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50"/>
+                    </Border>
+                    <VerticalStackLayout Padding="30,25" Spacing="25" BackgroundColor="White">
+                        <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#4B5563" HorizontalTextAlignment="Center"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <Button Grid.Column="0" 
+                                    x:Name="LogoutYesButton"
+                                    Text="Yes" 
+                                    BackgroundColor="#EF4444" 
+                                    TextColor="White" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutConfirmed"/>
+                            <Button Grid.Column="1" 
+                                    x:Name="LogoutNoButton"
+                                    Text="No" 
+                                    BackgroundColor="#E5E7EB" 
+                                    TextColor="#2C3E50" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutCancelled"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
     </Grid>
 </ContentPage>

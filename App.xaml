@@ -100,6 +100,40 @@
                     </HorizontalStackLayout>
                 </Border>
             </ControlTemplate>
+
+            <!-- Logout Confirmation Modal Template -->
+            <ControlTemplate x:Key="LogoutModalTemplate">
+                <Border BackgroundColor="#80000000" IsVisible="False">
+                    <Border BackgroundColor="White"
+                            WidthRequest="400"
+                            Padding="0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#2C3E50" Padding="30,25" StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12,12,0,0"/>
+                                </Border.StrokeShape>
+                                <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="White"/>
+                            </Border>
+                            <VerticalStackLayout Padding="30,25" Spacing="25">
+                                <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#2C3E50" HorizontalTextAlignment="Center"/>
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                                    <Button Grid.Column="0" Text="Yes" BackgroundColor="#2C3E50" TextColor="White" FontAttributes="Bold" CornerRadius="8" Padding="0" HeightRequest="44"/>
+                                    <Button Grid.Column="1" Text="No" BackgroundColor="#E5E7EB" TextColor="#2C3E50" FontAttributes="Bold" CornerRadius="8" Padding="0" HeightRequest="44"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </Border>
+            </ControlTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

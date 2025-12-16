@@ -140,8 +140,8 @@ public partial class TeacherTicketsPage : ContentPage
             DetailTicketNumberLabel.Text = ticket.TicketNumber;
             DetailStudentLabel.Text = ticket.CreatedByName;
             DetailCreatedLabel.Text = ticket.CreatedAt.ToString("M/d/yyyy h:mm tt");
-            DetailPriorityLabel.Text = ticket.Priority;
-            DetailStatusLabel.Text = ticket.Status;
+            DetailPriorityLabel.Text = FormatStatus(ticket.Priority);
+            DetailStatusLabel.Text = FormatStatus(ticket.Status);
             DetailDescriptionLabel.Text = ticket.Description;
 
             // Set status text color
@@ -351,12 +351,18 @@ public partial class TeacherTicketsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        var confirm = await ShowCustomConfirmAsync("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private void OnNewTicketClicked(object? sender, EventArgs e)
@@ -519,6 +525,15 @@ public partial class TeacherTicketsPage : ContentPage
             CustomAlertOverlay.IsVisible = false;
             _alertTaskCompletionSource?.SetResult(false);
         }
+    }
+
+    private static string FormatStatus(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return "-";
+
+        var normalized = status.Replace('_', ' ');
+        return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
     }
 
     #endregion

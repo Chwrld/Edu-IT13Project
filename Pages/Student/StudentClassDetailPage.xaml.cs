@@ -351,47 +351,48 @@ public partial class StudentClassDetailPage : ContentPage
 
     private async void OnHomeTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new HomePage(), false);
+        await Shell.Current.GoToAsync("//HomePage", animate: false);
     }
 
     private async void OnMessagesTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MessagesPage(), false);
+        await Shell.Current.GoToAsync("//MessagesPage", animate: false);
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AnnouncementsPage(), false);
+        await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TicketsPage(), false);
+        await Shell.Current.GoToAsync("//TicketsPage", animate: false);
     }
 
     private async void OnProfileTapped(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ProfilePage(), false);
+        await Shell.Current.GoToAsync("//ProfilePage", animate: false);
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
-        var confirm = await DisplayAlert(
-            "Logout",
-            "Are you sure you want to logout?",
-            "Yes",
-            "No");
+        LogoutModal.IsVisible = true;
+    }
 
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Navigation.PopToRootAsync();
-        }
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private void OnCloseValidationErrorTapped(object sender, EventArgs e)

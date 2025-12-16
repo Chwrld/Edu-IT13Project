@@ -68,7 +68,7 @@ public partial class TicketsPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//ProfilePage");
+            await Shell.Current.GoToAsync("//ProfilePage", animate: false);
         }
         catch (Exception ex)
         {
@@ -80,7 +80,7 @@ public partial class TicketsPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//HomePage");
+            await Shell.Current.GoToAsync("//HomePage", animate: false);
         }
         catch (Exception ex)
         {
@@ -92,7 +92,7 @@ public partial class TicketsPage : ContentPage
     {
         try
         {
-            await Shell.Current.GoToAsync("//MessagesPage");
+            await Shell.Current.GoToAsync("//MessagesPage", animate: false);
         }
         catch (Exception ex)
         {
@@ -102,14 +102,14 @@ public partial class TicketsPage : ContentPage
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new StudentClassesPage(), false);
+        await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
         try
         {
-            await Shell.Current.GoToAsync("//AnnouncementsPage");
+            await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
         }
         catch (Exception ex)
         {
@@ -218,16 +218,32 @@ public partial class TicketsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private void OnCreateTicketClicked(object? sender, EventArgs e)
     {
         // Show the create ticket modal
         ModalOverlay.IsVisible = true;
+    }
+
+    private static string FormatStatus(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return "-";
+
+        var normalized = status.Replace('_', ' ');
+        return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
     }
 }
