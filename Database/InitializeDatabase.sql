@@ -731,38 +731,115 @@ BEGIN
         SELECT s.student_id
         FROM dbo.students s
         WHERE s.adviser_id = @TeacherUserId
+    ),
+    TeacherCourses AS (
+        SELECT course_id, created_by,
+               ROW_NUMBER() OVER (PARTITION BY created_by ORDER BY course_code) AS course_num
+        FROM dbo.courses
+        WHERE created_by = @TeacherUserId
     )
     INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
-    SELECT NEWID(), ts.student_id, c.course_id, c.created_by, @Now
+    SELECT NEWID(), ts.student_id, tc.course_id, tc.created_by, @Now
     FROM TeacherStudents ts
-    CROSS APPLY (
-        SELECT
-            c2.course_id,
-            c2.created_by,
-            ROW_NUMBER() OVER (ORDER BY ABS(CHECKSUM(ts.student_id, c2.course_id))) AS row_num
-        FROM dbo.courses c2
-    ) c
+    CROSS JOIN TeacherCourses tc
     LEFT JOIN dbo.student_courses existing
         ON existing.student_id = ts.student_id
-       AND existing.course_id = c.course_id
-    WHERE existing.enrollment_id IS NULL
-      AND c.row_num <= (2 + ABS(CHECKSUM(ts.student_id)) % 3);
+       AND existing.course_id = tc.course_id
+    WHERE existing.enrollment_id IS NULL;
 
     SET @TeacherIndex += 1;
 END
+
+-- Create grades for all enrolled students that don't have grades yet
+INSERT INTO dbo.student_course_grades (grade_id, course_id, student_id, assignments_score, activities_score, exams_score, projects_score, updated_at)
+SELECT 
+    NEWID(),
+    sc.course_id,
+    sc.student_id,
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 35 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 70 + (ABS(CHECKSUM(sc.student_id)) % 25)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 30 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 68 + (ABS(CHECKSUM(sc.student_id)) % 20)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 40 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 72 + (ABS(CHECKSUM(sc.student_id)) % 18)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 38 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 75 + (ABS(CHECKSUM(sc.student_id)) % 22)
+    END AS DECIMAL(5,2)),
+    @Now
+FROM dbo.student_courses sc
+LEFT JOIN dbo.student_course_grades scg ON sc.course_id = scg.course_id AND sc.student_id = scg.student_id
+WHERE scg.grade_id IS NULL;
+
+------------------------------------------------------------
+-- Seed historical announcement view data for charts
+------------------------------------------------------------
+DECLARE @MonthsOfHistory INT = 6;
+
+;WITH RecentAnnouncements AS (
+    SELECT TOP 12 announcement_id, created_at
+    FROM dbo.announcements
+    ORDER BY created_at DESC
+),
+SampleStudents AS (
+    SELECT TOP 25 user_id, created_at
+    FROM dbo.users
+    WHERE role = 'Student'
+    ORDER BY created_at DESC
+),
+MonthOffsets AS (
+    SELECT 0 AS OffsetValue
+    UNION ALL
+    SELECT OffsetValue + 1
+    FROM MonthOffsets
+    WHERE OffsetValue + 1 < @MonthsOfHistory
+)
+INSERT INTO dbo.announcement_views (view_id, announcement_id, user_id, viewed_at)
+SELECT TOP (600)
+    NEWID(),
+    ra.announcement_id,
+    ss.user_id,
+    DATEADD(
+        DAY,
+        ABS(CHECKSUM(ra.announcement_id, ss.user_id, mo.OffsetValue)) % 28,
+        DATEFROMPARTS(
+            YEAR(DATEADD(MONTH, -mo.OffsetValue, @Now)),
+            MONTH(DATEADD(MONTH, -mo.OffsetValue, @Now)),
+            1
+        )
+    )
+FROM RecentAnnouncements ra
+CROSS JOIN SampleStudents ss
+CROSS JOIN MonthOffsets mo
+WHERE ABS(CHECKSUM(ra.announcement_id, ss.user_id, mo.OffsetValue)) % 5 = 0
+ORDER BY ra.created_at DESC, mo.OffsetValue, ss.created_at DESC
+OPTION (MAXRECURSION 100);
 
 ------------------------------------------------------------
 -- Specific Seeding for student03324@university.edu
 ------------------------------------------------------------
 
-DECLARE @TargetStudentId UNIQUEIDENTIFIER = '6CD4E9D9-4C88-4671-ACCA-DD761F5DD6D0';
-DECLARE @Teacher1Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0002';
-DECLARE @Teacher2Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0003';
-DECLARE @Teacher3Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id != @Teacher1Id AND adviser_id != @Teacher2Id ORDER BY NEWID());
-DECLARE @Teacher4Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id NOT IN (@Teacher1Id, @Teacher2Id, @Teacher3Id) ORDER BY NEWID());
-
 -- Get the actual user_id for student03324@university.edu (created during bulk seeding)
+DECLARE @TargetStudentId UNIQUEIDENTIFIER;
 SELECT @TargetStudentId = user_id FROM dbo.users WHERE email = 'student03324@university.edu';
+
+-- If student doesn't exist, skip this section
+IF @TargetStudentId IS NULL
+BEGIN
+    PRINT 'Warning: student03324@university.edu not found in database. Skipping student-specific seeding.';
+END
+ELSE
+BEGIN
+    DECLARE @Teacher1Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0002';
+    DECLARE @Teacher2Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0003';
+    DECLARE @Teacher3Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id != @Teacher1Id AND adviser_id != @Teacher2Id ORDER BY NEWID());
+    DECLARE @Teacher4Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id NOT IN (@Teacher1Id, @Teacher2Id, @Teacher3Id) ORDER BY NEWID());
 
 -- Update user display names
 UPDATE dbo.users SET display_name = 'Maria Santos' WHERE user_id = @TargetStudentId;
@@ -850,4 +927,118 @@ VALUES
     (NEWID(), 'TKT-2024-0104', 'Transcript Request', 'Official transcript needed for graduate school application.', 'resolved', DATEADD(DAY, -8, @Now), @TargetStudentId, DATEADD(DAY, -7, @Now), @Teacher4Id, @TargetStudentId, @Teacher4Id),
     (NEWID(), 'TKT-2024-0105', 'Assignment Extension Request', 'Requesting 2-day extension for final project due to illness.', 'open', DATEADD(DAY, -2, @Now), @TargetStudentId, NULL, NULL, @TargetStudentId, @Teacher1Id);
 
-PRINT 'Seeding completed for student03324@university.edu with achievements, conversations, and tickets.';
+-- Add Course Grades for Student 03324 (All enrolled courses with realistic grades)
+DECLARE @CourseIds TABLE (course_id UNIQUEIDENTIFIER, course_name NVARCHAR(255));
+INSERT INTO @CourseIds
+SELECT c.course_id, c.course_name
+FROM dbo.student_courses sc
+INNER JOIN dbo.courses c ON sc.course_id = c.course_id
+WHERE sc.student_id = @TargetStudentId
+ORDER BY c.course_name;
+
+DECLARE @CrsId UNIQUEIDENTIFIER;
+DECLARE @CrsName NVARCHAR(255);
+DECLARE @GradeScore DECIMAL(5,2);
+DECLARE @CourseCounter INT = 1;
+DECLARE @TotalCourses INT = (SELECT COUNT(*) FROM @CourseIds);
+
+DECLARE course_cursor CURSOR FOR SELECT course_id, course_name FROM @CourseIds;
+OPEN course_cursor;
+FETCH NEXT FROM course_cursor INTO @CrsId, @CrsName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Vary the grades to show different performance levels across courses
+    SET @GradeScore = CASE (@CourseCounter % 5)
+        WHEN 0 THEN 94.50  -- Excellent
+        WHEN 1 THEN 91.25  -- Very Good
+        WHEN 2 THEN 87.75  -- Good
+        WHEN 3 THEN 89.50  -- Very Good
+        ELSE 92.00         -- Excellent
+    END;
+
+    -- Delete existing grade if present
+    DELETE FROM dbo.student_course_grades 
+    WHERE student_id = @TargetStudentId AND course_id = @CrsId;
+
+    -- Insert new grade with realistic component scores
+    INSERT INTO dbo.student_course_grades (grade_id, course_id, student_id, assignments_score, activities_score, exams_score, projects_score, updated_at)
+    VALUES (
+        NEWID(),
+        @CrsId,
+        @TargetStudentId,
+        @GradeScore - 3,      -- Assignments slightly lower
+        @GradeScore - 2,      -- Activities slightly lower
+        @GradeScore + 2,      -- Exams slightly higher
+        @GradeScore,          -- Projects match overall
+        DATEADD(DAY, -(@CourseCounter * 2), @Now)
+    );
+
+    SET @CourseCounter += 1;
+    FETCH NEXT FROM course_cursor INTO @CrsId, @CrsName;
+END
+
+CLOSE course_cursor;
+DEALLOCATE course_cursor;
+
+-- Add Assignment Submissions for Student 03324 (All assignments across all enrolled courses)
+DECLARE @AssignmentIds TABLE (assignment_id UNIQUEIDENTIFIER, course_id UNIQUEIDENTIFIER, title NVARCHAR(255));
+INSERT INTO @AssignmentIds
+SELECT a.assignment_id, a.course_id, a.title
+FROM dbo.class_assignments a
+WHERE a.course_id IN (SELECT course_id FROM @CourseIds)
+ORDER BY a.course_id, a.created_at;
+
+DECLARE @AsgId UNIQUEIDENTIFIER;
+DECLARE @AsgCourseId UNIQUEIDENTIFIER;
+DECLARE @AsgTitle NVARCHAR(255);
+DECLARE @SubmissionScore INT;
+DECLARE @AssignmentCounter INT = 1;
+DECLARE @TotalAssignments INT = (SELECT COUNT(*) FROM @AssignmentIds);
+
+DECLARE assignment_cursor CURSOR FOR SELECT assignment_id, course_id, title FROM @AssignmentIds;
+OPEN assignment_cursor;
+FETCH NEXT FROM assignment_cursor INTO @AsgId, @AsgCourseId, @AsgTitle;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Vary submission scores realistically (85-98 range for good student)
+    SET @SubmissionScore = CASE (@AssignmentCounter % 6)
+        WHEN 0 THEN 96  -- Excellent
+        WHEN 1 THEN 92  -- Very Good
+        WHEN 2 THEN 88  -- Good
+        WHEN 3 THEN 94  -- Excellent
+        WHEN 4 THEN 90  -- Very Good
+        ELSE 85         -- Good
+    END;
+
+    -- Check if submission already exists
+    IF NOT EXISTS (SELECT 1 FROM dbo.assignment_submissions WHERE assignment_id = @AsgId AND student_id = @TargetStudentId)
+    BEGIN
+        INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes, submission_content)
+        VALUES (
+            NEWID(),
+            @AsgId,
+            @TargetStudentId,
+            DATEADD(DAY, -(@AssignmentCounter), @Now),
+            @SubmissionScore,
+            'graded',
+            CASE (@AssignmentCounter % 4)
+                WHEN 0 THEN 'Excellent work! Well-structured, thorough analysis, and excellent implementation.'
+                WHEN 1 THEN 'Very good submission. Consider adding more detail to the methodology section for completeness.'
+                WHEN 2 THEN 'Good work. Minor improvements needed in the conclusion and recommendations.'
+                ELSE 'Solid submission. Well-executed with clear documentation and good attention to detail.'
+            END,
+            CONCAT('Submission for ', @AsgTitle, ': Comprehensive analysis with detailed implementation, clear documentation, and thoughtful recommendations based on research.')
+        );
+    END
+
+    SET @AssignmentCounter += 1;
+    FETCH NEXT FROM assignment_cursor INTO @AsgId, @AsgCourseId, @AsgTitle;
+END
+
+CLOSE assignment_cursor;
+DEALLOCATE assignment_cursor;
+
+    PRINT 'Seeding completed for student03324@university.edu with achievements, conversations, tickets, course grades, and assignments.';
+END

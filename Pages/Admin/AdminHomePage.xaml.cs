@@ -22,6 +22,10 @@ public partial class AdminHomePage : ContentPage
     private bool _isLoading;
 
     public ObservableCollection<AdminActivityItem> RecentActivities { get; } = new();
+    public ObservableCollection<UserGrowthPoint> UserGrowthTrend { get; } = new();
+    public ObservableCollection<TicketResolutionPoint> TicketResolutionTrend { get; } = new();
+    public ObservableCollection<AnnouncementViewPoint> AnnouncementViewTrend { get; } = new();
+    public ObservableCollection<AnnouncementAudienceStat> AnnouncementAudienceMix { get; } = new();
 
     public AdminHomePage()
     {
@@ -58,6 +62,7 @@ public partial class AdminHomePage : ContentPage
             var summary = await _dashboardService.GetSummaryAsync();
             UpdateSummaryCards(summary);
             UpdateRecentActivity(summary.RecentActivities);
+            UpdateTrendCharts(summary);
         }
         catch (Exception ex)
         {
@@ -97,6 +102,43 @@ public partial class AdminHomePage : ContentPage
     {
         var arrow = percent >= 0 ? "↑" : "↓";
         return $"{arrow} {Math.Abs(percent):0.#}% this month";
+    }
+
+    private void UpdateTrendCharts(AdminDashboardSummary summary)
+    {
+        UpdateCollection(UserGrowthTrend, summary.UserGrowthTrend);
+        var hasUserTrend = UserGrowthTrend.Count > 0;
+        UserGrowthChart.IsVisible = hasUserTrend;
+        UserGrowthEmptyLabel.IsVisible = !hasUserTrend;
+
+        UpdateCollection(TicketResolutionTrend, summary.TicketResolutionTrend);
+        var hasTicketTrend = TicketResolutionTrend.Count > 0;
+        TicketTrendChart.IsVisible = hasTicketTrend;
+        TicketTrendEmptyLabel.IsVisible = !hasTicketTrend;
+
+        UpdateCollection(AnnouncementViewTrend, summary.AnnouncementViewTrend);
+        var hasAnnouncementTrend = AnnouncementViewTrend.Count > 0;
+        AnnouncementViewsChart.IsVisible = hasAnnouncementTrend;
+        AnnouncementViewsEmptyLabel.IsVisible = !hasAnnouncementTrend;
+
+        UpdateCollection(AnnouncementAudienceMix, summary.AnnouncementAudienceMix);
+        var hasAudienceMix = AnnouncementAudienceMix.Count > 0;
+        AudienceMixChart.IsVisible = hasAudienceMix;
+        AudienceMixEmptyLabel.IsVisible = !hasAudienceMix;
+    }
+
+    private static void UpdateCollection<T>(ObservableCollection<T> target, IEnumerable<T> source)
+    {
+        target.Clear();
+        if (source is null)
+        {
+            return;
+        }
+
+        foreach (var item in source)
+        {
+            target.Add(item);
+        }
     }
 
     private async void OnAdminProfileTapped(object sender, EventArgs e)

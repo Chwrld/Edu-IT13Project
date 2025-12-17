@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:utils="clr-namespace:MauiAppIT13.Utils"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
              x:Class="MauiAppIT13.Pages.Teacher.TeacherHomePage"
              BackgroundColor="#F5F7FA">
 
@@ -304,8 +305,119 @@
                     </Border>
                 </Grid>
 
-                <!-- Content Row: Recent Messages and Upcoming Events -->
-                <Grid ColumnDefinitions="1.2*,*" ColumnSpacing="20">
+                <!-- Graphs Row: Class Performance and Submission Status -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+                    
+                    <!-- Class Performance Graph -->
+                    <Border Grid.Column="0" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="15">
+                            <HorizontalStackLayout>
+                                <Label Text="📈" FontSize="18" VerticalOptions="Center"/>
+                                <Label Text=" Class Performance" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       FontFamily="MontserratBold"
+                                       TextColor="#2C3E50"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Label Text="Average grades across your classes" 
+                                   FontSize="12" 
+                                   TextColor="#6B7280"
+                                   Margin="0,-10,0,0"/>
+
+                            <!-- Class Performance Line Chart (Syncfusion) -->
+                            <VerticalStackLayout Spacing="12">
+                                <!-- Syncfusion Cartesian Chart for Class Performance -->
+                                <chart:SfCartesianChart x:Name="ClassPerformanceChart"
+                                                       Height="280"
+                                                       HorizontalOptions="FillAndExpand"
+                                                       VerticalOptions="FillAndExpand"
+                                                       BackgroundColor="Transparent"
+                                                       Margin="0,0,0,15">
+                                    <chart:SfCartesianChart.XAxes>
+                                        <chart:CategoryAxis LabelPlacement="BetweenTicks"/>
+                                    </chart:SfCartesianChart.XAxes>
+                                    <chart:SfCartesianChart.YAxes>
+                                        <chart:NumericalAxis Minimum="0" Maximum="4"/>
+                                    </chart:SfCartesianChart.YAxes>
+                                    <chart:ColumnSeries ItemsSource="{Binding ClassPerformanceData}"
+                                                       XBindingPath="ClassName"
+                                                       YBindingPath="AverageGrade"
+                                                       Fill="#059669"
+                                                       CornerRadius="4"
+                                                       ShowDataLabels="True"
+                                                       EnableAnimation="True"
+                                                       Spacing="0.3"
+                                                       Width="0.8">
+                                        <chart:ColumnSeries.DataLabelSettings>
+                                            <chart:CartesianDataLabelSettings/>
+                                        </chart:ColumnSeries.DataLabelSettings>
+                                    </chart:ColumnSeries>
+                                </chart:SfCartesianChart>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Submission Status Graph -->
+                    <Border Grid.Column="1" 
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="15">
+                            <HorizontalStackLayout>
+                                <Label Text="✅" FontSize="18" VerticalOptions="Center"/>
+                                <Label Text=" Submission Status" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold"
+                                       FontFamily="MontserratBold"
+                                       TextColor="#2C3E50"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Label Text="Assignment submission rates by class" 
+                                   FontSize="12" 
+                                   TextColor="#6B7280"
+                                   Margin="0,-10,0,0"/>
+
+                            <!-- Submission Status Doughnut Chart (Syncfusion) -->
+                            <VerticalStackLayout Spacing="12">
+                                <!-- Syncfusion Circular Chart for Submission Status -->
+                                <chart:SfCircularChart x:Name="SubmissionStatusChart"
+                                                      Height="280"
+                                                      HorizontalOptions="FillAndExpand"
+                                                      VerticalOptions="FillAndExpand"
+                                                      BackgroundColor="Transparent"
+                                                      Margin="0,0,0,15">
+                                    <chart:SfCircularChart.Legend>
+                                        <chart:ChartLegend Placement="Left" IsVisible="True"/>
+                                    </chart:SfCircularChart.Legend>
+                                    <chart:PieSeries ItemsSource="{Binding SubmissionStatusData}"
+                                                    XBindingPath="ClassName"
+                                                    YBindingPath="Submitted"
+                                                    ShowDataLabels="True"
+                                                    EnableAnimation="True">
+                                        <chart:PieSeries.DataLabelSettings>
+                                            <chart:CircularDataLabelSettings/>
+                                        </chart:PieSeries.DataLabelSettings>
+                                    </chart:PieSeries>
+                                </chart:SfCircularChart>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Content Row: Recent Messages and At-Risk Students -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
                     
                     <!-- Recent Messages Section -->
                     <Border Grid.Column="0" 
@@ -425,7 +537,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Ticket Updates Section -->
+                    <!-- At-Risk Students Section -->
                     <Border Grid.Column="1" 
                             BackgroundColor="White"
                             StrokeThickness="1"
@@ -436,92 +548,77 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="🔔" FontSize="16" VerticalOptions="Center"/>
-                                <Label Text=" Ticket Updates" 
+                                <Label Text="⚠️" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text=" At-Risk Students" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
                                        FontFamily="MontserratBold"
                                        TextColor="#2C3E50"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
-                            <Label Text="Recently received support tickets" 
+                            <Label Text="Students with low grades across classes" 
                                    FontSize="12" 
                                    TextColor="#6B7280"
                                    Margin="0,-10,0,0"/>
 
-                            <Label Text="No ticket activity yet"
+                            <Label Text="No at-risk students"
                                    FontSize="12"
                                    TextColor="#9CA3AF"
                                    HorizontalOptions="Start"
                                    IsVisible="False">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
-                                                 Binding="{Binding TicketUpdates.Count}"
+                                                 Binding="{Binding AtRiskStudents.Count}"
                                                  Value="0">
                                         <Setter Property="IsVisible" Value="True"/>
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
 
-                            <VerticalStackLayout Spacing="10"
-                                                 BindableLayout.ItemsSource="{Binding TicketUpdates}">
+                            <VerticalStackLayout Spacing="8"
+                                                 BindableLayout.ItemsSource="{Binding AtRiskStudents}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BackgroundColor="{Binding CardBackgroundColor}"
+                                        <Border BackgroundColor="#FFFBEB"
                                                 Padding="12"
-                                                StrokeThickness="0">
+                                                StrokeThickness="1"
+                                                Stroke="#FCD34D">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="6"/>
                                             </Border.StrokeShape>
-                                            <VerticalStackLayout Spacing="6">
+                                            <VerticalStackLayout Spacing="4">
                                                 <HorizontalStackLayout Spacing="8">
-                                                    <Border BackgroundColor="{Binding StatusColor}"
+                                                    <Label Text="{Binding StudentName}"
+                                                           FontSize="12"
+                                                           FontAttributes="Bold"
+                                                           TextColor="#2C3E50"
+                                                           LineBreakMode="TailTruncation"/>
+                                                    <Label Text="{Binding ClassName}"
+                                                           FontSize="11"
+                                                           TextColor="#6B7280"
+                                                           VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout Spacing="8">
+                                                    <Label Text="{Binding Grade, StringFormat='Grade: {0:F2}'}"
+                                                           FontSize="11"
+                                                           TextColor="#4B5563"/>
+                                                    <Border BackgroundColor="#FEE2E2"
                                                             Padding="4,2"
                                                             StrokeThickness="0">
                                                         <Border.StrokeShape>
                                                             <RoundRectangle CornerRadius="3"/>
                                                         </Border.StrokeShape>
-                                                        <Label Text="{Binding StatusLabel}"
-                                                               TextColor="White"
+                                                        <Label Text="{Binding RiskLevel}"
+                                                               TextColor="#DC2626"
                                                                FontSize="9"
                                                                FontAttributes="Bold"/>
                                                     </Border>
-                                                    <Label Text="{Binding Title}"
-                                                           FontSize="12"
-                                                           FontAttributes="Bold"
-                                                           TextColor="#2C3E50"
-                                                           VerticalOptions="Center"/>
-                                                </HorizontalStackLayout>
-                                                <Label Text="{Binding Summary}"
-                                                       FontSize="11"
-                                                       TextColor="#4B5563"
-                                                       LineBreakMode="TailTruncation"/>
-                                                <HorizontalStackLayout Spacing="8">
-                                                    <Label Text="{Binding Author}"
-                                                           FontSize="10"
-                                                           TextColor="#4B5563"/>
-                                                    <Label Text="•"
-                                                           FontSize="10"
-                                                           TextColor="#9CA3AF"/>
-                                                    <Label Text="{Binding Timestamp}"
-                                                           FontSize="10"
-                                                           TextColor="#9CA3AF"/>
                                                 </HorizontalStackLayout>
                                             </VerticalStackLayout>
                                         </Border>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
-
-                            <!-- View All Tickets Button -->
-                            <Button Text="View All Tickets"
-                                    BackgroundColor="Transparent"
-                                    TextColor="#059669"
-                                    FontSize="13"
-                                    FontAttributes="Bold"
-                                    Padding="0"
-                                    Margin="0,5,0,0"
-                                    Clicked="OnTicketsTapped"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>

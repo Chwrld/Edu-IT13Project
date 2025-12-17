@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using MauiAppIT13.Models;
+using System.Globalization;
 
 namespace MauiAppIT13.Services;
 
@@ -14,12 +15,190 @@ public sealed class AdminDashboardService
             ?? throw new InvalidOperationException("Connection string 'EduCrmSql' not found.");
     }
 
+    private static async Task<IReadOnlyList<AnnouncementViewPoint>> GetAnnouncementViewTrendAsync(SqlConnection connection, DateTime trendStartUtc, int monthsBack)
+    {
+        const string sql = @"
+            SELECT DATEFROMPARTS(YEAR(viewed_at), MONTH(viewed_at), 1) AS period_start,
+                   COUNT(*) AS total_views
+            FROM announcement_views
+            WHERE viewed_at >= @Start
+            GROUP BY DATEFROMPARTS(YEAR(viewed_at), MONTH(viewed_at), 1)
+            ORDER BY period_start";
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@Start", trendStartUtc);
+
+        var raw = new Dictionary<DateTime, int>();
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var periodStart = reader.GetDateTime(0);
+            var total = reader.GetInt32(1);
+            raw[periodStart] = total;
+        }
+
+        reader.Close();
+
+        var trend = new List<AnnouncementViewPoint>(monthsBack);
+        for (var i = 0; i < monthsBack; i++)
+        {
+            var period = trendStartUtc.AddMonths(i);
+            raw.TryGetValue(period, out var total);
+            trend.Add(new AnnouncementViewPoint
+            {
+                PeriodStart = period,
+                Label = period.ToString("MMM", CultureInfo.InvariantCulture),
+                ViewCount = total
+            });
+        }
+
+        return trend;
+    }
+
+    private static async Task<IReadOnlyList<AnnouncementAudienceStat>> GetAnnouncementAudienceStatsAsync(SqlConnection connection)
+    {
+        const string sql = @"
+            SELECT
+                LOWER(COALESCE(NULLIF(visibility, ''), 'all')) AS audience,
+                COUNT(*) AS total
+            FROM announcements
+            GROUP BY LOWER(COALESCE(NULLIF(visibility, ''), 'all'))";
+
+        await using var command = new SqlCommand(sql, connection);
+        var stats = new List<AnnouncementAudienceStat>();
+        var totalCount = 0;
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var audienceKey = reader.GetString(0);
+            var count = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
+            totalCount += count;
+            stats.Add(new AnnouncementAudienceStat
+            {
+                Audience = NormalizeAudienceLabel(audienceKey),
+                Count = count
+            });
+        }
+
+        reader.Close();
+
+        if (totalCount > 0)
+        {
+            foreach (var stat in stats)
+            {
+                stat.Percentage = Math.Round((double)stat.Count / totalCount * 100, 1);
+            }
+        }
+
+        return stats;
+    }
+
+    private static string NormalizeAudienceLabel(string raw)
+    {
+        return raw switch
+        {
+            "students" => "Students",
+            "advisers" => "Advisers",
+            _ => "All Users"
+        };
+    }
+
+    private static async Task<IReadOnlyList<UserGrowthPoint>> GetUserGrowthTrendAsync(SqlConnection connection, DateTime trendStartUtc, int monthsBack)
+    {
+        const string sql = @"
+            SELECT DATEFROMPARTS(YEAR(created_at), MONTH(created_at), 1) AS period_start,
+                   COUNT(*) AS total
+            FROM users
+            WHERE status <> 'archived' AND created_at >= @Start
+            GROUP BY DATEFROMPARTS(YEAR(created_at), MONTH(created_at), 1)
+            ORDER BY period_start";
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@Start", trendStartUtc);
+
+        var raw = new Dictionary<DateTime, int>();
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var periodStart = reader.GetDateTime(0);
+            var total = reader.GetInt32(1);
+            raw[periodStart] = total;
+        }
+
+        reader.Close();
+
+        var trend = new List<UserGrowthPoint>(monthsBack);
+        for (var i = 0; i < monthsBack; i++)
+        {
+            var period = trendStartUtc.AddMonths(i);
+            raw.TryGetValue(period, out var total);
+            trend.Add(new UserGrowthPoint
+            {
+                PeriodStart = period,
+                Label = period.ToString("MMM", CultureInfo.InvariantCulture),
+                Total = total
+            });
+        }
+
+        return trend;
+    }
+
+    private static async Task<IReadOnlyList<TicketResolutionPoint>> GetTicketResolutionTrendAsync(SqlConnection connection, DateTime trendStartUtc, int monthsBack)
+    {
+        const string sql = @"
+            SELECT DATEFROMPARTS(YEAR(created_at), MONTH(created_at), 1) AS period_start,
+                   SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) AS open_count,
+                   SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS in_progress_count,
+                   SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) AS resolved_count
+            FROM support_tickets
+            WHERE created_at >= @Start
+            GROUP BY DATEFROMPARTS(YEAR(created_at), MONTH(created_at), 1)
+            ORDER BY period_start";
+
+        await using var command = new SqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@Start", trendStartUtc);
+
+        var raw = new Dictionary<DateTime, (int Open, int InProgress, int Resolved)>();
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var periodStart = reader.GetDateTime(0);
+            var open = reader.IsDBNull(1) ? 0 : reader.GetInt32(1);
+            var inProgress = reader.IsDBNull(2) ? 0 : reader.GetInt32(2);
+            var resolved = reader.IsDBNull(3) ? 0 : reader.GetInt32(3);
+            raw[periodStart] = (open, inProgress, resolved);
+        }
+
+        reader.Close();
+
+        var trend = new List<TicketResolutionPoint>(monthsBack);
+        for (var i = 0; i < monthsBack; i++)
+        {
+            var period = trendStartUtc.AddMonths(i);
+            raw.TryGetValue(period, out var counts);
+            trend.Add(new TicketResolutionPoint
+            {
+                PeriodStart = period,
+                Label = period.ToString("MMM", CultureInfo.InvariantCulture),
+                OpenCount = counts.Open,
+                InProgressCount = counts.InProgress,
+                ResolvedCount = counts.Resolved
+            });
+        }
+
+        return trend;
+    }
+
     public async Task<AdminDashboardSummary> GetSummaryAsync(int periodDays = 30, int activityLimit = 6)
     {
         var now = DateTime.UtcNow;
         var currentStart = now.AddDays(-periodDays);
         var previousStart = currentStart.AddDays(-periodDays);
         var weekStart = now.AddDays(-7);
+        var monthsBack = 6;
+        var firstOfCurrentMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var trendStart = firstOfCurrentMonth.AddMonths(-(monthsBack - 1));
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -46,6 +225,10 @@ public sealed class AdminDashboardService
             new SqlParameter("@WeekStart", weekStart));
 
         var activities = await GetRecentActivitiesAsync(connection, activityLimit);
+        var userGrowthTrend = await GetUserGrowthTrendAsync(connection, trendStart, monthsBack);
+        var ticketTrend = await GetTicketResolutionTrendAsync(connection, trendStart, monthsBack);
+        var announcementViewTrend = await GetAnnouncementViewTrendAsync(connection, trendStart, monthsBack);
+        var announcementAudienceMix = await GetAnnouncementAudienceStatsAsync(connection);
 
         return new AdminDashboardSummary
         {
@@ -57,7 +240,11 @@ public sealed class AdminDashboardService
             InProgressTickets = ticketsSummary.InProgress,
             AnnouncementsTotal = announcementsTotal,
             AnnouncementsThisWeek = announcementsThisWeek,
-            RecentActivities = activities
+            RecentActivities = activities,
+            UserGrowthTrend = userGrowthTrend,
+            TicketResolutionTrend = ticketTrend,
+            AnnouncementViewTrend = announcementViewTrend,
+            AnnouncementAudienceMix = announcementAudienceMix
         };
     }
 

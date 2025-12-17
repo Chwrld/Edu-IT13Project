@@ -8,6 +8,7 @@ using MauiAppIT13.Database;
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
 using System.Diagnostics;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace MauiAppIT13
 {
@@ -33,6 +34,7 @@ namespace MauiAppIT13
 
             builder
                 .UseMauiApp<App>()
+                .ConfigureSyncfusionToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -82,7 +84,7 @@ namespace MauiAppIT13
             AppServiceProvider.Initialize(app.Services);
             SeedDatabaseInBackground(app.Services);
 
-            QuestPDF.Settings.License = LicenseType.Community;
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             return app;
         }
