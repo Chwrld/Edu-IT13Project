@@ -139,9 +139,12 @@ public partial class TeacherAnnouncementsPage : ContentPage
         var thisWeek = _allAnnouncements.Count(a => a.CreatedAt >= weekAgo);
         var studentsTargeted = _allAnnouncements.Count(a => a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase));
 
-        TotalCountLabel.Text = total.ToString();
-        WeekCountLabel.Text = thisWeek.ToString();
-        ImportantCountLabel.Text = studentsTargeted.ToString();
+        if (TotalCountLabel != null)
+            TotalCountLabel.Text = total.ToString();
+        if (WeekCountLabel != null)
+            WeekCountLabel.Text = thisWeek.ToString();
+        if (ImportantCountLabel != null)
+            ImportantCountLabel.Text = studentsTargeted.ToString();
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
@@ -151,7 +154,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private void ApplyFilters(string? searchText = null)
     {
-        searchText ??= SearchEntry.Text;
+        searchText ??= SearchEntry?.Text;
         var query = _allAnnouncements.AsEnumerable();
 
         // Apply visibility filter
@@ -181,7 +184,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private void OnFilterChanged(object? sender, EventArgs e)
     {
-        if (FilterPicker.SelectedIndex == -1) return;
+        if (FilterPicker == null || FilterPicker.SelectedIndex == -1) return;
 
         var selectedFilter = FilterPicker.SelectedIndex switch
         {
@@ -199,10 +202,13 @@ public partial class TeacherAnnouncementsPage : ContentPage
     {
         _isEditMode = false;
         _selectedAnnouncement = null;
-        ModalTitleLabel.Text = "Create New Announcement";
-        SubmitButton.Text = "Post Announcement";
+        if (ModalTitleLabel != null)
+            ModalTitleLabel.Text = "Create New Announcement";
+        if (SubmitButton != null)
+            SubmitButton.Text = "Post Announcement";
         ClearForm();
-        ModalOverlay.IsVisible = true;
+        if (ModalOverlay != null)
+            ModalOverlay.IsVisible = true;
     }
 
     private void OnEditAnnouncementClicked(object? sender, EventArgs e)
@@ -211,16 +217,23 @@ public partial class TeacherAnnouncementsPage : ContentPage
         {
             _isEditMode = true;
             _selectedAnnouncement = announcement;
-            ModalTitleLabel.Text = "Edit Announcement";
-            SubmitButton.Text = "Update Announcement";
+            if (ModalTitleLabel != null)
+                ModalTitleLabel.Text = "Edit Announcement";
+            if (SubmitButton != null)
+                SubmitButton.Text = "Update Announcement";
             
             // Populate form with existing data
-            SubjectEntry.Text = announcement.Subject;
-            MessageEditor.Text = announcement.Message;
-            TargetPicker.SelectedIndex = GetTargetPickerIndex(announcement.Visibility);
-            PublishSwitch.IsToggled = announcement.IsPublished;
+            if (SubjectEntry != null)
+                SubjectEntry.Text = announcement.Subject;
+            if (MessageEditor != null)
+                MessageEditor.Text = announcement.Message;
+            if (TargetPicker != null)
+                TargetPicker.SelectedIndex = GetTargetPickerIndex(announcement.Visibility);
+            if (PublishSwitch != null)
+                PublishSwitch.IsToggled = announcement.IsPublished;
             
-            ModalOverlay.IsVisible = true;
+            if (ModalOverlay != null)
+                ModalOverlay.IsVisible = true;
         }
     }
 
@@ -249,26 +262,28 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private void OnCloseModalTapped(object? sender, EventArgs e)
     {
-        ModalOverlay.IsVisible = false;
+        if (ModalOverlay != null)
+            ModalOverlay.IsVisible = false;
         ClearForm();
     }
 
     private void OnCancelAnnouncementClicked(object? sender, EventArgs e)
     {
-        ModalOverlay.IsVisible = false;
+        if (ModalOverlay != null)
+            ModalOverlay.IsVisible = false;
         ClearForm();
     }
 
     private async void OnSubmitAnnouncementClicked(object? sender, EventArgs e)
     {
         // Validate inputs
-        if (string.IsNullOrWhiteSpace(SubjectEntry.Text))
+        if (SubjectEntry == null || string.IsNullOrWhiteSpace(SubjectEntry.Text))
         {
             await DisplayAlert("Validation", "Please enter a subject.", "OK");
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(MessageEditor.Text))
+        if (MessageEditor == null || string.IsNullOrWhiteSpace(MessageEditor.Text))
         {
             await DisplayAlert("Validation", "Please enter a message.", "OK");
             return;
@@ -276,10 +291,10 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
         try
         {
-            var subject = SubjectEntry.Text.Trim();
-            var message = MessageEditor.Text.Trim();
+            var subject = SubjectEntry?.Text?.Trim() ?? string.Empty;
+            var message = MessageEditor?.Text?.Trim() ?? string.Empty;
             var visibility = GetVisibilityFromPicker();
-            var isPublished = PublishSwitch.IsToggled;
+            var isPublished = PublishSwitch?.IsToggled ?? true;
 
             var currentUser = _authManager.CurrentUser;
             if (currentUser == null)
@@ -322,7 +337,8 @@ public partial class TeacherAnnouncementsPage : ContentPage
             var successMessage = _isEditMode ? "Announcement updated successfully." : "Announcement posted successfully.";
 
             await LoadAnnouncementsAsync();
-            ModalOverlay.IsVisible = false;
+            if (ModalOverlay != null)
+                ModalOverlay.IsVisible = false;
             ClearForm();
             await DisplayAlert("Success", successMessage, "OK");
         }
@@ -334,10 +350,14 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private void ClearForm()
     {
-        SubjectEntry.Text = string.Empty;
-        MessageEditor.Text = string.Empty;
-        TargetPicker.SelectedIndex = 0;
-        PublishSwitch.IsToggled = true;
+        if (SubjectEntry != null)
+            SubjectEntry.Text = string.Empty;
+        if (MessageEditor != null)
+            MessageEditor.Text = string.Empty;
+        if (TargetPicker != null)
+            TargetPicker.SelectedIndex = 0;
+        if (PublishSwitch != null)
+            PublishSwitch.IsToggled = true;
         _isEditMode = false;
         _selectedAnnouncement = null;
     }
@@ -354,7 +374,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
         _ => "all"
     };
 
-    private string GetVisibilityFromPicker() => GetVisibilityFromPickerIndex(TargetPicker.SelectedIndex);
+    private string GetVisibilityFromPicker() => GetVisibilityFromPickerIndex(TargetPicker?.SelectedIndex ?? 0);
 
     private static string GetTargetLabelFromVisibility(string visibility) => visibility switch
     {
@@ -404,19 +424,22 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        LogoutModal.IsVisible = true;
+        if (LogoutModal != null)
+            LogoutModal.IsVisible = true;
     }
 
     private async void OnLogoutConfirmed(object? sender, EventArgs e)
     {
-        LogoutModal.IsVisible = false;
+        if (LogoutModal != null)
+            LogoutModal.IsVisible = false;
         _authManager.ClearAuthentication();
         await Shell.Current.GoToAsync("//MainPage", animate: false);
     }
 
     private void OnLogoutCancelled(object? sender, EventArgs e)
     {
-        LogoutModal.IsVisible = false;
+        if (LogoutModal != null)
+            LogoutModal.IsVisible = false;
     }
 }
 

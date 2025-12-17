@@ -3,9 +3,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Versioning;
+using Microsoft.Maui.Controls.Shapes;
 using MauiAppIT13.Models;
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
+using Path = System.IO.Path;
 
 namespace MauiAppIT13.Pages.Admin;
 
@@ -314,12 +316,60 @@ public partial class AdminHomePage : ContentPage
             var adminExport = await _adminDataExportService.ExportAsync(directory);
             exports.AddRange(adminExport.FilePaths.Select(path => $"Dataset → {path}"));
 
-            var message = "Dashboard export generated:\n" + string.Join("\n", exports.Select(path => $"• {path}"));
-            await DisplayAlert("Export Complete", message, "OK");
+            ShowExportSuccessModal(exports);
         }
         catch (Exception ex)
         {
             await DisplayAlert("Export Failed", $"Unable to export data: {ex.Message}", "OK");
         }
+    }
+
+    private void ShowExportSuccessModal(List<string> exportPaths)
+    {
+        ExportPathsList.Children.Clear();
+
+        foreach (var path in exportPaths)
+        {
+            var border = new Border
+            {
+                BackgroundColor = Color.FromArgb("#F3F4F6"),
+                Padding = new Thickness(15, 12),
+                StrokeThickness = 0,
+                StrokeShape = new RoundRectangle { CornerRadius = 8 }
+            };
+
+            var stack = new HorizontalStackLayout { Spacing = 10 };
+            
+            var icon = new Label
+            {
+                Text = path.Contains("→") ? "\ue24d" : "\ue415",
+                FontFamily = "MaterialIcons",
+                FontSize = 18,
+                TextColor = Color.FromArgb("#10B981"),
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            var label = new Label
+            {
+                Text = path,
+                FontSize = 13,
+                TextColor = Color.FromArgb("#374151"),
+                VerticalOptions = LayoutOptions.Center,
+                LineBreakMode = LineBreakMode.TailTruncation
+            };
+
+            stack.Children.Add(icon);
+            stack.Children.Add(label);
+            border.Content = stack;
+
+            ExportPathsList.Children.Add(border);
+        }
+
+        ExportSuccessModal.IsVisible = true;
+    }
+
+    private void OnExportSuccessOkClicked(object? sender, EventArgs e)
+    {
+        ExportSuccessModal.IsVisible = false;
     }
 }

@@ -9,6 +9,7 @@ using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
 using System.Diagnostics;
 using Syncfusion.Maui.Toolkit.Hosting;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace MauiAppIT13
 {
@@ -16,6 +17,20 @@ namespace MauiAppIT13
     {
         public static MauiApp CreateMauiApp()
         {
+            // Register Syncfusion license - Community License
+            // If you see a license dialog, you may need to:
+            // 1. Visit https://www.syncfusion.com/account/claim-license-key
+            // 2. Claim your license key with your email
+            // 3. Copy the exact key from your Syncfusion dashboard
+            try
+            {
+                Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf0x3Q3xbf1x2ZFxMZVRbRnFPMyBoS35Rc0RhWHhfcHRcQmNcWUV/VEFf");
+            }
+            catch
+            {
+                // License registration failed - will show watermark but app will still work
+            }
+            
             var builder = MauiApp.CreateBuilder();
             
             // Load configuration from appsettings.json with fallback
@@ -35,6 +50,7 @@ namespace MauiAppIT13
             builder
                 .UseMauiApp<App>()
                 .ConfigureSyncfusionToolkit()
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -68,9 +84,12 @@ namespace MauiAppIT13
             builder.Services.AddSingleton<GradeService>();
             builder.Services.AddSingleton<AuditLogService>();
             builder.Services.AddSingleton<ReportsService>();
+            builder.Services.AddSingleton<ChartRenderingService>();
             builder.Services.AddSingleton<ReportExportService>();
             builder.Services.AddSingleton<AdminDashboardService>();
             builder.Services.AddSingleton<AdminDataExportService>();
+            builder.Services.AddSingleton<StudentDashboardService>();
+            builder.Services.AddSingleton<TeacherDashboardService>();
             builder.Services.AddSingleton<SyncService>();
             builder.Services.AddSingleton<DeltaSyncService>();
 

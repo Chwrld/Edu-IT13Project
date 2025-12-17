@@ -728,7 +728,7 @@ BEGIN
     END
 
     ;WITH TeacherStudents AS (
-        SELECT s.student_id
+        SELECT s.student_id, ROW_NUMBER() OVER (ORDER BY s.student_id) AS student_row
         FROM dbo.students s
         WHERE s.adviser_id = @TeacherUserId
     ),
@@ -737,15 +737,28 @@ BEGIN
                ROW_NUMBER() OVER (PARTITION BY created_by ORDER BY course_code) AS course_num
         FROM dbo.courses
         WHERE created_by = @TeacherUserId
+    ),
+    EnrollmentData AS (
+        SELECT 
+            ts.student_id, 
+            tc.course_id, 
+            tc.created_by,
+            ROW_NUMBER() OVER (ORDER BY ts.student_id, tc.course_id) AS enrollment_row
+        FROM TeacherStudents ts
+        CROSS JOIN TeacherCourses tc
+        LEFT JOIN dbo.student_courses existing
+            ON existing.student_id = ts.student_id
+           AND existing.course_id = tc.course_id
+        WHERE existing.enrollment_id IS NULL
     )
     INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
-    SELECT NEWID(), ts.student_id, tc.course_id, tc.created_by, @Now
-    FROM TeacherStudents ts
-    CROSS JOIN TeacherCourses tc
-    LEFT JOIN dbo.student_courses existing
-        ON existing.student_id = ts.student_id
-       AND existing.course_id = tc.course_id
-    WHERE existing.enrollment_id IS NULL;
+    SELECT 
+        NEWID(), 
+        student_id, 
+        course_id, 
+        created_by,
+        DATEADD(DAY, -1 * (ABS(CHECKSUM(NEWID())) % 30), @Now)
+    FROM EnrollmentData;
 
     SET @TeacherIndex += 1;
 END
@@ -858,11 +871,22 @@ END
 -- Remove all existing enrollments for this student first
 DELETE FROM dbo.student_courses WHERE student_id = @TargetStudentId;
 
--- Enroll student in exactly 4 courses
+-- Enroll student in exactly 4 courses with varied enrollment dates
+;WITH CoursesToEnroll AS (
+    SELECT TOP 4 
+        c.course_id, 
+        c.created_by,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) AS course_num
+    FROM dbo.courses c
+)
 INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
-SELECT TOP 4 NEWID(), @TargetStudentId, c.course_id, c.created_by, @Now
-FROM dbo.courses c
-ORDER BY NEWID();
+SELECT 
+    NEWID(), 
+    @TargetStudentId, 
+    course_id, 
+    created_by, 
+    DATEADD(DAY, -1 * (ABS(CHECKSUM(NEWID())) % 30), @Now)
+FROM CoursesToEnroll;
 
 -- Add Student Achievements
 INSERT INTO dbo.student_achievements (achievement_id, student_id, achievement_name, description, awarded_by, awarded_date)

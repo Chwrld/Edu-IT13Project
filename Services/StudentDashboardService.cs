@@ -9,9 +9,9 @@ public class StudentDashboardService
 {
     private readonly DbConnection _dbConnection;
 
-    public StudentDashboardService(DbConnection? dbConnection = null)
+    public StudentDashboardService(DbConnection dbConnection)
     {
-        _dbConnection = dbConnection;
+        _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
     }
 
     public async Task<List<GpaTrendData>> GetGradePerformanceByCoursesAsync(Guid studentId)

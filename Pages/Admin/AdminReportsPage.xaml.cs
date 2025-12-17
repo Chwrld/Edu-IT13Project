@@ -1,9 +1,11 @@
 using System.Globalization;
 using System.IO;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls.Shapes;
 using MauiAppIT13.Models;
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
+using Path = System.IO.Path;
 
 namespace MauiAppIT13.Pages.Admin;
 
@@ -327,56 +329,105 @@ public partial class AdminReportsPage : ContentPage
         // Clear and populate preview content
         PreviewContentLayout.Children.Clear();
 
-        // Add report title
-        PreviewContentLayout.Children.Add(new Label
+        // Create styled table container
+        var tableContainer = new Border
         {
-            Text = reportData.ReportTitle,
-            FontSize = 16,
-            FontAttributes = FontAttributes.Bold,
-            TextColor = Color.FromArgb("#1F2937"),
-            Margin = new Thickness(0, 0, 0, 10)
-        });
+            StrokeThickness = 1,
+            Stroke = Color.FromArgb("#E5E7EB"),
+            BackgroundColor = Colors.White,
+            Margin = new Thickness(0, 10, 0, 0)
+        };
+        tableContainer.StrokeShape = new RoundRectangle { CornerRadius = 8 };
 
-        // Add period info
-        PreviewContentLayout.Children.Add(new Label
-        {
-            Text = $"Period: {reportData.PeriodStartUtc:MMM d, yyyy} - {reportData.PeriodEndUtc:MMM d, yyyy}",
-            FontSize = 12,
-            TextColor = Color.FromArgb("#474747ff"),
-            Margin = new Thickness(0, 0, 0, 15)
-        });
+        var tableLayout = new VerticalStackLayout { Spacing = 0 };
 
-        // Add table headers
-        var headerLayout = new HorizontalStackLayout { Spacing = 10, Margin = new Thickness(0, 0, 0, 10) };
-        foreach (var header in reportData.Headers)
+        // Add table header with background
+        var headerContainer = new Border
         {
-            headerLayout.Children.Add(new Label
+            BackgroundColor = Color.FromArgb("#F3F4F6"),
+            Padding = new Thickness(15, 12),
+            StrokeThickness = 0
+        };
+
+        var headerGrid = new Grid { ColumnSpacing = 15 };
+        for (int i = 0; i < reportData.Headers.Count; i++)
+        {
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        }
+
+        for (int i = 0; i < reportData.Headers.Count; i++)
+        {
+            var headerLabel = new Label
             {
-                Text = header,
-                FontSize = 12,
+                Text = reportData.Headers[i],
+                FontSize = 13,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#374151"),
-                HorizontalOptions = LayoutOptions.FillAndExpand
-            });
+                VerticalOptions = LayoutOptions.Center
+            };
+            Grid.SetColumn(headerLabel, i);
+            headerGrid.Children.Add(headerLabel);
         }
-        PreviewContentLayout.Children.Add(headerLayout);
 
-        // Add table rows
+        headerContainer.Content = headerGrid;
+        tableLayout.Children.Add(headerContainer);
+
+        // Add separator
+        tableLayout.Children.Add(new BoxView 
+        { 
+            HeightRequest = 1, 
+            BackgroundColor = Color.FromArgb("#E5E7EB") 
+        });
+
+        // Add table rows with alternating colors
+        bool isAlternate = false;
         foreach (var row in reportData.Rows)
         {
-            var rowLayout = new HorizontalStackLayout { Spacing = 10, Margin = new Thickness(0, 0, 0, 8) };
-            foreach (var cell in row)
+            var rowContainer = new Border
             {
-                rowLayout.Children.Add(new Label
+                BackgroundColor = isAlternate ? Color.FromArgb("#F9FAFB") : Colors.White,
+                Padding = new Thickness(15, 12),
+                StrokeThickness = 0
+            };
+
+            var rowGrid = new Grid { ColumnSpacing = 15 };
+            for (int i = 0; i < reportData.Headers.Count; i++)
+            {
+                rowGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            }
+
+            for (int i = 0; i < row.Count; i++)
+            {
+                var cellLabel = new Label
                 {
-                    Text = cell,
-                    FontSize = 11,
+                    Text = row[i],
+                    FontSize = 12,
                     TextColor = Color.FromArgb("#1F2937"),
-                    HorizontalOptions = LayoutOptions.FillAndExpand
+                    VerticalOptions = LayoutOptions.Center,
+                    LineBreakMode = LineBreakMode.TailTruncation
+                };
+                Grid.SetColumn(cellLabel, i);
+                rowGrid.Children.Add(cellLabel);
+            }
+
+            rowContainer.Content = rowGrid;
+            tableLayout.Children.Add(rowContainer);
+
+            // Add separator between rows
+            if (row != reportData.Rows.Last())
+            {
+                tableLayout.Children.Add(new BoxView 
+                { 
+                    HeightRequest = 1, 
+                    BackgroundColor = Color.FromArgb("#F3F4F6") 
                 });
             }
-            PreviewContentLayout.Children.Add(rowLayout);
+
+            isAlternate = !isAlternate;
         }
+
+        tableContainer.Content = tableLayout;
+        PreviewContentLayout.Children.Add(tableContainer);
 
         // Show the preview modal
         PrintPreviewOverlay.IsVisible = true;
@@ -393,25 +444,110 @@ public partial class AdminReportsPage : ContentPage
         if (_currentReportData is null)
             return;
 
+        if (!_exportPdfSelected && !_exportCsvSelected)
+        {
+            await DisplayAlert("No Format Selected", "Please select at least one export format (PDF or CSV) before exporting.", "OK");
+            return;
+        }
+
         try
         {
+            var exports = await ExportSelectedFormatsAsync();
+            
+            if (exports.Count == 0)
+            {
+                await DisplayAlert("Export Failed", "No reports were exported. Please try again.", "OK");
+                return;
+            }
+
+            // Show custom success modal
+            ShowExportSuccessModal(exports);
+            
             PrintPreviewOverlay.IsVisible = false;
-
-            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "EduCRM", "Reports");
-            var pdfPath = await _reportExportService.ExportPdfAsync(_currentReportData, directory);
-
-            var message = $"Report exported successfully!\n\n" +
-                          $"Total Tickets: {_currentReportData.Metrics.TotalTicketsCurrent:N0}\n" +
-                          $"Active Users: {_currentReportData.Metrics.ActiveUsersTotal:N0}\n" +
-                          $"Avg Response: {FormatDuration(_currentReportData.Metrics.AvgResponseMinutesCurrent)}\n\n" +
-                          $"Path: {pdfPath}";
-
-            await DisplayAlert("Export Successful", message, "OK");
-            _currentReportData = null;
+            _exportPdfSelected = false;
+            _exportCsvSelected = false;
+            UpdateQuickExportButtons();
         }
         catch (Exception ex)
         {
             await DisplayAlert("Export Failed", $"Failed to export report: {ex.Message}", "OK");
         }
+    }
+
+    private void ShowExportSuccessModal(List<string> exportPaths)
+    {
+        if (_currentReportData is null)
+            return;
+
+        // Clear previous content
+        SuccessMetricsLayout.Children.Clear();
+        SuccessFilePathsLayout.Children.Clear();
+
+        // Add metrics
+        SuccessMetricsLayout.Children.Add(new Label
+        {
+            Text = $"Total Tickets: {_currentReportData.Metrics.TotalTicketsCurrent:N0}",
+            FontSize = 13,
+            TextColor = Color.FromArgb("#374151")
+        });
+        SuccessMetricsLayout.Children.Add(new Label
+        {
+            Text = $"Active Users: {_currentReportData.Metrics.ActiveUsersTotal:N0}",
+            FontSize = 13,
+            TextColor = Color.FromArgb("#374151")
+        });
+        SuccessMetricsLayout.Children.Add(new Label
+        {
+            Text = $"Avg Response: {FormatDuration(_currentReportData.Metrics.AvgResponseMinutesCurrent)}",
+            FontSize = 13,
+            TextColor = Color.FromArgb("#374151")
+        });
+
+        // Add file paths with styled cards
+        foreach (var path in exportPaths)
+        {
+            var border = new Border
+            {
+                BackgroundColor = Color.FromArgb("#F3F4F6"),
+                Padding = new Thickness(15, 12),
+                StrokeThickness = 0,
+                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 8 }
+            };
+
+            var stack = new HorizontalStackLayout { Spacing = 10 };
+            
+            var icon = new Label
+            {
+                Text = path.Contains("PDF") ? "\ue415" : "\ue24d",
+                FontFamily = "MaterialIcons",
+                FontSize = 18,
+                TextColor = Color.FromArgb("#10B981"),
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            var label = new Label
+            {
+                Text = path,
+                FontSize = 13,
+                TextColor = Color.FromArgb("#374151"),
+                VerticalOptions = LayoutOptions.Center,
+                LineBreakMode = LineBreakMode.TailTruncation
+            };
+
+            stack.Children.Add(icon);
+            stack.Children.Add(label);
+            border.Content = stack;
+
+            SuccessFilePathsLayout.Children.Add(border);
+        }
+
+        // Show modal
+        ExportSuccessModal.IsVisible = true;
+    }
+
+    private void OnSuccessModalOkClicked(object? sender, EventArgs e)
+    {
+        ExportSuccessModal.IsVisible = false;
+        _currentReportData = null;
     }
 }

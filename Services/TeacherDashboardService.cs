@@ -9,9 +9,9 @@ public class TeacherDashboardService
 {
     private readonly DbConnection _dbConnection;
 
-    public TeacherDashboardService(DbConnection? dbConnection = null)
+    public TeacherDashboardService(DbConnection dbConnection)
     {
-        _dbConnection = dbConnection;
+        _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
     }
 
     public async Task<List<ClassPerformanceData>> GetClassPerformanceAsync(Guid teacherId)
