@@ -575,50 +575,53 @@
                                 </Label.Triggers>
                             </Label>
 
-                            <VerticalStackLayout Spacing="8"
-                                                 BindableLayout.ItemsSource="{Binding AtRiskStudents}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BackgroundColor="#FFFBEB"
-                                                Padding="12"
-                                                StrokeThickness="1"
-                                                Stroke="#FCD34D">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="6"/>
-                                            </Border.StrokeShape>
-                                            <VerticalStackLayout Spacing="4">
-                                                <HorizontalStackLayout Spacing="8">
-                                                    <Label Text="{Binding StudentName}"
-                                                           FontSize="12"
-                                                           FontAttributes="Bold"
-                                                           TextColor="#2C3E50"
-                                                           LineBreakMode="TailTruncation"/>
-                                                    <Label Text="{Binding ClassName}"
-                                                           FontSize="11"
-                                                           TextColor="#6B7280"
-                                                           VerticalOptions="Center"/>
-                                                </HorizontalStackLayout>
-                                                <HorizontalStackLayout Spacing="8">
-                                                    <Label Text="{Binding Grade, StringFormat='Grade: {0:F2}'}"
-                                                           FontSize="11"
-                                                           TextColor="#4B5563"/>
-                                                    <Border BackgroundColor="#FEE2E2"
-                                                            Padding="4,2"
-                                                            StrokeThickness="0">
-                                                        <Border.StrokeShape>
-                                                            <RoundRectangle CornerRadius="3"/>
-                                                        </Border.StrokeShape>
-                                                        <Label Text="{Binding RiskLevel}"
-                                                               TextColor="#DC2626"
-                                                               FontSize="9"
-                                                               FontAttributes="Bold"/>
-                                                    </Border>
-                                                </HorizontalStackLayout>
-                                            </VerticalStackLayout>
-                                        </Border>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
+                            <ScrollView HeightRequest="320"
+                                        VerticalScrollBarVisibility="Always">
+                                <VerticalStackLayout Spacing="8"
+                                                     BindableLayout.ItemsSource="{Binding AtRiskStudents}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FFFBEB"
+                                                    Padding="12"
+                                                    StrokeThickness="1"
+                                                    Stroke="#FCD34D">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="6"/>
+                                                </Border.StrokeShape>
+                                                <VerticalStackLayout Spacing="4">
+                                                    <HorizontalStackLayout Spacing="8">
+                                                        <Label Text="{Binding StudentName}"
+                                                               FontSize="12"
+                                                               FontAttributes="Bold"
+                                                               TextColor="#2C3E50"
+                                                               LineBreakMode="TailTruncation"/>
+                                                        <Label Text="{Binding ClassName}"
+                                                               FontSize="11"
+                                                               TextColor="#6B7280"
+                                                               VerticalOptions="Center"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="8">
+                                                        <Label Text="{Binding Grade, StringFormat='Grade: {0:F2}'}"
+                                                               FontSize="11"
+                                                               TextColor="#4B5563"/>
+                                                        <Border BackgroundColor="#FEE2E2"
+                                                                Padding="4,2"
+                                                                StrokeThickness="0">
+                                                            <Border.StrokeShape>
+                                                                <RoundRectangle CornerRadius="3"/>
+                                                            </Border.StrokeShape>
+                                                            <Label Text="{Binding RiskLevel}"
+                                                                   TextColor="#DC2626"
+                                                                   FontSize="9"
+                                                                   FontAttributes="Bold"/>
+                                                        </Border>
+                                                    </HorizontalStackLayout>
+                                                </VerticalStackLayout>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </ScrollView>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
