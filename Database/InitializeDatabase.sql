@@ -731,24 +731,314 @@ BEGIN
         SELECT s.student_id
         FROM dbo.students s
         WHERE s.adviser_id = @TeacherUserId
+    ),
+    TeacherCourses AS (
+        SELECT course_id, created_by,
+               ROW_NUMBER() OVER (PARTITION BY created_by ORDER BY course_code) AS course_num
+        FROM dbo.courses
+        WHERE created_by = @TeacherUserId
     )
     INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
-    SELECT NEWID(), ts.student_id, c.course_id, c.created_by, @Now
+    SELECT NEWID(), ts.student_id, tc.course_id, tc.created_by, @Now
     FROM TeacherStudents ts
-    CROSS APPLY (
-        SELECT
-            c2.course_id,
-            c2.created_by,
-            ROW_NUMBER() OVER (ORDER BY ABS(CHECKSUM(ts.student_id, c2.course_id))) AS row_num
-        FROM dbo.courses c2
-    ) c
+    CROSS JOIN TeacherCourses tc
     LEFT JOIN dbo.student_courses existing
         ON existing.student_id = ts.student_id
-       AND existing.course_id = c.course_id
-    WHERE existing.enrollment_id IS NULL
-      AND c.row_num <= (2 + ABS(CHECKSUM(ts.student_id)) % 3);
+       AND existing.course_id = tc.course_id
+    WHERE existing.enrollment_id IS NULL;
 
     SET @TeacherIndex += 1;
 END
 
-PRINT 'EduCRM database created and fully seeded.';
+-- Create grades for all enrolled students that don't have grades yet
+INSERT INTO dbo.student_course_grades (grade_id, course_id, student_id, assignments_score, activities_score, exams_score, projects_score, updated_at)
+SELECT 
+    NEWID(),
+    sc.course_id,
+    sc.student_id,
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 35 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 70 + (ABS(CHECKSUM(sc.student_id)) % 25)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 30 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 68 + (ABS(CHECKSUM(sc.student_id)) % 20)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 40 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 72 + (ABS(CHECKSUM(sc.student_id)) % 18)
+    END AS DECIMAL(5,2)),
+    CAST(CASE 
+        WHEN ABS(CHECKSUM(sc.student_id, sc.course_id)) % 180 IN (2, 8, 15, 22, 28) THEN 38 + (ABS(CHECKSUM(sc.student_id)) % 20)
+        ELSE 75 + (ABS(CHECKSUM(sc.student_id)) % 22)
+    END AS DECIMAL(5,2)),
+    @Now
+FROM dbo.student_courses sc
+LEFT JOIN dbo.student_course_grades scg ON sc.course_id = scg.course_id AND sc.student_id = scg.student_id
+WHERE scg.grade_id IS NULL;
+
+------------------------------------------------------------
+-- Seed historical announcement view data for charts
+------------------------------------------------------------
+DECLARE @MonthsOfHistory INT = 6;
+
+;WITH RecentAnnouncements AS (
+    SELECT TOP 12 announcement_id, created_at
+    FROM dbo.announcements
+    ORDER BY created_at DESC
+),
+SampleStudents AS (
+    SELECT TOP 25 user_id, created_at
+    FROM dbo.users
+    WHERE role = 'Student'
+    ORDER BY created_at DESC
+),
+MonthOffsets AS (
+    SELECT 0 AS OffsetValue
+    UNION ALL
+    SELECT OffsetValue + 1
+    FROM MonthOffsets
+    WHERE OffsetValue + 1 < @MonthsOfHistory
+)
+INSERT INTO dbo.announcement_views (view_id, announcement_id, user_id, viewed_at)
+SELECT TOP (600)
+    NEWID(),
+    ra.announcement_id,
+    ss.user_id,
+    DATEADD(
+        DAY,
+        ABS(CHECKSUM(ra.announcement_id, ss.user_id, mo.OffsetValue)) % 28,
+        DATEFROMPARTS(
+            YEAR(DATEADD(MONTH, -mo.OffsetValue, @Now)),
+            MONTH(DATEADD(MONTH, -mo.OffsetValue, @Now)),
+            1
+        )
+    )
+FROM RecentAnnouncements ra
+CROSS JOIN SampleStudents ss
+CROSS JOIN MonthOffsets mo
+WHERE ABS(CHECKSUM(ra.announcement_id, ss.user_id, mo.OffsetValue)) % 5 = 0
+ORDER BY ra.created_at DESC, mo.OffsetValue, ss.created_at DESC
+OPTION (MAXRECURSION 100);
+
+------------------------------------------------------------
+-- Specific Seeding for student03324@university.edu
+------------------------------------------------------------
+
+-- Get the actual user_id for student03324@university.edu (created during bulk seeding)
+DECLARE @TargetStudentId UNIQUEIDENTIFIER;
+SELECT @TargetStudentId = user_id FROM dbo.users WHERE email = 'student03324@university.edu';
+
+-- If student doesn't exist, skip this section
+IF @TargetStudentId IS NULL
+BEGIN
+    PRINT 'Warning: student03324@university.edu not found in database. Skipping student-specific seeding.';
+END
+ELSE
+BEGIN
+    DECLARE @Teacher1Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0002';
+    DECLARE @Teacher2Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0003';
+    DECLARE @Teacher3Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id != @Teacher1Id AND adviser_id != @Teacher2Id ORDER BY NEWID());
+    DECLARE @Teacher4Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id NOT IN (@Teacher1Id, @Teacher2Id, @Teacher3Id) ORDER BY NEWID());
+
+-- Update user display names
+UPDATE dbo.users SET display_name = 'Maria Santos' WHERE user_id = @TargetStudentId;
+UPDATE dbo.users SET display_name = 'Dr. James Mitchell' WHERE user_id = @Teacher1Id;
+UPDATE dbo.users SET display_name = 'Prof. Sarah Chen' WHERE user_id = @Teacher2Id;
+UPDATE dbo.users SET display_name = 'Dr. Robert Williams' WHERE user_id = @Teacher3Id;
+UPDATE dbo.users SET display_name = 'Prof. Elena Rodriguez' WHERE user_id = @Teacher4Id;
+
+-- Ensure student record exists
+IF NOT EXISTS (SELECT 1 FROM dbo.students WHERE student_id = @TargetStudentId)
+BEGIN
+    INSERT INTO dbo.students (student_id, student_number, program, year_level, gpa, status, adviser_id, created_at)
+    VALUES (@TargetStudentId, 'STU-2024-3324', 'BS Computer Science', 'Year 3', 3.75, 'active', @Teacher1Id, @Now);
+END
+
+-- Remove all existing enrollments for this student first
+DELETE FROM dbo.student_courses WHERE student_id = @TargetStudentId;
+
+-- Enroll student in exactly 4 courses
+INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
+SELECT TOP 4 NEWID(), @TargetStudentId, c.course_id, c.created_by, @Now
+FROM dbo.courses c
+ORDER BY NEWID();
+
+-- Add Student Achievements
+INSERT INTO dbo.student_achievements (achievement_id, student_id, achievement_name, description, awarded_by, awarded_date)
+VALUES
+    (NEWID(), @TargetStudentId, 'Perfect Attendance', 'Maintained perfect attendance throughout the semester', @Teacher1Id, DATEADD(MONTH, -2, @Now)),
+    (NEWID(), @TargetStudentId, 'Excellent Project Work', 'Demonstrated exceptional skills in capstone project', @Teacher2Id, DATEADD(MONTH, -1, @Now)),
+    (NEWID(), @TargetStudentId, 'Class Participation Award', 'Active contributor in class discussions and activities', @Teacher3Id, DATEADD(WEEK, -3, @Now)),
+    (NEWID(), @TargetStudentId, 'Peer Mentor', 'Helped fellow students with course material and assignments', @Teacher4Id, DATEADD(WEEK, -1, @Now));
+
+-- Create 4 Conversations with Teachers
+DECLARE @TargetMsg1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg2 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg3 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg4 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg5 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg6 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg7 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg8 UNIQUEIDENTIFIER = NEWID();
+
+-- Conversation 1: With Teacher 1
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg1, @Teacher1Id, @TargetStudentId, 'Hi! I wanted to discuss your project proposal. Great work so far!', 0, DATEADD(DAY, -7, @Now)),
+    (@TargetMsg2, @TargetStudentId, @Teacher1Id, 'Thank you! I would love your feedback on the implementation approach.', 1, DATEADD(DAY, -6, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher1Id, @TargetStudentId, @TargetMsg2, DATEADD(DAY, -6, @Now), DATEADD(DAY, -7, @Now));
+
+-- Conversation 2: With Teacher 2
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg3, @Teacher2Id, @TargetStudentId, 'Your assignment submission was excellent. Keep up the good work!', 0, DATEADD(DAY, -5, @Now)),
+    (@TargetMsg4, @TargetStudentId, @Teacher2Id, 'Thank you for the positive feedback! I really enjoyed this assignment.', 1, DATEADD(DAY, -4, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher2Id, @TargetStudentId, @TargetMsg4, DATEADD(DAY, -4, @Now), DATEADD(DAY, -5, @Now));
+
+-- Conversation 3: With Teacher 3
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg5, @TargetStudentId, @Teacher3Id, 'Can we schedule a meeting to discuss the upcoming exam?', 1, DATEADD(DAY, -3, @Now)),
+    (@TargetMsg6, @Teacher3Id, @TargetStudentId, 'Absolutely! How about Thursday at 2 PM in my office?', 0, DATEADD(DAY, -2, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @TargetStudentId, @Teacher3Id, @TargetMsg6, DATEADD(DAY, -2, @Now), DATEADD(DAY, -3, @Now));
+
+-- Conversation 4: With Teacher 4
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg7, @Teacher4Id, @TargetStudentId, 'I noticed you helping other students with the lab work. Great initiative!', 0, DATEADD(DAY, -1, @Now)),
+    (@TargetMsg8, @TargetStudentId, @Teacher4Id, 'Thank you! I enjoy helping my classmates understand the concepts better.', 1, DATEADD(HOUR, -12, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher4Id, @TargetStudentId, @TargetMsg8, DATEADD(HOUR, -12, @Now), DATEADD(DAY, -1, @Now));
+
+-- Create 5 Support Tickets
+INSERT INTO dbo.support_tickets (ticket_id, ticket_number, title, description, status, created_at, created_by, updated_at, updated_by, student_id, assigned_to_id)
+VALUES
+    (NEWID(), 'TKT-2024-0101', 'Course Registration Issue', 'Unable to register for Spring 2025 courses due to system error.', 'resolved', DATEADD(DAY, -20, @Now), @TargetStudentId, DATEADD(DAY, -18, @Now), @Teacher1Id, @TargetStudentId, @Teacher1Id),
+    (NEWID(), 'TKT-2024-0102', 'Grade Appeal', 'Requesting review of midterm exam grade - believe there was a calculation error.', 'in_progress', DATEADD(DAY, -15, @Now), @TargetStudentId, DATEADD(DAY, -10, @Now), @Teacher2Id, @TargetStudentId, @Teacher2Id),
+    (NEWID(), 'TKT-2024-0103', 'Lab Equipment Access', 'Need access to computer lab for capstone project work.', 'resolved', DATEADD(DAY, -12, @Now), @TargetStudentId, DATEADD(DAY, -11, @Now), @Teacher3Id, @TargetStudentId, @Teacher3Id),
+    (NEWID(), 'TKT-2024-0104', 'Transcript Request', 'Official transcript needed for graduate school application.', 'resolved', DATEADD(DAY, -8, @Now), @TargetStudentId, DATEADD(DAY, -7, @Now), @Teacher4Id, @TargetStudentId, @Teacher4Id),
+    (NEWID(), 'TKT-2024-0105', 'Assignment Extension Request', 'Requesting 2-day extension for final project due to illness.', 'open', DATEADD(DAY, -2, @Now), @TargetStudentId, NULL, NULL, @TargetStudentId, @Teacher1Id);
+
+-- Add Course Grades for Student 03324 (All enrolled courses with realistic grades)
+DECLARE @CourseIds TABLE (course_id UNIQUEIDENTIFIER, course_name NVARCHAR(255));
+INSERT INTO @CourseIds
+SELECT c.course_id, c.course_name
+FROM dbo.student_courses sc
+INNER JOIN dbo.courses c ON sc.course_id = c.course_id
+WHERE sc.student_id = @TargetStudentId
+ORDER BY c.course_name;
+
+DECLARE @CrsId UNIQUEIDENTIFIER;
+DECLARE @CrsName NVARCHAR(255);
+DECLARE @GradeScore DECIMAL(5,2);
+DECLARE @CourseCounter INT = 1;
+DECLARE @TotalCourses INT = (SELECT COUNT(*) FROM @CourseIds);
+
+DECLARE course_cursor CURSOR FOR SELECT course_id, course_name FROM @CourseIds;
+OPEN course_cursor;
+FETCH NEXT FROM course_cursor INTO @CrsId, @CrsName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Vary the grades to show different performance levels across courses
+    SET @GradeScore = CASE (@CourseCounter % 5)
+        WHEN 0 THEN 94.50  -- Excellent
+        WHEN 1 THEN 91.25  -- Very Good
+        WHEN 2 THEN 87.75  -- Good
+        WHEN 3 THEN 89.50  -- Very Good
+        ELSE 92.00         -- Excellent
+    END;
+
+    -- Delete existing grade if present
+    DELETE FROM dbo.student_course_grades 
+    WHERE student_id = @TargetStudentId AND course_id = @CrsId;
+
+    -- Insert new grade with realistic component scores
+    INSERT INTO dbo.student_course_grades (grade_id, course_id, student_id, assignments_score, activities_score, exams_score, projects_score, updated_at)
+    VALUES (
+        NEWID(),
+        @CrsId,
+        @TargetStudentId,
+        @GradeScore - 3,      -- Assignments slightly lower
+        @GradeScore - 2,      -- Activities slightly lower
+        @GradeScore + 2,      -- Exams slightly higher
+        @GradeScore,          -- Projects match overall
+        DATEADD(DAY, -(@CourseCounter * 2), @Now)
+    );
+
+    SET @CourseCounter += 1;
+    FETCH NEXT FROM course_cursor INTO @CrsId, @CrsName;
+END
+
+CLOSE course_cursor;
+DEALLOCATE course_cursor;
+
+-- Add Assignment Submissions for Student 03324 (All assignments across all enrolled courses)
+DECLARE @AssignmentIds TABLE (assignment_id UNIQUEIDENTIFIER, course_id UNIQUEIDENTIFIER, title NVARCHAR(255));
+INSERT INTO @AssignmentIds
+SELECT a.assignment_id, a.course_id, a.title
+FROM dbo.class_assignments a
+WHERE a.course_id IN (SELECT course_id FROM @CourseIds)
+ORDER BY a.course_id, a.created_at;
+
+DECLARE @AsgId UNIQUEIDENTIFIER;
+DECLARE @AsgCourseId UNIQUEIDENTIFIER;
+DECLARE @AsgTitle NVARCHAR(255);
+DECLARE @SubmissionScore INT;
+DECLARE @AssignmentCounter INT = 1;
+DECLARE @TotalAssignments INT = (SELECT COUNT(*) FROM @AssignmentIds);
+
+DECLARE assignment_cursor CURSOR FOR SELECT assignment_id, course_id, title FROM @AssignmentIds;
+OPEN assignment_cursor;
+FETCH NEXT FROM assignment_cursor INTO @AsgId, @AsgCourseId, @AsgTitle;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Vary submission scores realistically (85-98 range for good student)
+    SET @SubmissionScore = CASE (@AssignmentCounter % 6)
+        WHEN 0 THEN 96  -- Excellent
+        WHEN 1 THEN 92  -- Very Good
+        WHEN 2 THEN 88  -- Good
+        WHEN 3 THEN 94  -- Excellent
+        WHEN 4 THEN 90  -- Very Good
+        ELSE 85         -- Good
+    END;
+
+    -- Check if submission already exists
+    IF NOT EXISTS (SELECT 1 FROM dbo.assignment_submissions WHERE assignment_id = @AsgId AND student_id = @TargetStudentId)
+    BEGIN
+        INSERT INTO dbo.assignment_submissions (submission_id, assignment_id, student_id, submitted_at, score, status, notes, submission_content)
+        VALUES (
+            NEWID(),
+            @AsgId,
+            @TargetStudentId,
+            DATEADD(DAY, -(@AssignmentCounter), @Now),
+            @SubmissionScore,
+            'graded',
+            CASE (@AssignmentCounter % 4)
+                WHEN 0 THEN 'Excellent work! Well-structured, thorough analysis, and excellent implementation.'
+                WHEN 1 THEN 'Very good submission. Consider adding more detail to the methodology section for completeness.'
+                WHEN 2 THEN 'Good work. Minor improvements needed in the conclusion and recommendations.'
+                ELSE 'Solid submission. Well-executed with clear documentation and good attention to detail.'
+            END,
+            CONCAT('Submission for ', @AsgTitle, ': Comprehensive analysis with detailed implementation, clear documentation, and thoughtful recommendations based on research.')
+        );
+    END
+
+    SET @AssignmentCounter += 1;
+    FETCH NEXT FROM assignment_cursor INTO @AsgId, @AsgCourseId, @AsgTitle;
+END
+
+CLOSE assignment_cursor;
+DEALLOCATE assignment_cursor;
+
+    PRINT 'Seeding completed for student03324@university.edu with achievements, conversations, tickets, course grades, and assignments.';
+END

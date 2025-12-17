@@ -18,10 +18,20 @@ public partial class HomePage : ContentPage
     private readonly DbConnection? _dbConnection;
     private readonly SyncService _syncService;
     private readonly DeltaSyncService _deltaSyncService;
+    private readonly StudentDashboardService _dashboardService;
     private bool _isLoadingDashboard;
 
     public ObservableCollection<Conversation> RecentMessages { get; } = new();
     public ObservableCollection<Announcement> LatestAnnouncements { get; } = new();
+    public ObservableCollection<GpaTrendData> GpaTrendData { get; } = new();
+    public ObservableCollection<AssignmentCompletionData> AssignmentCompletionData { get; } = new();
+
+    private double _currentGpa = 3.75;
+    public double CurrentGpa
+    {
+        get => _currentGpa;
+        set => SetProperty(ref _currentGpa, value);
+    }
 
     private string _welcomeMessage = "Welcome back, Student!";
     public string WelcomeMessage
@@ -90,6 +100,7 @@ public partial class HomePage : ContentPage
             ?? throw new InvalidOperationException("SyncService is not registered.");
         _deltaSyncService = AppServiceProvider.GetService<DeltaSyncService>()
             ?? throw new InvalidOperationException("DeltaSyncService is not registered.");
+        _dashboardService = new StudentDashboardService(_dbConnection);
 
         BindingContext = this;
     }
@@ -142,6 +153,7 @@ public partial class HomePage : ContentPage
             UpdateMessagesSection(unreadSummary, conversations);
             UpdateAnnouncementsSection(announcements);
             UpdateTicketsSection(tickets);
+            await LoadGraphDataAsync();
         }
         catch (Exception ex)
         {
@@ -151,6 +163,90 @@ public partial class HomePage : ContentPage
         {
             _isLoadingDashboard = false;
         }
+    }
+
+    private async Task LoadGraphDataAsync()
+    {
+        try
+        {
+            var currentUser = _authManager.CurrentUser;
+            if (currentUser is null)
+            {
+                System.Diagnostics.Debug.WriteLine("HomePage: Current user is null");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine($"HomePage: Loading graph data for user {currentUser.Id}");
+
+            // Load Grade Performance by Courses (Real Data)
+            var gradePerformanceList = await _dashboardService.GetGradePerformanceByCoursesAsync(currentUser.Id);
+            System.Diagnostics.Debug.WriteLine($"HomePage: Grade performance data count: {gradePerformanceList.Count}");
+            
+            GpaTrendData.Clear();
+            
+            if (gradePerformanceList.Any())
+            {
+                foreach (var data in gradePerformanceList)
+                {
+                    GpaTrendData.Add(data);
+                    System.Diagnostics.Debug.WriteLine($"HomePage: Added grade data - {data.Month}: {data.Gpa}");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("HomePage: No real grade data, using fallback");
+                var fallbackList = await _dashboardService.GetGpaTrendAsync(CurrentGpa, 6);
+                foreach (var data in fallbackList)
+                {
+                    GpaTrendData.Add(data);
+                }
+            }
+
+            // Load Assignment Completion by Courses (Real Data)
+            var assignmentList = await _dashboardService.GetAssignmentCompletionByCoursesAsync(currentUser.Id);
+            System.Diagnostics.Debug.WriteLine($"HomePage: Assignment completion data count: {assignmentList.Count}");
+            
+            AssignmentCompletionData.Clear();
+            
+            if (assignmentList.Any())
+            {
+                foreach (var data in assignmentList)
+                {
+                    AssignmentCompletionData.Add(data);
+                    System.Diagnostics.Debug.WriteLine($"HomePage: Added assignment data - {data.ClassName}: {data.Submitted}/{data.Total}");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("HomePage: No assignment data available");
+                var fallbackData = new List<AssignmentCompletionData>
+                {
+                    new AssignmentCompletionData { ClassName = "No courses", Submitted = 0, Total = 0 }
+                };
+                foreach (var data in fallbackData)
+                {
+                    AssignmentCompletionData.Add(data);
+                }
+            }
+            
+            System.Diagnostics.Debug.WriteLine($"HomePage: Graph data loaded - GPA items: {GpaTrendData.Count}, Assignment items: {AssignmentCompletionData.Count}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"HomePage: Failed to load graph data - {ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    private void UpdateGradePerformanceChart(IEnumerable<GpaTrendData> data)
+    {
+        // Charts will be displayed via Microcharts ChartView binding
+        // Data is available in GpaTrendData collection for binding
+    }
+
+    private void UpdateAssignmentCompletionChart(IEnumerable<AssignmentCompletionData> data)
+    {
+        // Charts will be displayed via Microcharts ChartView binding
+        // Data is available in AssignmentCompletionData collection for binding
     }
 
     private void UpdateMessagesSection((int TotalUnread, int AdvisorUnread) summary, IEnumerable<Conversation> conversations)

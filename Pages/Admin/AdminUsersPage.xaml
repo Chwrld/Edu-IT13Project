@@ -427,6 +427,99 @@
 
         </Grid>
 
+        <!-- Archive Reason Modal -->
+        <Grid x:Name="ArchiveReasonModal"
+              Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+              IsVisible="False"
+              Padding="0"
+              ZIndex="1001">
+            <BoxView BackgroundColor="#80000000"
+                     InputTransparent="False"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Fill">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnArchiveModalBackgroundTapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border BackgroundColor="White"
+                    Margin="20"
+                    Padding="30"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    WidthRequest="600">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="20">
+                    <!-- Header -->
+                    <Label x:Name="ArchiveModalLabel"
+                           Text="Archive User"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+
+                    <!-- Archive Reason Picker -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Select Archive Reason"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#374151"/>
+                        <Picker x:Name="ArchiveReasonPicker"
+                                BackgroundColor="#F3F4F6"
+                                TextColor="#1F2937"
+                                Title="Select a reason"
+                                SelectedIndexChanged="OnArchiveReasonChanged"/>
+                    </VerticalStackLayout>
+
+                    <!-- Custom Reason Entry (shown only when "Other" is selected) -->
+                    <VerticalStackLayout Spacing="8" IsVisible="False" x:Name="CustomReasonContainer">
+                        <Label Text="Please specify the reason"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#374151"/>
+                        <Border BackgroundColor="#F3F4F6" StrokeThickness="0" Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Entry x:Name="CustomReasonEntry"
+                                   Placeholder="Enter custom reason"
+                                   PlaceholderColor="#D1D5DB"
+                                   TextColor="#1F2937"
+                                   BackgroundColor="Transparent"
+                                   MaxLength="200"/>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Buttons -->
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                        <Button Grid.Column="1"
+                                Text="Cancel"
+                                BackgroundColor="#E5E7EB"
+                                TextColor="#1F2937"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Padding="20,12"
+                                WidthRequest="120"
+                                Clicked="OnCancelArchiveClicked"/>
+                        <Button Grid.Column="2"
+                                Text="Archive"
+                                BackgroundColor="#EF4444"
+                                TextColor="White"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Padding="20,12"
+                                WidthRequest="120"
+                                Clicked="OnConfirmArchiveClicked"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
         <!-- Add User Modal -->
         <Grid x:Name="AddUserModal"
               Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"

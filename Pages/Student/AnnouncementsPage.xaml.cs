@@ -50,18 +50,18 @@ public partial class AnnouncementsPage : ContentPage
         try
         {
             var currentUserId = _authManager.CurrentUser?.Id;
-            var announcements = await _announcementService.GetAnnouncementsAsync(150, currentUserId);
-            var visibleAnnouncements = announcements
-                .Where(a => a.IsPublished &&
-                    (a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase) ||
-                     a.Visibility.Equals("students", StringComparison.OrdinalIgnoreCase)))
-                .OrderByDescending(a => a.CreatedAt)
-                .ToList();
+            if (!currentUserId.HasValue)
+            {
+                await DisplayAlert("Error", "User not authenticated", "OK");
+                return;
+            }
+
+            var announcements = await _announcementService.GetStudentAnnouncementsAsync(currentUserId.Value, 150, currentUserId);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 _allAnnouncements.Clear();
-                foreach (var announcement in visibleAnnouncements)
+                foreach (var announcement in announcements)
                 {
                     _allAnnouncements.Add(announcement);
                 }
@@ -86,6 +86,10 @@ public partial class AnnouncementsPage : ContentPage
         if (_currentFilter == "Announcements")
         {
             query = query.Where(a => a.Visibility.Equals("all", StringComparison.OrdinalIgnoreCase));
+        }
+        else if (_currentFilter == "Reminders")
+        {
+            query = query.Where(a => a.Title?.Contains("Reminder", StringComparison.OrdinalIgnoreCase) ?? false);
         }
 
         if (!string.IsNullOrWhiteSpace(_searchText))

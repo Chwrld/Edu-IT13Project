@@ -18,6 +18,19 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
     private string _statusFilter = "All"; // "All", "Active", or "Inactive"
     private string _currentSearchText = string.Empty;
     private string? _pendingAction;
+    private User? _userToArchive = null;
+    
+    private static readonly List<string> ArchiveReasons = new()
+    {
+        "Graduation",
+        "Withdrawal",
+        "Transfer",
+        "Inactive Account",
+        "Policy Violation",
+        "Request by User",
+        "Administrative Action",
+        "Other"
+    };
 
     public AdminUsersPage()
     {
@@ -354,30 +367,73 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
         if (!confirm)
             return;
 
-        string? reason = await DisplayPromptAsync("Archive Reason",
-            "Please provide a reason for archiving this user.",
-            placeholder: "Reason for archiving",
-            maxLength: 200);
+        _userToArchive = user;
+        ShowArchiveReasonModal();
+    }
 
-        if (reason is null)
-            return; // user cancelled prompt
+    private void ShowArchiveReasonModal()
+    {
+        ArchiveReasonPicker.ItemsSource = ArchiveReasons;
+        ArchiveReasonPicker.SelectedIndex = -1;
+        ArchiveReasonPicker.Title = "Select a reason";
+        CustomReasonEntry.Text = "";
+        CustomReasonContainer.IsVisible = false;
+        ArchiveModalLabel.Text = $"Archive {_userToArchive?.DisplayName}";
+        ArchiveReasonModal.IsVisible = true;
+    }
 
-        reason = reason.Trim();
-        if (string.IsNullOrWhiteSpace(reason))
+    private void OnArchiveReasonChanged(object? sender, EventArgs e)
+    {
+        if (ArchiveReasonPicker.SelectedIndex < 0)
         {
-            await DisplayAlert("Required", "Please enter a reason for archiving.", "OK");
+            CustomReasonContainer.IsVisible = false;
             return;
         }
 
-        user.ArchiveReason = reason;
+        string selectedReason = ArchiveReasonPicker.SelectedItem?.ToString() ?? "";
+        CustomReasonContainer.IsVisible = selectedReason == "Other";
+        
+        if (!CustomReasonContainer.IsVisible)
+        {
+            CustomReasonEntry.Text = "";
+        }
+    }
+
+    private async void OnConfirmArchiveClicked(object? sender, EventArgs e)
+    {
+        if (_userToArchive is null)
+            return;
+
+        if (ArchiveReasonPicker.SelectedIndex < 0)
+        {
+            await DisplayAlert("Required", "Please select an archive reason.", "OK");
+            return;
+        }
+
+        string selectedReason = ArchiveReasonPicker.SelectedItem?.ToString() ?? "";
+        string finalReason = selectedReason;
+
+        if (selectedReason == "Other")
+        {
+            finalReason = CustomReasonEntry.Text?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(finalReason))
+            {
+                await DisplayAlert("Required", "Please enter a custom reason for archiving.", "OK");
+                return;
+            }
+        }
+
+        _userToArchive.ArchiveReason = finalReason;
 
         try
         {
-            var (success, message) = await _userController.DeleteUserAsync(user, reason);
+            var (success, message) = await _userController.DeleteUserAsync(_userToArchive, finalReason);
             if (success)
             {
                 await LoadUsersAsync();
-                await DisplayAlert("Archived", $"{message}\nReason: {reason}", "OK");
+                ArchiveReasonModal.IsVisible = false;
+                _userToArchive = null;
+                await DisplayAlert("Archived", $"{message}\nReason: {finalReason}", "OK");
             }
             else
             {
@@ -388,6 +444,18 @@ public partial class AdminUsersPage : ContentPage, IQueryAttributable
         {
             await DisplayAlert("Error", $"Failed to archive user: {ex.Message}", "OK");
         }
+    }
+
+    private void OnCancelArchiveClicked(object? sender, EventArgs e)
+    {
+        ArchiveReasonModal.IsVisible = false;
+        _userToArchive = null;
+    }
+
+    private void OnArchiveModalBackgroundTapped(object? sender, EventArgs e)
+    {
+        ArchiveReasonModal.IsVisible = false;
+        _userToArchive = null;
     }
 
     private async void OnAdminProfileTapped(object? sender, EventArgs e)

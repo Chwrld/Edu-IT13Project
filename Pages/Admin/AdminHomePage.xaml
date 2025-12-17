@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:MauiAppIT13.Models"
              xmlns:utils="clr-namespace:MauiAppIT13.Utils"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
              x:Class="MauiAppIT13.Pages.Admin.AdminHomePage"
              BackgroundColor="#F5F7FA">
 
@@ -317,8 +318,265 @@
                                    TextColor="#FF525252"/>
                         </VerticalStackLayout>
                     </Border>
+                </Grid>
 
-                    
+                <!-- Insightful Analytics -->
+                <Grid RowDefinitions="Auto" ColumnDefinitions="*,*" ColumnSpacing="20">
+                    <!-- User Growth Trend -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="📈" FontSize="18" VerticalOptions="Center"/>
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="User Growth Momentum"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           FontFamily="MontserratBold"
+                                           TextColor="#1F2937"/>
+                                    <Label Text="Monthly intake of active users"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <chart:SfCartesianChart x:Name="UserGrowthChart"
+                                                   HeightRequest="260"
+                                                   BackgroundColor="Transparent"
+                                                   IsVisible="False">
+                                <chart:SfCartesianChart.XAxes>
+                                    <chart:CategoryAxis LabelPlacement="BetweenTicks"
+                                                        ShowMajorGridLines="False">
+                                        <chart:CategoryAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:CategoryAxis.LabelStyle>
+                                    </chart:CategoryAxis>
+                                </chart:SfCartesianChart.XAxes>
+                                <chart:SfCartesianChart.YAxes>
+                                    <chart:NumericalAxis Minimum="0"
+                                                         ShowMajorGridLines="False">
+                                        <chart:NumericalAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:NumericalAxis.LabelStyle>
+                                    </chart:NumericalAxis>
+                                </chart:SfCartesianChart.YAxes>
+                                <chart:SplineAreaSeries ItemsSource="{Binding UserGrowthTrend}"
+                                                        XBindingPath="Label"
+                                                        YBindingPath="Total"
+                                                        Stroke="#2563EB"
+                                                        StrokeWidth="2"
+                                                        Opacity="0.7"
+                                                        ShowMarkers="True">
+                                    <chart:SplineAreaSeries.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#3B82F6" Offset="0.1"/>
+                                            <GradientStop Color="#93C5FD" Offset="0.8"/>
+                                            <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </chart:SplineAreaSeries.Fill>
+                                </chart:SplineAreaSeries>
+                            </chart:SfCartesianChart>
+
+                            <Label x:Name="UserGrowthEmptyLabel"
+                                   Text="No trend data available yet."
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Ticket Lifecycle Composition -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🪄" FontSize="18" VerticalOptions="Center"/>
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="Ticket Flow Composition"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           FontFamily="MontserratBold"
+                                           TextColor="#1F2937"/>
+                                    <Label Text="Balanced view of open, in-progress, and resolved"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <chart:SfCartesianChart x:Name="TicketTrendChart"
+                                                   HeightRequest="260"
+                                                   BackgroundColor="Transparent"
+                                                   Legend="{chart:ChartLegend Placement=Bottom}"
+                                                   IsVisible="False">
+                                <chart:SfCartesianChart.XAxes>
+                                    <chart:CategoryAxis LabelPlacement="BetweenTicks"
+                                                        ShowMajorGridLines="False">
+                                        <chart:CategoryAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:CategoryAxis.LabelStyle>
+                                    </chart:CategoryAxis>
+                                </chart:SfCartesianChart.XAxes>
+                                <chart:SfCartesianChart.YAxes>
+                                    <chart:NumericalAxis Minimum="0">
+                                        <chart:NumericalAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:NumericalAxis.LabelStyle>
+                                        <chart:NumericalAxis.Title>
+                                            <chart:ChartAxisTitle Text="Tickets"/>
+                                        </chart:NumericalAxis.Title>
+                                    </chart:NumericalAxis>
+                                </chart:SfCartesianChart.YAxes>
+                                <chart:SfCartesianChart.Series>
+                                    <chart:StackingColumnSeries ItemsSource="{Binding TicketResolutionTrend}"
+                                                                XBindingPath="Label"
+                                                                YBindingPath="OpenCount"
+                                                                Label="Open"
+                                                                Fill="#F87171"
+                                                                EnableAnimation="True"/>
+                                    <chart:StackingColumnSeries ItemsSource="{Binding TicketResolutionTrend}"
+                                                                XBindingPath="Label"
+                                                                YBindingPath="InProgressCount"
+                                                                Label="In Progress"
+                                                                Fill="#FBBF24"
+                                                                EnableAnimation="True"/>
+                                    <chart:StackingColumnSeries ItemsSource="{Binding TicketResolutionTrend}"
+                                                                XBindingPath="Label"
+                                                                YBindingPath="ResolvedCount"
+                                                                Label="Resolved"
+                                                                Fill="#34D399"
+                                                                EnableAnimation="True"/>
+                                </chart:SfCartesianChart.Series>
+                            </chart:SfCartesianChart>
+
+                            <Label x:Name="TicketTrendEmptyLabel"
+                                   Text="Ticket lifecycle data will appear when records exist."
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Announcement Engagement & Audience -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+                    <!-- Announcement Views Trend -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="👁️" FontSize="18" VerticalOptions="Center"/>
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="Announcement Reach"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           FontFamily="MontserratBold"
+                                           TextColor="#1F2937"/>
+                                    <Label Text="Monthly views across all audiences"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <chart:SfCartesianChart x:Name="AnnouncementViewsChart"
+                                                   HeightRequest="260"
+                                                   BackgroundColor="Transparent"
+                                                   IsVisible="False">
+                                <chart:SfCartesianChart.XAxes>
+                                    <chart:CategoryAxis LabelPlacement="BetweenTicks"
+                                                        ShowMajorGridLines="False">
+                                        <chart:CategoryAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:CategoryAxis.LabelStyle>
+                                    </chart:CategoryAxis>
+                                </chart:SfCartesianChart.XAxes>
+                                <chart:SfCartesianChart.YAxes>
+                                    <chart:NumericalAxis Minimum="0">
+                                        <chart:NumericalAxis.LabelStyle>
+                                            <chart:ChartAxisLabelStyle TextColor="#6B7280"/>
+                                        </chart:NumericalAxis.LabelStyle>
+                                        <chart:NumericalAxis.Title>
+                                            <chart:ChartAxisTitle Text="Views"/>
+                                        </chart:NumericalAxis.Title>
+                                    </chart:NumericalAxis>
+                                </chart:SfCartesianChart.YAxes>
+                                <chart:ColumnSeries ItemsSource="{Binding AnnouncementViewTrend}"
+                                                    XBindingPath="Label"
+                                                    YBindingPath="ViewCount"
+                                                    Fill="#F59E0B"
+                                                    CornerRadius="4"
+                                                    EnableAnimation="True"
+                                                    ShowDataLabels="True"/>
+                            </chart:SfCartesianChart>
+
+                            <Label x:Name="AnnouncementViewsEmptyLabel"
+                                   Text="Announcement views will appear once engagement starts."
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Audience Mix -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="🌐" FontSize="18" VerticalOptions="Center"/>
+                                <VerticalStackLayout Spacing="0">
+                                    <Label Text="Audience Mix"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           FontFamily="MontserratBold"
+                                           TextColor="#1F2937"/>
+                                    <Label Text="Distribution of announcement visibility"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <chart:SfCircularChart x:Name="AudienceMixChart"
+                                                  HeightRequest="260"
+                                                  BackgroundColor="Transparent"
+                                                  Legend="{chart:ChartLegend Placement=Right}"
+                                                  IsVisible="False">
+                                <chart:PieSeries ItemsSource="{Binding AnnouncementAudienceMix}"
+                                                 XBindingPath="Audience"
+                                                 YBindingPath="Count"
+                                                 ShowDataLabels="True"
+                                                 EnableAnimation="True"/>
+                            </chart:SfCircularChart>
+
+                            <Label x:Name="AudienceMixEmptyLabel"
+                                   Text="Audience mix will appear once announcements are recorded."
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
                 </Grid>
 
                 <!-- Content Row: Recent Activity and Quick Actions -->

@@ -13,6 +13,10 @@ public sealed class AdminDashboardSummary
     public int AnnouncementsTotal { get; init; }
     public int AnnouncementsThisWeek { get; init; }
     public IReadOnlyList<AdminActivityItem> RecentActivities { get; init; } = Array.Empty<AdminActivityItem>();
+    public IReadOnlyList<UserGrowthPoint> UserGrowthTrend { get; init; } = Array.Empty<UserGrowthPoint>();
+    public IReadOnlyList<TicketResolutionPoint> TicketResolutionTrend { get; init; } = Array.Empty<TicketResolutionPoint>();
+    public IReadOnlyList<AnnouncementViewPoint> AnnouncementViewTrend { get; init; } = Array.Empty<AnnouncementViewPoint>();
+    public IReadOnlyList<AnnouncementAudienceStat> AnnouncementAudienceMix { get; init; } = Array.Empty<AnnouncementAudienceStat>();
 
     public double UserGrowthPercent => ComputePercent(NewUsersCurrentPeriod, NewUsersPreviousPeriod);
 
@@ -57,4 +61,34 @@ public sealed class AdminActivityItem
 
         return localTime.ToString("MMM d", CultureInfo.InvariantCulture);
     }
+}
+
+public sealed class UserGrowthPoint
+{
+    public DateTime PeriodStart { get; init; }
+    public string Label { get; init; } = string.Empty;
+    public int Total { get; init; }
+}
+
+public sealed class TicketResolutionPoint
+{
+    public DateTime PeriodStart { get; init; }
+    public string Label { get; init; } = string.Empty;
+    public int OpenCount { get; init; }
+    public int InProgressCount { get; init; }
+    public int ResolvedCount { get; init; }
+}
+
+public sealed class AnnouncementViewPoint
+{
+    public DateTime PeriodStart { get; init; }
+    public string Label { get; init; } = string.Empty;
+    public int ViewCount { get; init; }
+}
+
+public sealed class AnnouncementAudienceStat
+{
+    public string Audience { get; init; } = string.Empty;
+    public int Count { get; init; }
+    public double Percentage { get; set; }
 }

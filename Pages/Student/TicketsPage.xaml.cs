@@ -1,3 +1,4 @@
+using MauiAppIT13.Models;
 using MauiAppIT13.Services;
 using MauiAppIT13.Utils;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,8 @@ public partial class TicketsPage : ContentPage
     private readonly TicketService _ticketService;
     private readonly AuthManager _authManager;
     private Guid _currentUserId;
+    private Ticket? _selectedTicket;
+    private List<TicketComment> _selectedTicketComments = new();
 
     public TicketsPage()
     {
@@ -146,7 +149,6 @@ public partial class TicketsPage : ContentPage
         {
             string title = TitleEntry.Text?.Trim() ?? string.Empty;
             string category = CategoryPicker.SelectedIndex > 0 ? CategoryPicker.Items[CategoryPicker.SelectedIndex] : string.Empty;
-            string priority = PriorityPicker.SelectedIndex > 0 ? PriorityPicker.Items[PriorityPicker.SelectedIndex].ToLower() : string.Empty;
             string description = DescriptionEditor.Text?.Trim() ?? string.Empty;
 
             // Validation
@@ -162,20 +164,14 @@ public partial class TicketsPage : ContentPage
                 return;
             }
 
-            if (PriorityPicker.SelectedIndex <= 0)
-            {
-                await DisplayAlert("Error", "Please select a priority level.", "OK");
-                return;
-            }
-
             if (string.IsNullOrEmpty(description))
             {
                 await DisplayAlert("Error", "Please provide a description of your issue.", "OK");
                 return;
             }
 
-            // Submit ticket to database
-            bool success = await _ticketService.CreateTicketAsync(_currentUserId, title, description, priority);
+            // Submit ticket to database (priority will be assigned by admin)
+            bool success = await _ticketService.CreateTicketAsync(_currentUserId, title, description, "medium");
             
             if (success)
             {
@@ -202,18 +198,93 @@ public partial class TicketsPage : ContentPage
     {
         TitleEntry.Text = string.Empty;
         CategoryPicker.SelectedIndex = 0;
-        PriorityPicker.SelectedIndex = 0;
         DescriptionEditor.Text = string.Empty;
     }
 
     private async void OnViewDetailsClicked(object? sender, EventArgs e)
     {
-        await DisplayAlert("View Details", "Ticket details view - Coming soon!", "OK");
+        if (sender is Button button && button.BindingContext is Ticket ticket)
+        {
+            _selectedTicket = ticket;
+            await LoadTicketDetailsAsync(ticket);
+        }
     }
 
-    private async void OnAddCommentClicked(object? sender, EventArgs e)
+    private async Task LoadTicketDetailsAsync(Ticket ticket)
     {
-        await DisplayAlert("Add Comment", "Add comment functionality - Coming soon!", "OK");
+        try
+        {
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Loading details for ticket {ticket.Id}");
+            _selectedTicketComments = await _ticketService.GetTicketCommentsAsync(ticket.Id);
+            
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                DetailsTicketTitle.Text = ticket.Title;
+                DetailsTicketNumber.Text = ticket.TicketNumber;
+                DetailsTicketStatus.Text = ticket.Status;
+                DetailsTicketPriority.Text = ticket.Priority;
+                DetailsTicketDescription.Text = ticket.Description;
+                DetailsCreatedDate.Text = $"Created: {ticket.CreatedAt:MMMM d, yyyy}";
+                DetailsAssignedTo.Text = $"Assigned to: {ticket.AssignedToName}";
+                
+                CommentsCollectionView.ItemsSource = _selectedTicketComments;
+                DetailsModal.IsVisible = true;
+                
+                System.Diagnostics.Debug.WriteLine($"TicketsPage: Loaded {_selectedTicketComments.Count} comments");
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error loading ticket details - {ex.Message}");
+            await DisplayAlert("Error", $"Failed to load ticket details: {ex.Message}", "OK");
+        }
+    }
+
+    private void OnCloseDetailsClicked(object? sender, EventArgs e)
+    {
+        DetailsModal.IsVisible = false;
+        _selectedTicket = null;
+        _selectedTicketComments.Clear();
+    }
+
+    private void OnDetailsOverlayTapped(object? sender, EventArgs e)
+    {
+        DetailsModal.IsVisible = false;
+        _selectedTicket = null;
+        _selectedTicketComments.Clear();
+    }
+
+    private async void OnAddReplyClicked(object? sender, EventArgs e)
+    {
+        if (_selectedTicket is null)
+            return;
+
+        string? reply = await DisplayPromptAsync("Add Reply",
+            "Enter your reply to this ticket:",
+            placeholder: "Type your message here",
+            maxLength: 500);
+
+        if (string.IsNullOrWhiteSpace(reply))
+            return;
+
+        try
+        {
+            bool success = await _ticketService.AddCommentAsync(_selectedTicket.Id, _currentUserId, reply);
+            if (success)
+            {
+                await DisplayAlert("Success", "Your reply has been added.", "OK");
+                await LoadTicketDetailsAsync(_selectedTicket);
+            }
+            else
+            {
+                await DisplayAlert("Error", "Failed to add reply. Please try again.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"TicketsPage: Error adding reply - {ex.Message}");
+            await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+        }
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)

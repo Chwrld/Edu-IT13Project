@@ -361,7 +361,7 @@
                                 </Border.StrokeShape>
                                 <VerticalStackLayout Spacing="10">
                                     <!-- Header with Title and Badges -->
-                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                         <VerticalStackLayout Grid.Column="0" Spacing="4">
                                             <Label Text="{Binding Title}" 
                                                    FontSize="15" 
@@ -387,20 +387,6 @@
                                                    FontAttributes="Bold"/>
                                         </Border>
 
-                                        <!-- Priority Badge -->
-                                        <Border Grid.Column="2"
-                                                BackgroundColor="{Binding PriorityColor}"
-                                                Padding="8,4"
-                                                StrokeThickness="0"
-                                                VerticalOptions="Start">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="12"/>
-                                            </Border.StrokeShape>
-                                            <Label Text="{Binding Priority, StringFormat='{0:G}'}" 
-                                                   TextColor="White"
-                                                   FontSize="11"
-                                                   FontAttributes="Bold"/>
-                                        </Border>
                                     </Grid>
 
                                     <!-- Description -->
@@ -418,12 +404,6 @@
                                                 FontSize="12"
                                                 Padding="0"
                                                 Clicked="OnViewDetailsClicked"/>
-                                        <Button Text="Add Comment"
-                                                BackgroundColor="Transparent"
-                                                TextColor="#0891B2"
-                                                FontSize="12"
-                                                Padding="0"
-                                                Clicked="OnAddCommentClicked"/>
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </Border>
@@ -433,6 +413,206 @@
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- Ticket Details Modal -->
+        <Grid x:Name="DetailsModal"
+              Grid.RowSpan="2"
+              Grid.ColumnSpan="2"
+              IsVisible="False"
+              Padding="0"
+              ZIndex="1001">
+            <BoxView BackgroundColor="#80000000"
+                     InputTransparent="False"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Fill">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDetailsOverlayTapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border BackgroundColor="White"
+                    Margin="20"
+                    Padding="0"
+                    StrokeThickness="0"
+                    VerticalOptions="Fill"
+                    HorizontalOptions="Fill"
+                    WidthRequest="700">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <!-- Header -->
+                    <Border Grid.Row="0"
+                            BackgroundColor="#0891B2"
+                            Padding="30,25"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="15,15,0,0"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="6">
+                                <Label x:Name="DetailsTicketTitle"
+                                       Text="Ticket Title"
+                                       FontSize="22"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                                <Label x:Name="DetailsTicketNumber"
+                                       Text="TKT-20250101-ABC123"
+                                       FontSize="13"
+                                       TextColor="#E0F2FE"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="✕"
+                                   FontSize="28"
+                                   TextColor="White"
+                                   VerticalOptions="Start"
+                                   Margin="0,-5,0,0">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCloseDetailsClicked"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                    </Border>
+
+                    <!-- Content -->
+                    <ScrollView Grid.Row="1" Padding="30,25">
+                        <VerticalStackLayout Spacing="20">
+                            <!-- Ticket Info Grid -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="20" RowSpacing="15">
+                                <!-- Status -->
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
+                                    <Label Text="Status"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#6B7280"/>
+                                    <Label x:Name="DetailsTicketStatus"
+                                           Text="Open"
+                                           FontSize="14"
+                                           TextColor="#1F2937"/>
+                                </VerticalStackLayout>
+
+                                <!-- Priority -->
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                                    <Label Text="Priority"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#6B7280"/>
+                                    <Label x:Name="DetailsTicketPriority"
+                                           Text="Medium"
+                                           FontSize="14"
+                                           TextColor="#1F2937"/>
+                                </VerticalStackLayout>
+
+                                <!-- Created Date -->
+                                <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
+                                    <Label x:Name="DetailsCreatedDate"
+                                           Text="Created: January 1, 2025"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+
+                                <!-- Assigned To -->
+                                <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                                    <Label x:Name="DetailsAssignedTo"
+                                           Text="Assigned to: Unassigned"
+                                           FontSize="12"
+                                           TextColor="#6B7280"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- Description -->
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Description"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#6B7280"/>
+                                <Label x:Name="DetailsTicketDescription"
+                                       Text="Ticket description goes here"
+                                       FontSize="13"
+                                       TextColor="#1F2937"
+                                       LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+
+                            <!-- Comments Section -->
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="Comments &amp; Replies"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="#6B7280"/>
+
+                                <!-- Comments List -->
+                                <CollectionView x:Name="CommentsCollectionView"
+                                                SelectionMode="None"
+                                                HeightRequest="200">
+                                    <CollectionView.EmptyView>
+                                        <Label Text="No comments yet"
+                                               FontSize="12"
+                                               TextColor="#9CA3AF"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#F9FAFB"
+                                                    Padding="12"
+                                                    StrokeThickness="1"
+                                                    Stroke="#E5E7EB">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="8"/>
+                                                </Border.StrokeShape>
+                                                <VerticalStackLayout Spacing="6">
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <Label Grid.Column="0"
+                                                               Text="{Binding UserName}"
+                                                               FontSize="12"
+                                                               FontAttributes="Bold"
+                                                               TextColor="#1F2937"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding UserRole, StringFormat='({0})'}"
+                                                               FontSize="11"
+                                                               TextColor="#6B7280"/>
+                                                    </Grid>
+                                                    <Label Text="{Binding Content}"
+                                                           FontSize="12"
+                                                           TextColor="#374151"
+                                                           LineBreakMode="WordWrap"/>
+                                                    <Label Text="{Binding CreatedAt, StringFormat='{0:MMM d, yyyy h:mm tt}'}"
+                                                           FontSize="10"
+                                                           TextColor="#9CA3AF"/>
+                                                </VerticalStackLayout>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- Footer with Reply Button -->
+                    <Border Grid.Row="2"
+                            BackgroundColor="#F9FAFB"
+                            Padding="30,20"
+                            StrokeThickness="1"
+                            Stroke="#E5E7EB">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="0,0,15,15"/>
+                        </Border.StrokeShape>
+                        <Button Text="Add Reply"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                Padding="20,12"
+                                Clicked="OnAddReplyClicked"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
 
         <!-- Modal Overlay (Hidden by default) -->
         <Border x:Name="ModalOverlay"
@@ -513,51 +693,28 @@
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Category and Priority Row -->
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-                            <!-- Category Picker -->
-                            <VerticalStackLayout Grid.Column="0" Spacing="10">
-                                <Label Text="Category *" 
-                                       FontSize="14" 
-                                       TextColor="#2C3E50"
-                                       FontAttributes="Bold"/>
-                                <Picker x:Name="CategoryPicker"
-                                        TextColor="#2C3E50"
-                                        BackgroundColor="White"
-                                        FontSize="14">
-                                    <Picker.Items>
-                                        <x:String>Select category</x:String>
-                                        <x:String>Academic</x:String>
-                                        <x:String>Facilities</x:String>
-                                        <x:String>Administration</x:String>
-                                        <x:String>Technical</x:String>
-                                        <x:String>Financial</x:String>
-                                        <x:String>Other</x:String>
-                                    </Picker.Items>
-                                    <Picker.SelectedIndex>0</Picker.SelectedIndex>
-                                </Picker>
-                            </VerticalStackLayout>
-
-                            <!-- Priority Picker -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="10">
-                                <Label Text="Priority *" 
-                                       FontSize="14" 
-                                       TextColor="#2C3E50"
-                                       FontAttributes="Bold"/>
-                                <Picker x:Name="PriorityPicker"
-                                        TextColor="#2C3E50"
-                                        BackgroundColor="White"
-                                        FontSize="14">
-                                    <Picker.Items>
-                                        <x:String>Select priority</x:String>
-                                        <x:String>Low</x:String>
-                                        <x:String>Medium</x:String>
-                                        <x:String>High</x:String>
-                                    </Picker.Items>
-                                    <Picker.SelectedIndex>0</Picker.SelectedIndex>
-                                </Picker>
-                            </VerticalStackLayout>
-                        </Grid>
+                        <!-- Category Field -->
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Category *" 
+                                   FontSize="14" 
+                                   TextColor="#2C3E50"
+                                   FontAttributes="Bold"/>
+                            <Picker x:Name="CategoryPicker"
+                                    TextColor="#2C3E50"
+                                    BackgroundColor="White"
+                                    FontSize="14">
+                                <Picker.Items>
+                                    <x:String>Select category</x:String>
+                                    <x:String>Academic</x:String>
+                                    <x:String>Facilities</x:String>
+                                    <x:String>Administration</x:String>
+                                    <x:String>Technical</x:String>
+                                    <x:String>Financial</x:String>
+                                    <x:String>Other</x:String>
+                                </Picker.Items>
+                                <Picker.SelectedIndex>0</Picker.SelectedIndex>
+                            </Picker>
+                        </VerticalStackLayout>
 
                         <!-- Description Field -->
                         <VerticalStackLayout Spacing="10">

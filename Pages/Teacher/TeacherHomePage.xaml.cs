@@ -20,10 +20,14 @@ public partial class TeacherHomePage : ContentPage
     private readonly DbConnection _dbConnection;
     private readonly SyncService _syncService;
     private readonly DeltaSyncService _deltaSyncService;
+    private readonly TeacherDashboardService _dashboardService;
     private bool _isLoading;
 
     public ObservableCollection<Conversation> RecentMessages { get; } = new();
     public ObservableCollection<TicketDashboardItem> TicketUpdates { get; } = new();
+    public ObservableCollection<ClassPerformanceData> ClassPerformanceData { get; } = new();
+    public ObservableCollection<SubmissionStatusData> SubmissionStatusData { get; } = new();
+    public ObservableCollection<StudentAcademicRiskData> AtRiskStudents { get; } = new();
 
     private string _welcomeTitle = "Welcome, Professor!";
     public string WelcomeTitle
@@ -98,6 +102,7 @@ public partial class TeacherHomePage : ContentPage
             ?? throw new InvalidOperationException("SyncService is not registered.");
         _deltaSyncService = AppServiceProvider.GetService<DeltaSyncService>()
             ?? throw new InvalidOperationException("DeltaSyncService is not registered.");
+        _dashboardService = new TeacherDashboardService(_dbConnection);
 
         BindingContext = this;
     }
@@ -116,8 +121,17 @@ public partial class TeacherHomePage : ContentPage
         _isLoading = true;
         try
         {
-            var currentUser = _authManager.CurrentUser
-                ?? await _dbConnection.GetUserByEmailAsync("teacher@university.edu");
+            var currentUser = _authManager.CurrentUser;
+
+            if (currentUser is null || !string.Equals(currentUser.Email, "teacher01@university.edu", StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.WriteLine("TeacherHomePage: Loading teacher01@university.edu profile for dashboard context");
+                currentUser = await _dbConnection.GetUserByEmailAsync("teacher01@university.edu");
+                if (currentUser is not null)
+                {
+                    _authManager.SetAuthenticatedUser(currentUser);
+                }
+            }
 
             if (currentUser is null)
             {
@@ -127,6 +141,8 @@ public partial class TeacherHomePage : ContentPage
 
             WelcomeTitle = $"Welcome, {(!string.IsNullOrWhiteSpace(currentUser.DisplayName) ? currentUser.DisplayName : "Professor")}";
             WelcomeSubtitle = $"Here's what's happening • {DateTime.Now:MMMM d}";
+
+            Debug.WriteLine($"TeacherHomePage: Current user ID: {currentUser.Id}, Email: {currentUser.Email}");
 
             var classesTask = _classService.GetTeacherClassesAsync(currentUser.Id);
             var ticketsTask = _ticketService.GetTeacherTicketsAsync(currentUser.Id, 25);
@@ -141,6 +157,7 @@ public partial class TeacherHomePage : ContentPage
             UpdateStats(classes, tickets);
             UpdateMessages(conversations);
             UpdateTickets(tickets);
+            await LoadGraphDataAsync(currentUser.Id);
         }
         catch (Exception ex)
         {
@@ -150,6 +167,61 @@ public partial class TeacherHomePage : ContentPage
         finally
         {
             _isLoading = false;
+        }
+    }
+
+    private async Task LoadGraphDataAsync(Guid teacherId)
+    {
+        try
+        {
+            Debug.WriteLine($"TeacherHomePage: Loading graph data for teacher {teacherId}");
+            Debug.WriteLine($"TeacherHomePage: _dashboardService is null: {_dashboardService == null}");
+            Debug.WriteLine($"TeacherHomePage: _dbConnection is null: {_dbConnection == null}");
+            Debug.WriteLine($"TeacherHomePage: _dbConnection type: {_dbConnection?.GetType().Name}");
+
+            var performanceTask = _dashboardService.GetClassPerformanceAsync(teacherId);
+            var submissionTask = _dashboardService.GetSubmissionStatusAsync(teacherId);
+            var atRiskTask = _dashboardService.GetStudentsAtAcademicRiskAsync(teacherId);
+
+            await Task.WhenAll(performanceTask, submissionTask, atRiskTask);
+
+            var performanceList = await performanceTask;
+            var submissionList = await submissionTask;
+            var atRiskList = await atRiskTask;
+
+            Debug.WriteLine($"TeacherHomePage: Received {performanceList.Count} performance items, {submissionList.Count} submission items, and {atRiskList.Count} at-risk students");
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                ClassPerformanceData.Clear();
+                foreach (var data in performanceList)
+                {
+                    ClassPerformanceData.Add(data);
+                    Debug.WriteLine($"TeacherHomePage: Added performance data - {data.ClassName}: {data.AverageGrade:F2}");
+                }
+
+                SubmissionStatusData.Clear();
+                foreach (var data in submissionList)
+                {
+                    SubmissionStatusData.Add(data);
+                    Debug.WriteLine($"TeacherHomePage: Added submission data - {data.ClassName}: {data.Submitted}/{data.Total}");
+                }
+
+                AtRiskStudents.Clear();
+                foreach (var data in atRiskList)
+                {
+                    AtRiskStudents.Add(data);
+                    Debug.WriteLine($"TeacherHomePage: Added at-risk student - {data.StudentName} in {data.ClassName}: {data.Grade} ({data.RiskLevel})");
+                }
+
+                Debug.WriteLine($"TeacherHomePage: After adding - Performance items: {ClassPerformanceData.Count}, Submission items: {SubmissionStatusData.Count}, At-risk students: {AtRiskStudents.Count}");
+            });
+
+            Debug.WriteLine($"TeacherHomePage: Graph data loaded - Performance items: {ClassPerformanceData.Count}, Submission items: {SubmissionStatusData.Count}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"TeacherHomePage: Failed to load graph data - {ex.Message}\n{ex.StackTrace}");
         }
     }
 
