@@ -395,7 +395,7 @@
                         <CollectionView.Header>
                             <Grid BackgroundColor="#F9FAFB" 
                                   Padding="20,12"
-                                  ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1*">
+                                  ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,1*">
                                 <Label Grid.Column="0" 
                                        Text="Ticket #" 
                                        FontSize="13" 
@@ -417,11 +417,6 @@
                                        FontAttributes="Bold"
                                        TextColor="#374151"/>
                                 <Label Grid.Column="4" 
-                                       Text="Priority" 
-                                       FontSize="13" 
-                                       FontAttributes="Bold"
-                                       TextColor="#374151"/>
-                                <Label Grid.Column="5" 
                                        Text="Actions" 
                                        FontSize="13" 
                                        FontAttributes="Bold"
@@ -440,7 +435,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Padding="20,16"
-                                      ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,0.8*,1*"
+                                      ColumnDefinitions="0.8*,1.5*,1.2*,0.8*,1*"
                                       BackgroundColor="White">
 
                                     <Label Grid.Column="0" 
@@ -467,15 +462,7 @@
                                            VerticalOptions="Center"
                                            HorizontalOptions="Start"/>
 
-                                    <Label Grid.Column="4"
-                                           Text="{Binding Priority}"
-                                           FontSize="12" 
-                                           TextColor="{Binding PriorityTextColor}"
-                                           FontAttributes="Bold"
-                                           VerticalOptions="Center"
-                                           HorizontalOptions="Start"/>
-
-                                    <HorizontalStackLayout Grid.Column="5" Spacing="10" VerticalOptions="Center">
+                                    <HorizontalStackLayout Grid.Column="4" Spacing="10" VerticalOptions="Center">
                                         <Button Text="View"
                                                 Padding="14,6"
                                                 FontSize="12"
@@ -561,18 +548,8 @@
                                    TextColor="#1F2937"/>
                         </VerticalStackLayout>
 
-                        <!-- Second Row: Priority and Status -->
+                        <!-- Second Row: Status -->
                         <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4">
-                            <Label Text="Priority"
-                                   FontAttributes="Bold"
-                                   FontSize="12"
-                                   TextColor="#6B7280"/>
-                            <Label x:Name="DetailPriorityLabel"
-                                   Text="High"
-                                   FontSize="14"
-                                   FontAttributes="Bold"/>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
                             <Label Text="Status"
                                    FontAttributes="Bold"
                                    FontSize="12"

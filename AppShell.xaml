@@ -7,7 +7,7 @@
     xmlns:admin="clr-namespace:MauiAppIT13.Pages.Admin"
     xmlns:teacher="clr-namespace:MauiAppIT13.Pages.Teacher"
     Shell.FlyoutBehavior="Disabled"
-    Title="StudentHub">
+    Title="EduCRM">
 
     <!-- Student Login -->
     <ShellContent

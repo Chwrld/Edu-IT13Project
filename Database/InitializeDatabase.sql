@@ -751,4 +751,103 @@ BEGIN
     SET @TeacherIndex += 1;
 END
 
-PRINT 'EduCRM database created and fully seeded.';
+------------------------------------------------------------
+-- Specific Seeding for student03324@university.edu
+------------------------------------------------------------
+
+DECLARE @TargetStudentId UNIQUEIDENTIFIER = '6CD4E9D9-4C88-4671-ACCA-DD761F5DD6D0';
+DECLARE @Teacher1Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0002';
+DECLARE @Teacher2Id UNIQUEIDENTIFIER = 'F5E0A1E7-7C77-4A04-9E68-7B7F7A7D0003';
+DECLARE @Teacher3Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id != @Teacher1Id AND adviser_id != @Teacher2Id ORDER BY NEWID());
+DECLARE @Teacher4Id UNIQUEIDENTIFIER = (SELECT TOP 1 adviser_id FROM dbo.advisers WHERE adviser_id NOT IN (@Teacher1Id, @Teacher2Id, @Teacher3Id) ORDER BY NEWID());
+
+-- Get the actual user_id for student03324@university.edu (created during bulk seeding)
+SELECT @TargetStudentId = user_id FROM dbo.users WHERE email = 'student03324@university.edu';
+
+-- Update user display names
+UPDATE dbo.users SET display_name = 'Maria Santos' WHERE user_id = @TargetStudentId;
+UPDATE dbo.users SET display_name = 'Dr. James Mitchell' WHERE user_id = @Teacher1Id;
+UPDATE dbo.users SET display_name = 'Prof. Sarah Chen' WHERE user_id = @Teacher2Id;
+UPDATE dbo.users SET display_name = 'Dr. Robert Williams' WHERE user_id = @Teacher3Id;
+UPDATE dbo.users SET display_name = 'Prof. Elena Rodriguez' WHERE user_id = @Teacher4Id;
+
+-- Ensure student record exists
+IF NOT EXISTS (SELECT 1 FROM dbo.students WHERE student_id = @TargetStudentId)
+BEGIN
+    INSERT INTO dbo.students (student_id, student_number, program, year_level, gpa, status, adviser_id, created_at)
+    VALUES (@TargetStudentId, 'STU-2024-3324', 'BS Computer Science', 'Year 3', 3.75, 'active', @Teacher1Id, @Now);
+END
+
+-- Remove all existing enrollments for this student first
+DELETE FROM dbo.student_courses WHERE student_id = @TargetStudentId;
+
+-- Enroll student in exactly 4 courses
+INSERT INTO dbo.student_courses (enrollment_id, student_id, course_id, teacher_id, enrolled_at)
+SELECT TOP 4 NEWID(), @TargetStudentId, c.course_id, c.created_by, @Now
+FROM dbo.courses c
+ORDER BY NEWID();
+
+-- Add Student Achievements
+INSERT INTO dbo.student_achievements (achievement_id, student_id, achievement_name, description, awarded_by, awarded_date)
+VALUES
+    (NEWID(), @TargetStudentId, 'Perfect Attendance', 'Maintained perfect attendance throughout the semester', @Teacher1Id, DATEADD(MONTH, -2, @Now)),
+    (NEWID(), @TargetStudentId, 'Excellent Project Work', 'Demonstrated exceptional skills in capstone project', @Teacher2Id, DATEADD(MONTH, -1, @Now)),
+    (NEWID(), @TargetStudentId, 'Class Participation Award', 'Active contributor in class discussions and activities', @Teacher3Id, DATEADD(WEEK, -3, @Now)),
+    (NEWID(), @TargetStudentId, 'Peer Mentor', 'Helped fellow students with course material and assignments', @Teacher4Id, DATEADD(WEEK, -1, @Now));
+
+-- Create 4 Conversations with Teachers
+DECLARE @TargetMsg1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg2 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg3 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg4 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg5 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg6 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg7 UNIQUEIDENTIFIER = NEWID();
+DECLARE @TargetMsg8 UNIQUEIDENTIFIER = NEWID();
+
+-- Conversation 1: With Teacher 1
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg1, @Teacher1Id, @TargetStudentId, 'Hi! I wanted to discuss your project proposal. Great work so far!', 0, DATEADD(DAY, -7, @Now)),
+    (@TargetMsg2, @TargetStudentId, @Teacher1Id, 'Thank you! I would love your feedback on the implementation approach.', 1, DATEADD(DAY, -6, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher1Id, @TargetStudentId, @TargetMsg2, DATEADD(DAY, -6, @Now), DATEADD(DAY, -7, @Now));
+
+-- Conversation 2: With Teacher 2
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg3, @Teacher2Id, @TargetStudentId, 'Your assignment submission was excellent. Keep up the good work!', 0, DATEADD(DAY, -5, @Now)),
+    (@TargetMsg4, @TargetStudentId, @Teacher2Id, 'Thank you for the positive feedback! I really enjoyed this assignment.', 1, DATEADD(DAY, -4, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher2Id, @TargetStudentId, @TargetMsg4, DATEADD(DAY, -4, @Now), DATEADD(DAY, -5, @Now));
+
+-- Conversation 3: With Teacher 3
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg5, @TargetStudentId, @Teacher3Id, 'Can we schedule a meeting to discuss the upcoming exam?', 1, DATEADD(DAY, -3, @Now)),
+    (@TargetMsg6, @Teacher3Id, @TargetStudentId, 'Absolutely! How about Thursday at 2 PM in my office?', 0, DATEADD(DAY, -2, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @TargetStudentId, @Teacher3Id, @TargetMsg6, DATEADD(DAY, -2, @Now), DATEADD(DAY, -3, @Now));
+
+-- Conversation 4: With Teacher 4
+INSERT INTO dbo.messages (message_id, sender_id, receiver_id, content, is_read, created_at)
+VALUES
+    (@TargetMsg7, @Teacher4Id, @TargetStudentId, 'I noticed you helping other students with the lab work. Great initiative!', 0, DATEADD(DAY, -1, @Now)),
+    (@TargetMsg8, @TargetStudentId, @Teacher4Id, 'Thank you! I enjoy helping my classmates understand the concepts better.', 1, DATEADD(HOUR, -12, @Now));
+
+INSERT INTO dbo.conversations (conversation_id, participant1_id, participant2_id, last_message_id, last_message_time, created_at)
+VALUES (NEWID(), @Teacher4Id, @TargetStudentId, @TargetMsg8, DATEADD(HOUR, -12, @Now), DATEADD(DAY, -1, @Now));
+
+-- Create 5 Support Tickets
+INSERT INTO dbo.support_tickets (ticket_id, ticket_number, title, description, status, created_at, created_by, updated_at, updated_by, student_id, assigned_to_id)
+VALUES
+    (NEWID(), 'TKT-2024-0101', 'Course Registration Issue', 'Unable to register for Spring 2025 courses due to system error.', 'resolved', DATEADD(DAY, -20, @Now), @TargetStudentId, DATEADD(DAY, -18, @Now), @Teacher1Id, @TargetStudentId, @Teacher1Id),
+    (NEWID(), 'TKT-2024-0102', 'Grade Appeal', 'Requesting review of midterm exam grade - believe there was a calculation error.', 'in_progress', DATEADD(DAY, -15, @Now), @TargetStudentId, DATEADD(DAY, -10, @Now), @Teacher2Id, @TargetStudentId, @Teacher2Id),
+    (NEWID(), 'TKT-2024-0103', 'Lab Equipment Access', 'Need access to computer lab for capstone project work.', 'resolved', DATEADD(DAY, -12, @Now), @TargetStudentId, DATEADD(DAY, -11, @Now), @Teacher3Id, @TargetStudentId, @Teacher3Id),
+    (NEWID(), 'TKT-2024-0104', 'Transcript Request', 'Official transcript needed for graduate school application.', 'resolved', DATEADD(DAY, -8, @Now), @TargetStudentId, DATEADD(DAY, -7, @Now), @Teacher4Id, @TargetStudentId, @Teacher4Id),
+    (NEWID(), 'TKT-2024-0105', 'Assignment Extension Request', 'Requesting 2-day extension for final project due to illness.', 'open', DATEADD(DAY, -2, @Now), @TargetStudentId, NULL, NULL, @TargetStudentId, @Teacher1Id);
+
+PRINT 'Seeding completed for student03324@university.edu with achievements, conversations, and tickets.';

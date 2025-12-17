@@ -246,6 +246,22 @@
                                FontSize="14"/>
                     </Border>
 
+                    <Border x:Name="RemindersTab"
+                            BackgroundColor="Transparent"
+                            Padding="20,10"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="6"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRemindersTabTapped"/>
+                        </Border.GestureRecognizers>
+                        <Label x:Name="RemindersTabLabel"
+                               Text="Reminders" 
+                               TextColor="#0891B2"
+                               FontSize="14"/>
+                    </Border>
+
                 </HorizontalStackLayout>
 
                 <!-- Search Bar -->
