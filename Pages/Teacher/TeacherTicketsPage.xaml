@@ -557,6 +557,16 @@
                                    FontSize="14"
                                    FontAttributes="Bold"/>
                         </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
+                            <Label Text="Priority"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   TextColor="#6B7280"/>
+                            <Label x:Name="DetailPriorityLabel"
+                                   Text="Normal"
+                                   FontSize="14"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
 
                         <!-- Third Row: Description (Full Width) -->
                         <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="8">
