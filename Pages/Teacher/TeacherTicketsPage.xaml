@@ -612,7 +612,7 @@
                                     Padding="20,12"
                                     Clicked="OnSendCommentClicked"/>
                             <Button Text="Mark as Resolved"
-                                    BackgroundColor="#10B981"
+                                    BackgroundColor="#4B5563"
                                     TextColor="White"
                                     FontAttributes="Bold"
                                     CornerRadius="8"
