@@ -30,14 +30,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="A" 
-                               TextColor="#005BA5" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
+                        <Image Source="educrm_log.png" 
+                               WidthRequest="24" 
+                               HeightRequest="24"
+                               Aspect="AspectFit"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="Admin Portal" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -248,7 +248,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="TotalTicketsChangeLabel"
                                    Text="+12% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#FF454645"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -280,7 +280,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="AvgResponseChangeLabel"
                                    Text="-8% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#FF454645"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -312,7 +312,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="ResolutionRateChangeLabel"
                                    Text="+2% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#FF454645"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
 
@@ -344,7 +344,7 @@ Includes every ticket regardless of status.">
                             <Label x:Name="ActiveUsersChangeLabel"
                                    Text="+5% from previous period" 
                                    FontSize="11" 
-                                   TextColor="#FF454645"/>
+                                   TextColor="#6B7280"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
@@ -488,7 +488,7 @@ Includes every ticket regardless of status.">
 
                                 <HorizontalStackLayout Spacing="10">
                                     <Button x:Name="QuickPdfButton"
-                                            Text="📄 Export as PDF"
+                                            Text="Export as PDF"
                                             BackgroundColor="White"
                                             TextColor="#005BA5"
                                             FontSize="12"
@@ -496,9 +496,13 @@ Includes every ticket regardless of status.">
                                             CornerRadius="6"
                                             BorderColor="#D1D5DB"
                                             BorderWidth="1"
-                                            Clicked="OnQuickExportPdfClicked"/>
+                                            Clicked="OnQuickExportPdfClicked">
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#xe415;" FontFamily="MaterialIcons" Color="#005BA5" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
                                     <Button x:Name="QuickCsvButton"
-                                            Text="📊 Export as CSV"
+                                            Text="Export as CSV"
                                             BackgroundColor="White"
                                             TextColor="#005BA5"
                                             FontSize="12"
@@ -506,7 +510,11 @@ Includes every ticket regardless of status.">
                                             CornerRadius="6"
                                             BorderColor="#D1D5DB"
                                             BorderWidth="1"
-                                            Clicked="OnQuickExportCsvClicked"/>
+                                            Clicked="OnQuickExportCsvClicked">
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#xe6cf;" FontFamily="MaterialIcons" Color="#005BA5" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
                         </Border>
@@ -678,8 +686,8 @@ Includes every ticket regardless of status.">
                                     CornerRadius="6"
                                     Padding="20,10"
                                     Clicked="OnPrintPreviewCancelClicked"/>
-                            <Button Text="📥 Export"
-                                    BackgroundColor="#10B981"
+                            <Button Text="Export"
+                                    BackgroundColor="#FF08885D"
                                     TextColor="White"
                                     FontSize="13"
                                     FontAttributes="Bold"
@@ -690,6 +698,60 @@ Includes every ticket regardless of status.">
                     </Grid>
                 </Border>
             </Grid>
+        </Border>
+
+        <!-- Logout Confirmation Modal -->
+        <Border x:Name="LogoutModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" Padding="30,25" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50"/>
+                    </Border>
+                    <VerticalStackLayout Padding="30,25" Spacing="25" BackgroundColor="White">
+                        <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#4B5563" HorizontalTextAlignment="Center"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <Button Grid.Column="0" 
+                                    x:Name="LogoutYesButton"
+                                    Text="Yes" 
+                                    BackgroundColor="#EF4444" 
+                                    TextColor="White" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutConfirmed"/>
+                            <Button Grid.Column="1" 
+                                    x:Name="LogoutNoButton"
+                                    Text="No" 
+                                    BackgroundColor="#E5E7EB" 
+                                    TextColor="#2C3E50" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutCancelled"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
         </Border>
 
     </Grid>

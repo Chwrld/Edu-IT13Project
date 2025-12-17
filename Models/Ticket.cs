@@ -24,4 +24,25 @@ public class Ticket
     public string PriorityColor { get; set; } = "#FCD34D";
     public string StatusTextColor { get; set; } = "#6B7280";
     public string PriorityTextColor { get; set; } = "#6B7280";
+
+    public string StatusDisplay
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Status))
+                return "-";
+            var normalized = Status.Replace('_', ' ');
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
+        }
+    }
+
+    public string PriorityDisplay
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Priority))
+                return "-";
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Priority);
+        }
+    }
 }

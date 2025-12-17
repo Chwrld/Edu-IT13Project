@@ -308,46 +308,53 @@ public partial class HomePage : ContentPage
 
     private async void OnProfileTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//ProfilePage");
+        await Shell.Current.GoToAsync("//ProfilePage", animate: false);
     }
 
     private async void OnMessagesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//MessagesPage");
+        await Shell.Current.GoToAsync("//MessagesPage", animate: false);
     }
 
     private async void OnClassesTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//StudentClassesPage");
+        await Shell.Current.GoToAsync("//StudentClassesPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//AnnouncementsPage");
+        await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("//TicketsPage");
+        await Shell.Current.GoToAsync("//TicketsPage", animate: false);
     }
 
     private async void OnViewAllMessagesTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new MessagesPage(), false);
+        await Shell.Current.GoToAsync("//MessagesPage", animate: false);
     }
 
     private async void OnViewAllAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AnnouncementsPage(), false);
+        await Shell.Current.GoToAsync("//AnnouncementsPage", animate: false);
     }
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)

@@ -30,14 +30,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="T" 
-                               TextColor="#059669" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
+                        <Image Source="educrm_log.png" 
+                               WidthRequest="24" 
+                               HeightRequest="24"
+                               Aspect="AspectFit"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="Teacher Portal" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -69,7 +69,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -88,7 +88,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Classes" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -107,7 +107,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Messages" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -123,7 +123,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Announcements" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -142,7 +142,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -164,7 +164,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#2C3E50"/>
                             <Label Text="Teacher" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -180,7 +180,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -248,54 +248,29 @@
                         </Border>
                     </Border>
 
-                    <!-- Filter Tabs -->
-                    <HorizontalStackLayout Padding="20,0,20,10" Spacing="8">
-                        <Border x:Name="AllTab"
-                                BackgroundColor="#059669"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnAllTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="All" 
-                                   TextColor="White"
-                                   FontSize="13"
-                                   FontAttributes="Bold"/>
-                        </Border>
-
-                        <Border x:Name="StudentsTab"
-                                BackgroundColor="Transparent"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnStudentsTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="Students" 
-                                   TextColor="#059669"
-                                   FontSize="13"/>
-                        </Border>
-
-                        <Border x:Name="StaffTab"
-                                BackgroundColor="Transparent"
-                                Padding="12,6"
-                                StrokeThickness="0">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnStaffTabTapped"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="Staff" 
-                                   TextColor="#059669"
-                                   FontSize="13"/>
-                        </Border>
-                    </HorizontalStackLayout>
+                    <!-- Filter Dropdown -->
+                    <Grid Padding="20,0,20,10" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" 
+                               Text="Filter:" 
+                               FontSize="14" 
+                               TextColor="#6B7280" 
+                               VerticalOptions="Center"/>
+                        <Picker Grid.Column="1"
+                                x:Name="FilterPicker"
+                                Title="Select conversation type"
+                                SelectedIndex="0"
+                                BackgroundColor="White"
+                                TextColor="#2C3E50"
+                                FontSize="14"
+                                HeightRequest="40"
+                                SelectedIndexChanged="OnFilterChanged">
+                            <Picker.Items>
+                                <x:String>All</x:String>
+                                <x:String>Students</x:String>
+                                <x:String>Staff</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </Grid>
 
                     <!-- Conversations List -->
                     <CollectionView x:Name="ConversationsCollectionView"
@@ -397,20 +372,6 @@
                                        TextColor="#6B7280"/>
                             </VerticalStackLayout>
 
-                            <HorizontalStackLayout Grid.Column="2" Spacing="10" VerticalOptions="Center">
-                                <Border BackgroundColor="#F3F4F6"
-                                        WidthRequest="36"
-                                        HeightRequest="36"
-                                        StrokeThickness="0">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="6"/>
-                                    </Border.StrokeShape>
-                                    <Label Text="ℹ️" 
-                                           FontSize="18"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                            </HorizontalStackLayout>
                         </Grid>
                     </Border>
 
@@ -603,5 +564,60 @@
                 </VerticalStackLayout>
             </Border>
         </Grid>
+
+        <!-- Logout Confirmation Modal -->
+        <Border x:Name="LogoutModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" Padding="30,25" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50"/>
+                    </Border>
+                    <VerticalStackLayout Padding="30,25" Spacing="25" BackgroundColor="White">
+                        <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#4B5563" HorizontalTextAlignment="Center"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <Button Grid.Column="0" 
+                                    x:Name="LogoutYesButton"
+                                    Text="Yes" 
+                                    BackgroundColor="#EF4444" 
+                                    TextColor="White" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutConfirmed"/>
+                            <Button Grid.Column="1" 
+                                    x:Name="LogoutNoButton"
+                                    Text="No" 
+                                    BackgroundColor="#E5E7EB" 
+                                    TextColor="#2C3E50" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutCancelled"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
     </Grid>
 </ContentPage>

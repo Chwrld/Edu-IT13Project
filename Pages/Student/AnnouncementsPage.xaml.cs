@@ -33,7 +33,6 @@ public partial class AnnouncementsPage : ContentPage
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
 
         AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
-        UpdateTabStyles();
     }
 
     protected override async void OnAppearing()
@@ -110,35 +109,23 @@ public partial class AnnouncementsPage : ContentPage
         }
     }
 
-    private void UpdateTabStyles()
-    {
-        static void SetTabVisuals(Border tab, Label label, bool isActive)
-        {
-            tab.BackgroundColor = isActive ? Color.FromArgb("#0891B2") : Colors.Transparent;
-            label.TextColor = isActive ? Colors.White : Color.FromArgb("#0891B2");
-            label.FontAttributes = isActive ? FontAttributes.Bold : FontAttributes.None;
-        }
-
-        SetTabVisuals(AllTab, AllTabLabel, _currentFilter == "All");
-        SetTabVisuals(AnnouncementsTab, AnnouncementsTabLabel, _currentFilter == "Announcements");
-        SetTabVisuals(RemindersTab, RemindersTabLabel, _currentFilter == "Reminders");
-    }
-
     private void ChangeFilter(string filter)
     {
         if (_currentFilter == filter)
             return;
 
         _currentFilter = filter;
-        UpdateTabStyles();
         ApplyFilters();
     }
 
-    private void OnAllTabTapped(object? sender, EventArgs e) => ChangeFilter("All");
+    private void OnFilterChanged(object? sender, EventArgs e)
+    {
+        if (sender is not Picker picker || picker.SelectedIndex < 0)
+            return;
 
-    private void OnAnnouncementsTabTapped(object? sender, EventArgs e) => ChangeFilter("Announcements");
-
-    private void OnRemindersTabTapped(object? sender, EventArgs e) => ChangeFilter("Reminders");
+        var filter = picker.SelectedItem?.ToString() ?? "All";
+        ChangeFilter(filter);
+    }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
@@ -198,10 +185,17 @@ public partial class AnnouncementsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 }

@@ -57,7 +57,7 @@ public partial class TeacherTicketsPage : ContentPage
         catch (Exception ex)
         {
             Debug.WriteLine($"TeacherTicketsPage: Error loading tickets - {ex.Message}");
-            await DisplayAlert("Error", "Failed to load tickets. Please try again.", "OK");
+            await ShowCustomAlertAsync("Error", "Failed to load tickets. Please try again.", "OK");
         }
     }
 
@@ -105,62 +105,22 @@ public partial class TeacherTicketsPage : ContentPage
         }
     }
 
-    private void UpdateFilterButtons(string activeFilter)
+    private void OnFilterPickerChanged(object? sender, EventArgs e)
     {
-        _currentFilter = activeFilter;
+        if (FilterPicker.SelectedIndex < 0) return;
 
-        // Reset all buttons
-        FilterAllBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterAllBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterOpenBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterOpenBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterInProgressBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterInProgressBtn.TextColor = Color.FromArgb("#6B7280");
-        FilterResolvedBtn.BackgroundColor = Color.FromArgb("#F3F4F6");
-        FilterResolvedBtn.TextColor = Color.FromArgb("#6B7280");
-
-        // Highlight active button
-        switch (activeFilter)
+        var selectedFilter = FilterPicker.SelectedItem?.ToString()?.ToLower();
+        
+        _currentFilter = selectedFilter switch
         {
-            case "all":
-                FilterAllBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterAllBtn.TextColor = Colors.White;
-                break;
-            case "open":
-                FilterOpenBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterOpenBtn.TextColor = Colors.White;
-                break;
-            case "in_progress":
-                FilterInProgressBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterInProgressBtn.TextColor = Colors.White;
-                break;
-            case "resolved":
-                FilterResolvedBtn.BackgroundColor = Color.FromArgb("#059669");
-                FilterResolvedBtn.TextColor = Colors.White;
-                break;
-        }
+            "all" => "all",
+            "open" => "open",
+            "in progress" => "in_progress",
+            "resolved" => "resolved",
+            _ => "all"
+        };
 
         ApplyFilters();
-    }
-
-    private void OnFilterAllClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("all");
-    }
-
-    private void OnFilterOpenClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("open");
-    }
-
-    private void OnFilterInProgressClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("in_progress");
-    }
-
-    private void OnFilterResolvedClicked(object? sender, EventArgs e)
-    {
-        UpdateFilterButtons("resolved");
     }
 
     private async void OnViewTicketClicked(object? sender, EventArgs e)
@@ -180,7 +140,8 @@ public partial class TeacherTicketsPage : ContentPage
             DetailTicketNumberLabel.Text = ticket.TicketNumber;
             DetailStudentLabel.Text = ticket.CreatedByName;
             DetailCreatedLabel.Text = ticket.CreatedAt.ToString("M/d/yyyy h:mm tt");
-            DetailStatusLabel.Text = ticket.Status;
+            DetailPriorityLabel.Text = FormatStatus(ticket.Priority);
+            DetailStatusLabel.Text = FormatStatus(ticket.Status);
             DetailDescriptionLabel.Text = ticket.Description;
 
             // Set status text color
@@ -258,7 +219,7 @@ public partial class TeacherTicketsPage : ContentPage
         catch (Exception ex)
         {
             Debug.WriteLine($"TeacherTicketsPage: Error showing ticket details - {ex.Message}");
-            await DisplayAlert("Error", "Failed to load ticket details.", "OK");
+            await ShowCustomAlertAsync("Error", "Failed to load ticket details.", "OK");
         }
     }
 
@@ -277,7 +238,7 @@ public partial class TeacherTicketsPage : ContentPage
         var comment = CommentEditor.Text?.Trim();
         if (string.IsNullOrWhiteSpace(comment))
         {
-            await DisplayAlert("Validation", "Please enter a comment.", "OK");
+            await ShowCustomAlertAsync("Validation", "Please enter a comment.", "OK");
             return;
         }
 
@@ -286,7 +247,7 @@ public partial class TeacherTicketsPage : ContentPage
             var currentUser = _authManager.CurrentUser;
             if (currentUser == null)
             {
-                await DisplayAlert("Error", "User not authenticated.", "OK");
+                await ShowCustomAlertAsync("Error", "User not authenticated.", "OK");
                 return;
             }
 
@@ -296,17 +257,17 @@ public partial class TeacherTicketsPage : ContentPage
             {
                 CommentEditor.Text = string.Empty;
                 await ShowTicketDetailsAsync(_selectedTicket); // Refresh details
-                await DisplayAlert("Success", "Comment added successfully.", "OK");
+                await ShowCustomAlertAsync("Success", "Comment added successfully.", "OK");
             }
             else
             {
-                await DisplayAlert("Error", "Failed to add comment.", "OK");
+                await ShowCustomAlertAsync("Error", "Failed to add comment.", "OK");
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"TeacherTicketsPage: Error sending comment - {ex.Message}");
-            await DisplayAlert("Error", "Failed to send comment.", "OK");
+            await ShowCustomAlertAsync("Error", "Failed to send comment.", "OK");
         }
     }
 
@@ -315,7 +276,7 @@ public partial class TeacherTicketsPage : ContentPage
         if (_selectedTicket == null)
             return;
 
-        var confirm = await DisplayAlert("Confirm", 
+        var confirm = await ShowCustomConfirmAsync("Confirm", 
             "Mark this ticket as resolved?", 
             "Yes", "No");
 
@@ -327,7 +288,7 @@ public partial class TeacherTicketsPage : ContentPage
             var currentUser = _authManager.CurrentUser;
             if (currentUser == null)
             {
-                await DisplayAlert("Error", "User not authenticated.", "OK");
+                await ShowCustomAlertAsync("Error", "User not authenticated.", "OK");
                 return;
             }
 
@@ -340,17 +301,17 @@ public partial class TeacherTicketsPage : ContentPage
             {
                 TicketDetailsOverlay.IsVisible = false;
                 await LoadTicketsAsync(); // Refresh list
-                await DisplayAlert("Success", "Ticket marked as resolved.", "OK");
+                await ShowCustomAlertAsync("Success", "Ticket marked as resolved.", "OK");
             }
             else
             {
-                await DisplayAlert("Error", "Failed to update ticket status.", "OK");
+                await ShowCustomAlertAsync("Error", "Failed to update ticket status.", "OK");
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"TeacherTicketsPage: Error resolving ticket - {ex.Message}");
-            await DisplayAlert("Error", "Failed to resolve ticket.", "OK");
+            await ShowCustomAlertAsync("Error", "Failed to resolve ticket.", "OK");
         }
     }
 
@@ -381,12 +342,18 @@ public partial class TeacherTicketsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        var confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private void OnNewTicketClicked(object? sender, EventArgs e)
@@ -423,19 +390,19 @@ public partial class TeacherTicketsPage : ContentPage
             // Validation
             if (string.IsNullOrEmpty(title))
             {
-                await DisplayAlert("Error", "Please enter a title for the ticket.", "OK");
+                await ShowCustomAlertAsync("Error", "Please enter a title for the ticket.", "OK");
                 return;
             }
 
             if (NewTicketCategoryPicker.SelectedIndex <= 0)
             {
-                await DisplayAlert("Error", "Please select a category.", "OK");
+                await ShowCustomAlertAsync("Error", "Please select a category.", "OK");
                 return;
             }
 
             if (string.IsNullOrEmpty(description))
             {
-                await DisplayAlert("Error", "Please provide a description of the issue.", "OK");
+                await ShowCustomAlertAsync("Error", "Please provide a description of the issue.", "OK");
                 return;
             }
 
@@ -443,7 +410,7 @@ public partial class TeacherTicketsPage : ContentPage
             var currentUser = _authManager.CurrentUser;
             if (currentUser == null)
             {
-                await DisplayAlert("Error", "User not authenticated.", "OK");
+                await ShowCustomAlertAsync("Error", "User not authenticated.", "OK");
                 return;
             }
 
@@ -451,7 +418,7 @@ public partial class TeacherTicketsPage : ContentPage
             
             if (success)
             {
-                await DisplayAlert("Success", "Ticket created successfully!", "OK");
+                await ShowCustomAlertAsync("Success", "Ticket created successfully!", "OK");
                 CreateTicketModalOverlay.IsVisible = false;
                 ClearNewTicketForm();
                 
@@ -460,13 +427,13 @@ public partial class TeacherTicketsPage : ContentPage
             }
             else
             {
-                await DisplayAlert("Error", "Failed to create ticket. Please try again.", "OK");
+                await ShowCustomAlertAsync("Error", "Failed to create ticket. Please try again.", "OK");
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"TeacherTicketsPage: Error creating ticket - {ex.Message}");
-            await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+            await ShowCustomAlertAsync("Error", $"Error: {ex.Message}", "OK");
         }
     }
 
@@ -476,4 +443,88 @@ public partial class TeacherTicketsPage : ContentPage
         NewTicketCategoryPicker.SelectedIndex = 0;
         NewTicketDescriptionEditor.Text = string.Empty;
     }
+
+    #region Custom White Alert Dialog
+
+    private TaskCompletionSource<bool>? _alertTaskCompletionSource;
+
+    /// <summary>
+    /// Shows a custom white-themed alert dialog with a single button
+    /// </summary>
+    private Task ShowCustomAlertAsync(string title, string message, string buttonText = "OK")
+    {
+        _alertTaskCompletionSource = new TaskCompletionSource<bool>();
+        
+        AlertTitle.Text = title;
+        AlertMessage.Text = message;
+        AlertPrimaryButton.Text = buttonText;
+        AlertSecondaryButton.IsVisible = false;
+        
+        // Adjust button layout for single button
+        AlertButtonsContainer.ColumnDefinitions.Clear();
+        AlertButtonsContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+        Grid.SetColumn(AlertPrimaryButton, 0);
+        
+        CustomAlertOverlay.IsVisible = true;
+        
+        return _alertTaskCompletionSource.Task;
+    }
+
+    /// <summary>
+    /// Shows a custom white-themed confirmation dialog with two buttons
+    /// </summary>
+    private Task<bool> ShowCustomConfirmAsync(string title, string message, string acceptText = "Yes", string cancelText = "No")
+    {
+        _alertTaskCompletionSource = new TaskCompletionSource<bool>();
+        
+        AlertTitle.Text = title;
+        AlertMessage.Text = message;
+        AlertPrimaryButton.Text = acceptText;
+        AlertSecondaryButton.Text = cancelText;
+        AlertSecondaryButton.IsVisible = true;
+        
+        // Adjust button layout for two buttons
+        AlertButtonsContainer.ColumnDefinitions.Clear();
+        AlertButtonsContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+        AlertButtonsContainer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+        Grid.SetColumn(AlertSecondaryButton, 0);
+        Grid.SetColumn(AlertPrimaryButton, 1);
+        
+        CustomAlertOverlay.IsVisible = true;
+        
+        return _alertTaskCompletionSource.Task;
+    }
+
+    private void OnAlertPrimaryClicked(object? sender, EventArgs e)
+    {
+        CustomAlertOverlay.IsVisible = false;
+        _alertTaskCompletionSource?.SetResult(true);
+    }
+
+    private void OnAlertSecondaryClicked(object? sender, EventArgs e)
+    {
+        CustomAlertOverlay.IsVisible = false;
+        _alertTaskCompletionSource?.SetResult(false);
+    }
+
+    private void OnAlertOverlayTapped(object? sender, EventArgs e)
+    {
+        // Close dialog when tapping outside the alert box
+        if (sender == CustomAlertOverlay)
+        {
+            CustomAlertOverlay.IsVisible = false;
+            _alertTaskCompletionSource?.SetResult(false);
+        }
+    }
+
+    private static string FormatStatus(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return "-";
+
+        var normalized = status.Replace('_', ' ');
+        return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
+    }
+
+    #endregion
 }

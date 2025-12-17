@@ -187,12 +187,18 @@ public partial class TeacherProfilePage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        var confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage", animate: false);
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private SqlConnection CreateSqlConnection()

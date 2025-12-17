@@ -79,85 +79,13 @@ public partial class TeacherMessagesPage : ContentPage
         await Shell.Current.GoToAsync("//TeacherTicketsPage", animate: false);
     }
 
-    private void OnAllTabTapped(object sender, EventArgs e)
+    private void OnFilterChanged(object sender, EventArgs e)
     {
-        // Update tab styles
-        AllTab.BackgroundColor = Color.FromArgb("#059669");
-        if (AllTab.Content is Label allLabel)
-        {
-            allLabel.TextColor = Colors.White;
-            allLabel.FontAttributes = FontAttributes.Bold;
-        }
+        if (sender is not Picker picker || picker.SelectedIndex < 0)
+            return;
 
-        StudentsTab.BackgroundColor = Colors.Transparent;
-        if (StudentsTab.Content is Label studentsLabel)
-        {
-            studentsLabel.TextColor = Color.FromArgb("#059669");
-            studentsLabel.FontAttributes = FontAttributes.None;
-        }
-
-        StaffTab.BackgroundColor = Colors.Transparent;
-        if (StaffTab.Content is Label staffLabel)
-        {
-            staffLabel.TextColor = Color.FromArgb("#059669");
-            staffLabel.FontAttributes = FontAttributes.None;
-        }
-
-        // Filter conversations (to be implemented)
-    }
-
-    private void OnStudentsTabTapped(object sender, EventArgs e)
-    {
-        // Update tab styles
-        StudentsTab.BackgroundColor = Color.FromArgb("#059669");
-        if (StudentsTab.Content is Label studentsLabel)
-        {
-            studentsLabel.TextColor = Colors.White;
-            studentsLabel.FontAttributes = FontAttributes.Bold;
-        }
-
-        AllTab.BackgroundColor = Colors.Transparent;
-        if (AllTab.Content is Label allLabel)
-        {
-            allLabel.TextColor = Color.FromArgb("#059669");
-            allLabel.FontAttributes = FontAttributes.None;
-        }
-
-        StaffTab.BackgroundColor = Colors.Transparent;
-        if (StaffTab.Content is Label staffLabel)
-        {
-            staffLabel.TextColor = Color.FromArgb("#059669");
-            staffLabel.FontAttributes = FontAttributes.None;
-        }
-
-        // Filter to show only student conversations
-    }
-
-    private void OnStaffTabTapped(object sender, EventArgs e)
-    {
-        // Update tab styles
-        StaffTab.BackgroundColor = Color.FromArgb("#059669");
-        if (StaffTab.Content is Label staffLabel)
-        {
-            staffLabel.TextColor = Colors.White;
-            staffLabel.FontAttributes = FontAttributes.Bold;
-        }
-
-        AllTab.BackgroundColor = Colors.Transparent;
-        if (AllTab.Content is Label allLabel)
-        {
-            allLabel.TextColor = Color.FromArgb("#059669");
-            allLabel.FontAttributes = FontAttributes.None;
-        }
-
-        StudentsTab.BackgroundColor = Colors.Transparent;
-        if (StudentsTab.Content is Label studentsLabel)
-        {
-            studentsLabel.TextColor = Color.FromArgb("#059669");
-            studentsLabel.FontAttributes = FontAttributes.None;
-        }
-
-        // Filter to show only staff conversations
+        // Filter conversations based on selection (to be implemented)
+        var filter = picker.SelectedItem?.ToString() ?? "All";
     }
 
     private async void OnConversationsSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -268,11 +196,18 @@ public partial class TeacherMessagesPage : ContentPage
 
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage", animate: false);
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private async Task LoadConversations()

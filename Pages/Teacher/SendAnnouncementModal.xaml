@@ -160,5 +160,38 @@
                 </Grid>
             </Grid>
         </Border>
+
+        <!-- Validation Error Overlay -->
+        <Border x:Name="ValidationErrorOverlay"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="30"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="20">
+                    <Label Text="Validation Error"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1F2937"/>
+                    <Label x:Name="ValidationErrorMessage"
+                           Text="Please enter a subject."
+                           FontSize="14"
+                           TextColor="#6B7280"/>
+                    <Button Text="OK"
+                            BackgroundColor="#4B5563"
+                            TextColor="White"
+                            Padding="25,10"
+                            CornerRadius="6"
+                            HorizontalOptions="Center"
+                            Clicked="OnCloseValidationErrorTapped"/>
+                </VerticalStackLayout>
+            </Border>
+        </Border>
     </Grid>
 </ContentPage>

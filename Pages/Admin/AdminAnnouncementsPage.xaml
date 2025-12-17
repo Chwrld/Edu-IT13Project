@@ -29,14 +29,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="A" 
-                               TextColor="#005BA5" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
+                        <Image Source="educrm_log.png" 
+                               WidthRequest="24" 
+                               HeightRequest="24"
+                               Aspect="AspectFit"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="Admin Portal" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -201,12 +201,12 @@
         </Border>
 
         <!-- Main Content Area -->
-        <ScrollView Grid.Row="1" Grid.Column="1" Padding="30">
-            <VerticalStackLayout Spacing="20">
+        <ScrollView Grid.Row="1" Grid.Column="1" Padding="20">
+            <VerticalStackLayout Spacing="15">
                 
                 <!-- Page Header -->
                 <Grid ColumnDefinitions="*,Auto">
-                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                    <VerticalStackLayout Grid.Column="0" Spacing="3">
                         <Label Text="Messaging &amp; Announcements" 
                                FontSize="24" 
                                FontAttributes="Bold"
@@ -233,18 +233,18 @@
             </Grid>
 
                 <!-- Stats -->
-                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15">
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
                     <Border BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="15,12">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
+                            <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="6">
                             <Label Text="Total Announcements"
                                    FontSize="12"
-                                   TextColor="#6B7280"/>
+                                   TextColor="#FF28292B"/>
                             <Label x:Name="TotalAnnouncementsLabel"
                                    Text="0"
                                    FontSize="28"
@@ -257,14 +257,14 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="15,12">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
+                            <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="6">
                             <Label Text="Published"
                                    FontSize="12"
-                                   TextColor="#6B7280"/>
+                                   TextColor="#FF28292B"/>
                             <Label x:Name="PublishedCountLabel"
                                    Text="0"
                                    FontSize="28"
@@ -277,14 +277,14 @@
                             BackgroundColor="White"
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
-                            Padding="20">
+                            Padding="15,12">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10"/>
+                            <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="6">
                             <Label Text="Drafts"
                                    FontSize="12"
-                                   TextColor="#6B7280"/>
+                                   TextColor="#FF28292B"/>
                             <Label x:Name="DraftCountLabel"
                                    Text="0"
                                    FontSize="28"
@@ -298,11 +298,11 @@
                 <Border BackgroundColor="White"
                         StrokeThickness="1"
                         Stroke="#E5E7EB"
-                        Padding="20">
+                        Padding="15">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10"/>
+                        <RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <Entry x:Name="AnnouncementSearchEntry"
                                Placeholder="Search announcements..."
                                TextColor="#1F2937"
@@ -326,11 +326,11 @@
                 <Border BackgroundColor="White"
                         StrokeThickness="1"
                         Stroke="#E5E7EB"
-                        Padding="20">
+                        Padding="15">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10"/>
+                        <RoundRectangle CornerRadius="8"/>
                     </Border.StrokeShape>
-                    <VerticalStackLayout Spacing="15">
+                    <VerticalStackLayout Spacing="12">
                         <Label Text="Announcements"
                                FontSize="16"
                                FontAttributes="Bold"
@@ -347,14 +347,14 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Border BackgroundColor="#F9FAFB"
-                                            Padding="16"
+                                            Padding="12"
                                             StrokeThickness="1"
                                             Stroke="#E5E7EB"
-                                            Margin="0,0,0,12">
+                                            Margin="0,0,0,8">
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="10"/>
+                                            <RoundRectangle CornerRadius="8"/>
                                         </Border.StrokeShape>
-                                        <VerticalStackLayout Spacing="10">
+                                        <VerticalStackLayout Spacing="8">
                                             <Grid ColumnDefinitions="*,Auto">
                                                 <Label Text="{Binding Title}"
                                                        FontSize="16"
@@ -540,6 +540,60 @@
                                 Clicked="OnSaveAnnouncementClicked"/>
                     </Grid>
                 </Grid>
+            </Border>
+        </Border>
+
+        <!-- Logout Confirmation Modal -->
+        <Border x:Name="LogoutModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" Padding="30,25" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50"/>
+                    </Border>
+                    <VerticalStackLayout Padding="30,25" Spacing="25" BackgroundColor="White">
+                        <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#4B5563" HorizontalTextAlignment="Center"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <Button Grid.Column="0" 
+                                    x:Name="LogoutYesButton"
+                                    Text="Yes" 
+                                    BackgroundColor="#EF4444" 
+                                    TextColor="White" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutConfirmed"/>
+                            <Button Grid.Column="1" 
+                                    x:Name="LogoutNoButton"
+                                    Text="No" 
+                                    BackgroundColor="#E5E7EB" 
+                                    TextColor="#2C3E50" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutCancelled"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
             </Border>
         </Border>
 

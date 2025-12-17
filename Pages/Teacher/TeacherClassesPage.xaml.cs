@@ -29,7 +29,6 @@ public partial class TeacherClassesPage : ContentPage
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
         _dbConnection = AppServiceProvider.GetService<DbConnection>() ?? throw new InvalidOperationException("DbConnection not found");
         CoursesCollectionView.ItemsSource = _classes;
-        UpdateFilterVisuals();
     }
 
     protected override void OnAppearing()
@@ -107,26 +106,26 @@ public partial class TeacherClassesPage : ContentPage
 
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage", animate: false);
-        }
+        LogoutModal.IsVisible = true;
     }
 
-    private void OnFilterTapped(object sender, TappedEventArgs e)
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
     {
-        if (e.Parameter is not string filter)
-        {
-            return;
-        }
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
 
-        if (string.Equals(_currentFilter, filter, StringComparison.OrdinalIgnoreCase))
-        {
-            return;
-        }
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+    }
 
-        _currentFilter = filter;
+    private void OnFilterChanged(object sender, EventArgs e)
+    {
+        if (sender is not Picker picker || picker.SelectedIndex < 0)
+            return;
+
+        _currentFilter = picker.SelectedItem?.ToString() ?? "All";
         ApplyFilter();
     }
 
@@ -144,26 +143,10 @@ public partial class TeacherClassesPage : ContentPage
         {
             _classes.Add(classModel);
         }
-
-        UpdateFilterVisuals();
     }
 
     private IEnumerable<ClassModel> FilterByStatus(string status) =>
         _allClasses.Where(classModel =>
             classModel.Status is not null &&
             classModel.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
-
-    private void UpdateFilterVisuals()
-    {
-        SetFilterState(AllFilter, AllFilterLabel, _currentFilter.Equals("All", StringComparison.OrdinalIgnoreCase));
-        SetFilterState(ActiveFilter, ActiveFilterLabel, _currentFilter.Equals("Active", StringComparison.OrdinalIgnoreCase));
-        SetFilterState(InactiveFilter, InactiveFilterLabel, _currentFilter.Equals("Inactive", StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static void SetFilterState(Border border, Label label, bool isActive)
-    {
-        border.BackgroundColor = isActive ? Color.FromArgb("#059669") : Color.FromArgb("#E5E7EB");
-        label.TextColor = isActive ? Colors.White : Color.FromArgb("#6B7280");
-        label.FontAttributes = isActive ? FontAttributes.Bold : FontAttributes.None;
-    }
 }

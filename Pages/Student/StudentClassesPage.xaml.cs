@@ -78,7 +78,7 @@ public partial class StudentClassesPage : ContentPage
             return;
         }
 
-        await Navigation.PushAsync(new StudentClassDetailPage(classModel.Id, "Assignments"), false);
+        await Shell.Current.GoToAsync($"//StudentClassDetailPage?classId={classModel.Id}&tab=Assignments", animate: false);
     }
 
     private async void OnViewGradesClicked(object sender, EventArgs e)
@@ -88,7 +88,7 @@ public partial class StudentClassesPage : ContentPage
             return;
         }
 
-        await Navigation.PushAsync(new StudentClassDetailPage(classModel.Id, "Grades"), false);
+        await Shell.Current.GoToAsync($"//StudentClassDetailPage?classId={classModel.Id}&tab=Grades", animate: false);
     }
 
     private async void OnHomeTapped(object sender, EventArgs e)
@@ -123,16 +123,17 @@ public partial class StudentClassesPage : ContentPage
 
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
-        var confirm = await DisplayAlert(
-            "Logout",
-            "Are you sure you want to logout?",
-            "Yes",
-            "No");
-
-        if (confirm)
-        {
-            _authManager.ClearAuthentication();
-            await Shell.Current.GoToAsync("//MainPage");
-        }
+        LogoutModal.IsVisible = true;
     }
-}
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+    }
+    }

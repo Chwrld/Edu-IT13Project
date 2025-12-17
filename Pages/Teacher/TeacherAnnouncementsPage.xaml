@@ -29,14 +29,14 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
-                        <Label Text="T" 
-                               TextColor="#059669" 
-                               FontSize="20" 
-                               FontAttributes="Bold"
+                        <Image Source="educrm_log.png" 
+                               WidthRequest="24" 
+                               HeightRequest="24"
+                               Aspect="AspectFit"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
                     </Border>
-                    <Label Text="Teacher Portal" 
+                    <Label Text="EduCRM" 
                            FontSize="18" 
                            FontAttributes="Bold"
                            TextColor="White"
@@ -68,7 +68,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📊" FontSize="18"/>
+                            <Label Text="&#xe871;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Dashboard" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -87,7 +87,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📚" FontSize="18"/>
+                            <Label Text="&#xe02f;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Classes" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -106,7 +106,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="💬" FontSize="18"/>
+                            <Label Text="&#xe0bf;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Messages" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -125,7 +125,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="📢" FontSize="18"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="White"/>
                             <Label Text="Announcements" 
                                    TextColor="White" 
                                    FontSize="14"
@@ -141,7 +141,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🎫" FontSize="18"/>
+                            <Label Text="&#xe638;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280"/>
                             <Label Text="Tickets" 
                                    TextColor="#6B7280" 
                                    FontSize="14"
@@ -165,12 +165,15 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="👨‍🏫" FontSize="18"/>
+                            <Label Text="&#xe7ef;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#2C3E50"/>
                             <Label Text="Faculty" 
                                    TextColor="#2C3E50" 
                                    FontSize="14"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFacultyTapped"/>
+                        </Border.GestureRecognizers>
                     </Border>
 
                     <!-- Logout Button -->
@@ -181,7 +184,7 @@
                             <RoundRectangle CornerRadius="8"/>
                         </Border.StrokeShape>
                         <HorizontalStackLayout Spacing="12">
-                            <Label Text="🚪" FontSize="18"/>
+                            <Label Text="&#xe9ba;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#EF4444"/>
                             <Label Text="Logout" 
                                    TextColor="#EF4444" 
                                    FontSize="14"
@@ -242,7 +245,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="📢" FontSize="16"/>
+                                       Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="16"/>
                             </Grid>
                             <Label x:Name="TotalCountLabel"
                                    Text="0" 
@@ -268,7 +271,7 @@
                                        FontSize="13" 
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="📅" FontSize="16"/>
+                                        Text="&#xf243;" FontFamily="MaterialIcons" FontSize="16"/>
                             </Grid>
                             <Label x:Name="WeekCountLabel"
                                    Text="0" 
@@ -294,7 +297,7 @@
                                        FontSize="13"
                                        TextColor="#6B7280"/>
                                 <Label Grid.Column="1"
-                                       Text="🎓" FontSize="16"/>
+                                       Text="&#xe80c;" FontFamily="MaterialIcons" FontSize="16"/>
                             </Grid>
                             <Label x:Name="ImportantCountLabel"
                                    Text="0" 
@@ -313,7 +316,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
                     </Border.StrokeShape>
-                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+                    <Grid ColumnDefinitions="*,200" ColumnSpacing="10">
                         <Border Grid.Column="0"
                                 BackgroundColor="#F9FAFB"
                                 Stroke="#E5E7EB"
@@ -324,7 +327,8 @@
                             </Border.StrokeShape>
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                                 <Label Grid.Column="0" 
-                                       Text="🔍" 
+                                       Text="&#xe8b6;" 
+                                       FontFamily="MaterialIcons"
                                        FontSize="16"
                                        VerticalOptions="Center"/>
                                 <Entry Grid.Column="1"
@@ -338,34 +342,27 @@
                             </Grid>
                         </Border>
 
-                        <!-- Filter Buttons -->
-                        <Button Grid.Column="1"
-                                x:Name="FilterAllBtn"
-                                Text="All"
-                                BackgroundColor="#059669"
-                                TextColor="White"
-                                FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
-                                Clicked="OnFilterAllClicked"/>
-                        <Button Grid.Column="2"
-                                x:Name="FilterStudentsBtn"
-                                Text="Students"
-                                BackgroundColor="#F3F4F6"
-                                TextColor="#6B7280"
-                                FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
-                                Clicked="OnFilterStudentsClicked"/>
-                        <Button Grid.Column="3"
-                                x:Name="FilterAdvisersBtn"
-                                Text="Advisers"
-                                BackgroundColor="#F3F4F6"
-                                TextColor="#6B7280"
-                                FontSize="13"
-                                Padding="15,8"
-                                CornerRadius="6"
-                                Clicked="OnFilterAdvisersClicked"/>
+                        <!-- Filter Dropdown -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="White"
+                                Stroke="#E5E7EB"
+                                StrokeThickness="1"
+                                Padding="12,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="FilterPicker"
+                                    TextColor="#1F2937"
+                                    FontSize="13"
+                                    SelectedIndexChanged="OnFilterChanged">
+                                <Picker.Items>
+                                    <x:String>All</x:String>
+                                    <x:String>Students</x:String>
+                                    <x:String>Advisers</x:String>
+                                </Picker.Items>
+                                <Picker.SelectedIndex>0</Picker.SelectedIndex>
+                            </Picker>
+                        </Border>
                     </Grid>
                 </Border>
 
@@ -377,7 +374,7 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.EmptyView>
                         <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10" Margin="0,40">
-                            <Label Text="📢" FontSize="48" HorizontalOptions="Center"/>
+                            <Label Text="&#xe98e;" FontFamily="MaterialIcons" FontSize="48" HorizontalOptions="Center"/>
                             <Label Text="No announcements yet"
                                    FontSize="16"
                                    TextColor="#6B7280"
@@ -434,22 +431,28 @@
 
                                     <!-- Actions -->
                                     <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="12">
-                                        <Button Text="✏️ Edit"
-                                                BackgroundColor="Transparent"
+                                        <Button BackgroundColor="Transparent"
                                                 TextColor="#059669"
                                                 FontSize="13"
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
                                                 Clicked="OnEditAnnouncementClicked"
-                                                IsVisible="{Binding IsOwnedByCurrentUser}"/>
-                                        <Button Text="🗑️ Delete"
-                                                BackgroundColor="Transparent"
+                                                IsVisible="{Binding IsOwnedByCurrentUser}">
+                                            <Button.ImageSource>
+                                                <FontImageSource Glyph="&#xe3c9;" FontFamily="MaterialIcons" Color="#059669" Size="16"/>
+                                            </Button.ImageSource>
+                                        </Button>
+                                        <Button BackgroundColor="Transparent"
                                                 TextColor="#EF4444"
                                                 FontSize="13"
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
                                                 Clicked="OnDeleteAnnouncementClicked"
-                                                IsVisible="{Binding IsOwnedByCurrentUser}"/>
+                                                IsVisible="{Binding IsOwnedByCurrentUser}">
+                                            <Button.ImageSource>
+                                                <FontImageSource Glyph="&#xe872;" FontFamily="MaterialIcons" Color="#EF4444" Size="16"/>
+                                            </Button.ImageSource>
+                                        </Button>
                                     </HorizontalStackLayout>
                                 </Grid>
                             </Border>
@@ -631,6 +634,60 @@
                         </VerticalStackLayout>
                     </ScrollView>
 
+                </VerticalStackLayout>
+            </Border>
+        </Border>
+
+        <!-- Logout Confirmation Modal -->
+        <Border x:Name="LogoutModal"
+                Grid.RowSpan="2"
+                Grid.ColumnSpan="2"
+                BackgroundColor="#80000000"
+                IsVisible="False">
+            <Border BackgroundColor="White"
+                    WidthRequest="400"
+                    Padding="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.3" Radius="20" Offset="0,10"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" Padding="30,25" StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12,12,0,0"/>
+                        </Border.StrokeShape>
+                        <Label Text="Logout" FontSize="20" FontAttributes="Bold" TextColor="#2C3E50"/>
+                    </Border>
+                    <VerticalStackLayout Padding="30,25" Spacing="25" BackgroundColor="White">
+                        <Label Text="Are you sure you want to logout?" FontSize="15" TextColor="#4B5563" HorizontalTextAlignment="Center"/>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                            <Button Grid.Column="0" 
+                                    x:Name="LogoutYesButton"
+                                    Text="Yes" 
+                                    BackgroundColor="#EF4444" 
+                                    TextColor="White" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutConfirmed"/>
+                            <Button Grid.Column="1" 
+                                    x:Name="LogoutNoButton"
+                                    Text="No" 
+                                    BackgroundColor="#E5E7EB" 
+                                    TextColor="#2C3E50" 
+                                    FontAttributes="Bold" 
+                                    CornerRadius="8" 
+                                    Padding="0" 
+                                    HeightRequest="44"
+                                    Clicked="OnLogoutCancelled"/>
+                        </Grid>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>
         </Border>

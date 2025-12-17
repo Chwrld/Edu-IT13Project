@@ -41,17 +41,17 @@ public partial class AdminReportsPage : ContentPage
 
     private async void OnUsersTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminUsersPage", animate: false);
+        await Shell.Current.GoToAsync("//AdminUsersPage", animate: false);
     }
 
     private async void OnAnnouncementsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminAnnouncementsPage", animate: false);
+        await Shell.Current.GoToAsync("//AdminAnnouncementsPage", animate: false);
     }
 
     private async void OnTicketsTapped(object? sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("AdminTicketsPage", animate: false);
+        await Shell.Current.GoToAsync("//AdminTicketsPage", animate: false);
     }
 
     private async void OnAdminProfileTapped(object? sender, EventArgs e)
@@ -61,11 +61,18 @@ public partial class AdminReportsPage : ContentPage
 
     private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-        if (confirm)
-        {
-            await Shell.Current.GoToAsync("//MainPage", animate: false);
-        }
+        LogoutModal.IsVisible = true;
+    }
+
+    private async void OnLogoutConfirmed(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
+        await Shell.Current.GoToAsync("//MainPage", animate: false);
+    }
+
+    private void OnLogoutCancelled(object sender, EventArgs e)
+    {
+        LogoutModal.IsVisible = false;
     }
 
     private async void OnGenerateReportClicked(object? sender, EventArgs e)
@@ -173,7 +180,7 @@ public partial class AdminReportsPage : ContentPage
         label.Text = $"{sign}{percentChange:0.#}% from previous period";
 
         bool positive = invert ? percentChange < 0 : percentChange >= 0;
-        label.TextColor = positive ? Color.FromArgb("#10B981") : Color.FromArgb("#EF4444");
+        label.TextColor = Color.FromArgb("#6B7280");
     }
 
     private ReportPeriod GetSelectedPeriod()
@@ -335,7 +342,7 @@ public partial class AdminReportsPage : ContentPage
         {
             Text = $"Period: {reportData.PeriodStartUtc:MMM d, yyyy} - {reportData.PeriodEndUtc:MMM d, yyyy}",
             FontSize = 12,
-            TextColor = Color.FromArgb("#6B7280"),
+            TextColor = Color.FromArgb("#474747ff"),
             Margin = new Thickness(0, 0, 0, 15)
         });
 

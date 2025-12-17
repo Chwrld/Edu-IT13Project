@@ -27,6 +27,16 @@ public sealed class ClassStudent
     public string Email { get; set; } = string.Empty;
     public string Status { get; set; } = "active";
 
+    public string StatusDisplay
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Status))
+                return "-";
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Status);
+        }
+    }
+
     public string Initials
     {
         get
