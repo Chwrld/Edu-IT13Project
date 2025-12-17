@@ -211,7 +211,7 @@
                 </VerticalStackLayout>
 
                 <!-- Filter Dropdown -->
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Grid ColumnDefinitions="Auto,200" ColumnSpacing="10">
                     <Label Grid.Column="0" 
                            Text="Filter:" 
                            FontSize="14" 

@@ -210,6 +210,7 @@
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
                             Text="✏ Edit Profile"
+                            FontFamily="Segoe UI"
                             BackgroundColor="#059669"
                             TextColor="White"
                             FontSize="14"
@@ -323,8 +324,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📧" 
+                                    <Label Text="&#xe158;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -349,8 +352,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📱" 
+                                     <Label Text="&#xe61d;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -375,8 +380,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="🏢" 
+                                    <Label Text="&#xf150;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>

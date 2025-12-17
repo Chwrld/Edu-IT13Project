@@ -687,7 +687,7 @@ Includes every ticket regardless of status.">
                                     Padding="20,10"
                                     Clicked="OnPrintPreviewCancelClicked"/>
                             <Button Text="Export"
-                                    BackgroundColor="#FF08885D"
+                                    BackgroundColor="#005BA5"
                                     TextColor="White"
                                     FontSize="13"
                                     FontAttributes="Bold"

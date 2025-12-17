@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MauiAppIT13"
              xmlns:utils="clr-namespace:MauiAppIT13.Utils"
-             x:Class="MauiAppIT13.App">
+             x:Class="MauiAppIT13.App"
+             UserAppTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

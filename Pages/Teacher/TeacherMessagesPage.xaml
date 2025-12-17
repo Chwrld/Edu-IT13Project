@@ -493,8 +493,7 @@
                 </Border.StrokeShape>
                 <VerticalStackLayout Spacing="18">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                        <Label Text="➕"
-                               FontSize="24"/>
+                        
                         <VerticalStackLayout>
                             <Label Text="New Message"
                                    FontSize="20"

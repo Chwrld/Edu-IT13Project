@@ -16,7 +16,7 @@ namespace MauiAppIT13.WinUI
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+            // this.InitializeComponent() is not needed in WinUI App class for MAUI
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();

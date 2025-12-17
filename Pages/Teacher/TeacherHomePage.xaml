@@ -300,7 +300,7 @@
                                    TextColor="#0891B2"/>
                             <Label Text="{Binding TicketsSubtitle}" 
                                    FontSize="11" 
-                                   TextColor="#9CA3AF"/>
+                                   TextColor="#FF525252"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>

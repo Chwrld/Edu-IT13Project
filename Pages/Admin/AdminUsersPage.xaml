@@ -364,7 +364,7 @@
                                                TextColor="#6B7280"
                                                VerticalOptions="Center"/>
                                         <Border Grid.Column="2"
-                                                BackgroundColor="{Binding Role, Converter={StaticResource RoleColorConverter}}"
+                                                BackgroundColor="Transparent"
                                                 Padding="8,4"
                                                 WidthRequest="80"
                                                 StrokeThickness="0"
