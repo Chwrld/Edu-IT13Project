@@ -188,7 +188,7 @@
                            TextColor="#2C3E50"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
-                            Text="✏ Edit Profile"
+                            Text="Edit Profile"
                             BackgroundColor="#0891B2"
                             TextColor="White"
                             FontSize="14"
@@ -313,8 +313,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📧" 
+                                    <Label Text="&#xe158;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -339,8 +341,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="📱" 
+                                    <Label Text="&#xe61d;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -365,8 +369,10 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8"/>
                                     </Border.StrokeShape>
-                                    <Label Text="🏢" 
+                                    <Label Text="&#xe61d;" 
+                                           FontFamily="MaterialIcons"
                                            FontSize="20"
+                                           TextColor="#FF54615D"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -426,7 +432,7 @@
                         
                         <VerticalStackLayout Spacing="18">
                             <HorizontalStackLayout Spacing="8">
-                                <Label Text="🎓" FontSize="18"/>
+                                <Label Text="&#xe80c;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                                 <Label Text="Academic Details" 
                                        FontSize="18" 
                                        FontAttributes="Bold"

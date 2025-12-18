@@ -339,7 +339,7 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="📊" FontSize="18" VerticalOptions="Center"/>
+                                <Label Text="&#xe894;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                                 <Label Text=" Grade Performance" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
@@ -409,7 +409,7 @@
                         </Border.StrokeShape>
                         <VerticalStackLayout Spacing="15">
                             <HorizontalStackLayout>
-                                <Label Text="✅" FontSize="18" VerticalOptions="Center"/>
+                                <Label Text="&#xe834;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                                 <Label Text=" Submission Status" 
                                        FontSize="16" 
                                        FontAttributes="Bold"
