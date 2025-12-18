@@ -338,6 +338,9 @@
 
                         <CollectionView x:Name="AnnouncementsCollectionView"
                                         SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
+                            </CollectionView.ItemsLayout>
                             <CollectionView.EmptyView>
                                 <Label Text="No announcements yet"
                                        HorizontalOptions="Center"
@@ -355,7 +358,7 @@
                                             <RoundRectangle CornerRadius="8"/>
                                         </Border.StrokeShape>
                                         <VerticalStackLayout Spacing="8">
-                                            <Grid ColumnDefinitions="*,Auto">
+                                            <Grid ColumnDefinitions="*,Auto,Auto">
                                                 <Label Text="{Binding Title}"
                                                        FontSize="16"
                                                        FontAttributes="Bold"
@@ -373,6 +376,19 @@
                                                            FontAttributes="Bold"
                                                            TextColor="#374151"/>
                                                 </Border>
+                                                <Button Grid.Column="2"
+                                                        BackgroundColor="Transparent"
+                                                        Padding="6"
+                                                        WidthRequest="32"
+                                                        HeightRequest="32"
+                                                        HorizontalOptions="End"
+                                                        VerticalOptions="Center"
+                                                        CommandParameter="{Binding .}"
+                                                        Clicked="OnAnnouncementMenuClicked">
+                                                    <Button.ImageSource>
+                                                        <FontImageSource Glyph="&#xe5d4;" FontFamily="MaterialIcons" Color="#6B7280" Size="20"/>
+                                                    </Button.ImageSource>
+                                                </Button>
                                             </Grid>
 
                                             <Label Text="{Binding Content}"
@@ -406,24 +422,7 @@
                                                            TextColor="#6B7280"/>
                                                 </HorizontalStackLayout>
 
-                                                <HorizontalStackLayout Grid.Column="1" Spacing="10" HorizontalOptions="End">
-                                                    <Button Text="Edit"
-                                                            Padding="14,6"
-                                                            FontSize="12"
-                                                            BackgroundColor="#005BA5"
-                                                            TextColor="White"
-                                                            CornerRadius="6"
-                                                            CommandParameter="{Binding .}"
-                                                            Clicked="OnEditAnnouncementClicked"/>
-                                                    <Button Text="Delete"
-                                                            Padding="14,6"
-                                                            FontSize="12"
-                                                            BackgroundColor="#FFFD5252"
-                                                            TextColor="White"
-                                                            CornerRadius="6"
-                                                            CommandParameter="{Binding .}"
-                                                            Clicked="OnDeleteAnnouncementClicked"/>
-                                                </HorizontalStackLayout>
+                                                <!-- Menu for Edit/Delete will be shown programmatically -->
                                             </Grid>
                                         </VerticalStackLayout>
                                     </Border>

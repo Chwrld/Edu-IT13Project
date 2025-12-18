@@ -237,7 +237,7 @@
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <HorizontalStackLayout Spacing="8">
-                                <Label Text="🔍" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text="&#xe8b6;" FontFamily="MaterialIcons" FontSize="16" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                                 <Entry Placeholder="Search conversations..."
                                        PlaceholderColor="#9CA3AF"
                                        TextColor="#2C3E50"
@@ -248,29 +248,7 @@
                         </Border>
                     </Border>
 
-                    <!-- Filter Dropdown -->
-                    <Grid Padding="20,0,20,10" ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <Label Grid.Column="0" 
-                               Text="Filter:" 
-                               FontSize="14" 
-                               TextColor="#6B7280" 
-                               VerticalOptions="Center"/>
-                        <Picker Grid.Column="1"
-                                x:Name="FilterPicker"
-                                Title="Select conversation type"
-                                SelectedIndex="0"
-                                BackgroundColor="White"
-                                TextColor="#2C3E50"
-                                FontSize="14"
-                                HeightRequest="40"
-                                SelectedIndexChanged="OnFilterChanged">
-                            <Picker.Items>
-                                <x:String>All</x:String>
-                                <x:String>Students</x:String>
-                                <x:String>Staff</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </Grid>
+
 
                     <!-- Conversations List -->
                     <CollectionView x:Name="ConversationsCollectionView"

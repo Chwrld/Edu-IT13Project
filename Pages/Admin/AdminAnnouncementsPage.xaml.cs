@@ -318,4 +318,33 @@ public partial class AdminAnnouncementsPage : ContentPage, IQueryAttributable
     {
         LogoutModal.IsVisible = false;
     }
+
+    // Handler for menu icon click on announcement card
+    private void OnAnnouncementMenuClicked(object sender, EventArgs e)
+    {
+        // You can implement a popup menu here for Edit/Delete actions
+        // Example: DisplayActionSheet or show a custom popup
+        var button = sender as Button;
+        var announcement = button?.CommandParameter as Announcement;
+        if (announcement == null) return;
+
+        // Example using DisplayActionSheet (replace with your preferred menu/popup)
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            string action = await DisplayActionSheet(
+                $"Actions for '{announcement.Title}'",
+                "Cancel",
+                null,
+                "Edit",
+                "Delete");
+            if (action == "Edit")
+            {
+                OnEditAnnouncementClicked(sender, EventArgs.Empty);
+            }
+            else if (action == "Delete")
+            {
+                OnDeleteAnnouncementClicked(sender, EventArgs.Empty);
+            }
+        });
+    }
 }

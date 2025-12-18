@@ -250,7 +250,7 @@
                                 <RoundRectangle CornerRadius="8"/>
                             </Border.StrokeShape>
                             <HorizontalStackLayout Spacing="8">
-                                <Label Text="🔍" FontSize="16" VerticalOptions="Center"/>
+                                <Label Text="&#xe8b6;" FontFamily="MaterialIcons" FontSize="16" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                                 <Entry Placeholder="Search conversations..."
                                        PlaceholderColor="#9CA3AF"
                                        TextColor="#2C3E50"

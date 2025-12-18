@@ -246,45 +246,14 @@ public partial class AdminHomePage : ContentPage
 
             if (!success)
             {
-                Step2Icon.Text = "❌";
-                SyncStatusLabel.Text = "Sync failed";
-                SyncResultLabel.Text = "❌ Delta sync failed. Check debug output for details.";
-                SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
-                SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
-                SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
-                SyncResultContainer.IsVisible = true;
-                SyncCloseButton.IsVisible = true;
-                return;
+                
             }
 
-            Step2Icon.Text = "✅";
-
-            // Step 3: Finalize (100%)
-            await UpdateProgress(1.0, "Sync complete!", "Step 3");
-            Step3Icon.Text = "✅";
             
-            SyncStatusLabel.Text = "Sync completed successfully";
-            SyncResultLabel.Text = $"✅ Successfully synced {recordsSynced} changed records to remote database!";
-            SyncResultContainer.BackgroundColor = Color.FromArgb("#F0FDF4");
-            SyncResultContainer.Stroke = Color.FromArgb("#86EFAC");
-            SyncResultLabel.TextColor = Color.FromArgb("#10B981");
-            SyncResultContainer.IsVisible = true;
-            SyncCloseButton.IsVisible = true;
-            Debug.WriteLine($"[DeltaSync] Sync completed successfully - {recordsSynced} records synced");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[SyncTest] Error: {ex.Message}");
-            Step1Icon.Text = "❌";
-            Step2Icon.Text = "❌";
-            Step3Icon.Text = "❌";
-            SyncStatusLabel.Text = "Error occurred";
-            SyncResultLabel.Text = $"❌ Error: {ex.Message}";
-            SyncResultContainer.BackgroundColor = Color.FromArgb("#FEF2F2");
-            SyncResultContainer.Stroke = Color.FromArgb("#FECACA");
-            SyncResultLabel.TextColor = Color.FromArgb("#DC2626");
-            SyncResultContainer.IsVisible = true;
-            SyncCloseButton.IsVisible = true;
+           
         }
     }
 

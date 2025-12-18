@@ -225,7 +225,7 @@
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20"
-                            toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected period.
+                            toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected year.
 Includes every ticket regardless of status.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
@@ -238,7 +238,7 @@ Includes every ticket regardless of status.">
                                 <Label Text="ⓘ"
                                        FontSize="14"
                                        TextColor="#FF2A2A2B"
-                                       toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected period, across every status."/>
+                                       toolTip:ToolTipProperties.Text="Total number of support tickets created in the selected year, across every status."/>
                             </HorizontalStackLayout>
                             <Label x:Name="TotalTicketsValueLabel"
                                    Text="1,234" 
@@ -246,7 +246,7 @@ Includes every ticket regardless of status.">
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
                             <Label x:Name="TotalTicketsChangeLabel"
-                                   Text="+12% from previous period" 
+                                   Text="+12% from previous year" 
                                    FontSize="11" 
                                    TextColor="#6B7280"/>
                         </VerticalStackLayout>
@@ -258,7 +258,7 @@ Includes every ticket regardless of status.">
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20"
-                            toolTip:ToolTipProperties.Text="Average time from ticket creation to the latest update or resolution during the selected period.">
+                            toolTip:ToolTipProperties.Text="Average time from ticket creation to the latest update or resolution during the selected year.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
@@ -270,7 +270,7 @@ Includes every ticket regardless of status.">
                                 <Label Text="ⓘ"
                                        FontSize="14"
                                        TextColor="#FF2A2A2B"
-                                       toolTip:ToolTipProperties.Text="Average duration between ticket creation and its most recent update or resolution in the period."/>
+                                       toolTip:ToolTipProperties.Text="Average duration between ticket creation and its most recent update or resolution in the year."/>
                             </HorizontalStackLayout>
                             <Label x:Name="AvgResponseValueLabel"
                                    Text="2.4 hrs" 
@@ -278,7 +278,7 @@ Includes every ticket regardless of status.">
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
                             <Label x:Name="AvgResponseChangeLabel"
-                                   Text="-8% from previous period" 
+                                   Text="-8% from previous year" 
                                    FontSize="11" 
                                    TextColor="#6B7280"/>
                         </VerticalStackLayout>
@@ -290,7 +290,7 @@ Includes every ticket regardless of status.">
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20"
-                            toolTip:ToolTipProperties.Text="Percentage of tickets resolved or closed out of all tickets created in the selected period.">
+                            toolTip:ToolTipProperties.Text="Percentage of tickets resolved or closed out of all tickets created in the selected year.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
@@ -302,7 +302,7 @@ Includes every ticket regardless of status.">
                                 <Label Text="ⓘ"
                                        FontSize="14"
                                        TextColor="#FF2A2A2B"
-                                       toolTip:ToolTipProperties.Text="Share of tickets marked resolved/closed out of all tickets created in the selected period."/>
+                                       toolTip:ToolTipProperties.Text="Share of tickets marked resolved/closed out of all tickets created in the selected year."/>
                             </HorizontalStackLayout>
                             <Label x:Name="ResolutionRateValueLabel"
                                    Text="94%" 
@@ -310,7 +310,7 @@ Includes every ticket regardless of status.">
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
                             <Label x:Name="ResolutionRateChangeLabel"
-                                   Text="+2% from previous period" 
+                                   Text="+2% from previous year" 
                                    FontSize="11" 
                                    TextColor="#6B7280"/>
                         </VerticalStackLayout>
@@ -322,7 +322,7 @@ Includes every ticket regardless of status.">
                             StrokeThickness="1"
                             Stroke="#E5E7EB"
                             Padding="20"
-                            toolTip:ToolTipProperties.Text="Total active accounts and their growth within the selected period.">
+                            toolTip:ToolTipProperties.Text="Total active accounts and their growth within the selected year.">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10"/>
                         </Border.StrokeShape>
@@ -334,7 +334,7 @@ Includes every ticket regardless of status.">
                                 <Label Text="ⓘ"
                                        FontSize="14"
                                        TextColor="#FF2A2A2B"
-                                       toolTip:ToolTipProperties.Text="Count of accounts currently marked active plus growth within the selected period."/>
+                                       toolTip:ToolTipProperties.Text="Count of accounts currently marked active plus growth within the selected year."/>
                             </HorizontalStackLayout>
                             <Label x:Name="ActiveUsersValueLabel"
                                    Text="856" 
@@ -342,7 +342,7 @@ Includes every ticket regardless of status.">
                                    FontAttributes="Bold"
                                    TextColor="#005BA5"/>
                             <Label x:Name="ActiveUsersChangeLabel"
-                                   Text="+5% from previous period" 
+                                   Text="+5% from previous year" 
                                    FontSize="11" 
                                    TextColor="#6B7280"/>
                         </VerticalStackLayout>
@@ -589,7 +589,7 @@ Includes every ticket regardless of status.">
                                        FontAttributes="Bold"
                                        TextColor="#005BA5"/>
                                 <Label x:Name="EngagementInsightLabel"
-                                       Text="Student activity increased by 18% compared to last period." 
+                                       Text="Student activity increased by 18% compared to last year." 
                                        FontSize="13" 
                                        TextColor="#6B7280"
                                        LineBreakMode="WordWrap"/>
