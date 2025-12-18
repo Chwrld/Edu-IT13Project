@@ -142,25 +142,25 @@ public partial class AdminReportsPage : ContentPage
         ResponseInsightValueLabel.Text = FormatDuration(metrics.AvgResponseMinutesCurrent);
         ResponseInsightLabel.Text = metrics.AvgResponseChangePercent switch
         {
-            < -1 => $"Average response time decreased by {Math.Abs(metrics.AvgResponseChangePercent):0.#}% this period.",
+            < -1 => $"Average response time decreased by {Math.Abs(metrics.AvgResponseChangePercent):0.#}% this year.",
             > 1 => $"Average response time increased by {metrics.AvgResponseChangePercent:0.#}%. Investigate bottlenecks.",
-            _ => "Response times held steady compared to the previous period."
+            _ => "Response times held steady compared to the previous year."
         };
 
         EngagementInsightValueLabel.Text = $"{metrics.StudentEngagementCurrent:N0} activities";
         EngagementInsightLabel.Text = metrics.StudentEngagementChangePercent switch
         {
             < -1 => $"Student engagement dipped by {Math.Abs(metrics.StudentEngagementChangePercent):0.#}%.",
-            > 1 => $"Student engagement grew by {metrics.StudentEngagementChangePercent:0.#}% compared to last period.",
-            _ => "Student engagement remained stable compared to the previous period."
+            > 1 => $"Student engagement grew by {metrics.StudentEngagementChangePercent:0.#}% compared to last year.",
+            _ => "Student engagement remained stable compared to the previous year."
         };
 
         CommunicationInsightValueLabel.Text = $"{metrics.MessagesCurrent:N0} messages";
         CommunicationInsightLabel.Text = metrics.MessageVolumeChangePercent switch
         {
-            < -1 => $"Message volume dropped by {Math.Abs(metrics.MessageVolumeChangePercent):0.#}% this period.",
+            < -1 => $"Message volume dropped by {Math.Abs(metrics.MessageVolumeChangePercent):0.#}% this year.",
             > 1 => $"{metrics.MessagesCurrent:N0} messages sent (+{metrics.MessageVolumeChangePercent:0.#}%).",
-            _ => "Message volume is steady compared to the previous period."
+            _ => "Message volume is steady compared to the previous year."
         };
     }
 
@@ -179,7 +179,7 @@ public partial class AdminReportsPage : ContentPage
     private static void ConfigureChangeLabel(Label label, double percentChange, bool invert = false)
     {
         string sign = percentChange >= 0 ? "+" : string.Empty;
-        label.Text = $"{sign}{percentChange:0.#}% from previous period";
+        label.Text = $"{sign}{percentChange:0.#}% from previous year";
 
         bool positive = invert ? percentChange < 0 : percentChange >= 0;
         label.TextColor = Color.FromArgb("#6B7280");

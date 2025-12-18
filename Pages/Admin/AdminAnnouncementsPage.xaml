@@ -366,15 +366,20 @@
                                                        LineBreakMode="WordWrap"/>
                                                 <Border Grid.Column="1"
                                                         BackgroundColor="#E5E7EB"
-                                                        Padding="8,4"
-                                                        StrokeThickness="0">
+                                                        Padding="4,0"
+                                                        StrokeThickness="0"
+                                                        HorizontalOptions="Start"
+                                                        VerticalOptions="Center">
                                                     <Border.StrokeShape>
                                                         <RoundRectangle CornerRadius="12"/>
                                                     </Border.StrokeShape>
                                                     <Label Text="{Binding PublishedStatus}"
                                                            FontSize="12"
                                                            FontAttributes="Bold"
-                                                           TextColor="#374151"/>
+                                                           TextColor="#374151"
+                                                           Padding="4,2,4,2"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center"/>
                                                 </Border>
                                                 <Button Grid.Column="2"
                                                         BackgroundColor="Transparent"
