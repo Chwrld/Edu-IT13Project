@@ -257,6 +257,9 @@
                 <!-- Announcements List -->
                 <CollectionView x:Name="AnnouncementsCollectionView"
                                 SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
                     <CollectionView.EmptyView>
                         <VerticalStackLayout Padding="20" Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
                             <Label Text="No announcements yet"
