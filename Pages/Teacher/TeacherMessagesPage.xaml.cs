@@ -21,6 +21,7 @@ public partial class TeacherMessagesPage : ContentPage
     private Conversation? _selectedConversation;
     private bool _isInitialized = false;
     private bool _isSendingNewMessage = false;
+    
 
     public TeacherMessagesPage()
     {

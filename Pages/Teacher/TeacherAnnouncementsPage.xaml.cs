@@ -23,15 +23,24 @@ public partial class TeacherAnnouncementsPage : ContentPage
 
     public TeacherAnnouncementsPage()
     {
-        InitializeComponent();
-        
-        _announcementService = AppServiceProvider.GetService<AnnouncementService>()
-            ?? throw new InvalidOperationException("AnnouncementService not found");
-            
-        _authManager = AppServiceProvider.GetService<AuthManager>()
-            ?? throw new InvalidOperationException("AuthManager not found");
-        
-        AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
+        try
+        {
+            InitializeComponent();
+            _announcementService = AppServiceProvider.GetService<AnnouncementService>()
+                ?? throw new InvalidOperationException("AnnouncementService not found");
+            _authManager = AppServiceProvider.GetService<AuthManager>()
+                ?? throw new InvalidOperationException("AuthManager not found");
+            AnnouncementsCollectionView.ItemsSource = _filteredAnnouncements;
+        }
+        catch (Exception ex)
+        {
+            Shell.Current?.DisplayAlert(
+                "Critical Error",
+                $"Failed to initialize TeacherAnnouncementsPage: {ex.Message}",
+                "OK");
+            System.Diagnostics.Debug.WriteLine($"[TeacherAnnouncementsPage] Constructor Exception: {ex}");
+            throw;
+        }
     }
 
     protected override async void OnAppearing()
@@ -44,6 +53,7 @@ public partial class TeacherAnnouncementsPage : ContentPage
         catch (Exception ex)
         {
             await DisplayAlert("Error", $"Failed to load announcements: {ex.Message}", "OK");
+            System.Diagnostics.Debug.WriteLine($"[TeacherAnnouncementsPage] OnAppearing Exception: {ex}");
         }
     }
 

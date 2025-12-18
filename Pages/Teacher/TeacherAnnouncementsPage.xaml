@@ -46,7 +46,6 @@
                 <!-- Network Status Indicator -->
                 <ContentView Grid.Column="2"
                              BindingContext="{x:Static utils:NetworkMonitor.Instance}"
-                             ControlTemplate="{StaticResource NetworkStatusBadgeTemplate}"
                              VerticalOptions="Center"
                              HorizontalOptions="End" />
             </Grid>
