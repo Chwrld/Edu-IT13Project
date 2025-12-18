@@ -186,13 +186,42 @@ public sealed class ReportsService
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@Start", System.Data.SqlDbType.DateTime2) { Value = periodStart });
         command.Parameters.Add(new SqlParameter("@End", System.Data.SqlDbType.DateTime2) { Value = periodEnd });
+        
+        var chartDataPoints = new List<ChartDataPoint>();
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
             var status = reader.GetString(0);
             var total = reader.GetInt32(1);
             rows.Add(Row($"Status: {status}", FormatNumber(total), "-", "-"));
+            chartDataPoints.Add(new ChartDataPoint { Label = status, Value = total });
         }
+
+        var charts = new List<ChartData>
+        {
+            new ChartData
+            {
+                Title = "Tickets by Status",
+                ChartType = "Pie",
+                DataPoints = chartDataPoints,
+                XAxisLabel = "Status",
+                YAxisLabel = "Count"
+            },
+            new ChartData
+            {
+                Title = "Period Comparison",
+                ChartType = "Column",
+                DataPoints = new[]
+                {
+                    new ChartDataPoint { Label = "Total Tickets", Value = metrics.TotalTicketsCurrent, Category = "Current" },
+                    new ChartDataPoint { Label = "Total Tickets", Value = metrics.TotalTicketsPrevious, Category = "Previous" },
+                    new ChartDataPoint { Label = "Resolved", Value = metrics.ResolvedTicketsCurrent, Category = "Current" },
+                    new ChartDataPoint { Label = "Resolved", Value = metrics.ResolvedTicketsPrevious, Category = "Previous" }
+                },
+                XAxisLabel = "Metric",
+                YAxisLabel = "Count"
+            }
+        };
 
         return new ReportExportData
         {
@@ -202,7 +231,8 @@ public sealed class ReportsService
             PeriodEndUtc = periodEnd,
             Metrics = metrics,
             Headers = headers,
-            Rows = rows
+            Rows = rows,
+            Charts = charts
         };
     }
 
@@ -219,18 +249,33 @@ public sealed class ReportsService
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@Start", System.Data.SqlDbType.DateTime2) { Value = periodStart });
         command.Parameters.Add(new SqlParameter("@End", System.Data.SqlDbType.DateTime2) { Value = periodEnd });
+        
+        var chartDataPoints = new List<ChartDataPoint>();
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
             var date = reader.GetDateTime(0);
             var count = reader.GetInt32(1);
             rows.Add(Row(date.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture), FormatNumber(count)));
+            chartDataPoints.Add(new ChartDataPoint { Label = date.ToString("MMM dd", CultureInfo.InvariantCulture), Value = count });
         }
 
         if (rows.Count == 0)
         {
             rows.Add(Row("No activity recorded", "0"));
         }
+
+        var charts = new List<ChartData>
+        {
+            new ChartData
+            {
+                Title = "Student Activity Trend",
+                ChartType = "Line",
+                DataPoints = chartDataPoints,
+                XAxisLabel = "Date",
+                YAxisLabel = "Activities"
+            }
+        };
 
         return new ReportExportData
         {
@@ -240,7 +285,8 @@ public sealed class ReportsService
             PeriodEndUtc = periodEnd,
             Metrics = metrics,
             Headers = headers,
-            Rows = rows
+            Rows = rows,
+            Charts = charts
         };
     }
 
@@ -249,17 +295,21 @@ public sealed class ReportsService
         var headers = new[] { "Adviser", "Tickets Assigned", "Resolved" };
         var rows = new List<IReadOnlyList<string>>();
 
-        const string sql = @"SELECT COALESCE(u.display_name, 'Unassigned') AS adviser,
-                                    COUNT(*) AS total,
+        const string sql = @"SELECT u.display_name AS adviser,
+                                    COUNT(t.ticket_id) AS total,
                                     SUM(CASE WHEN t.status IN ('resolved','closed') THEN 1 ELSE 0 END) AS resolved
-                             FROM support_tickets t
-                             LEFT JOIN users u ON t.assigned_to_id = u.user_id
-                             WHERE t.created_at >= @Start AND t.created_at < @End
+                             FROM users u
+                             LEFT JOIN support_tickets t ON u.user_id = t.assigned_to_id 
+                                 AND t.created_at >= @Start AND t.created_at < @End
+                             WHERE u.role = 'Teacher'
                              GROUP BY u.display_name
-                             ORDER BY total DESC";
+                             ORDER BY total DESC, u.display_name";
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@Start", System.Data.SqlDbType.DateTime2) { Value = periodStart });
         command.Parameters.Add(new SqlParameter("@End", System.Data.SqlDbType.DateTime2) { Value = periodEnd });
+        
+        var assignedChartPoints = new List<ChartDataPoint>();
+        var resolvedChartPoints = new List<ChartDataPoint>();
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
@@ -267,12 +317,30 @@ public sealed class ReportsService
             var total = reader.GetInt32(1);
             var resolved = reader.IsDBNull(2) ? 0 : reader.GetInt32(2);
             rows.Add(Row(adviser, FormatNumber(total), FormatNumber(resolved)));
+            assignedChartPoints.Add(new ChartDataPoint { Label = adviser, Value = total, Category = "Assigned" });
+            resolvedChartPoints.Add(new ChartDataPoint { Label = adviser, Value = resolved, Category = "Resolved" });
         }
 
         if (rows.Count == 0)
         {
             rows.Add(Row("No adviser assignments in this period", "0", "0"));
         }
+
+        var allChartPoints = new List<ChartDataPoint>();
+        allChartPoints.AddRange(assignedChartPoints);
+        allChartPoints.AddRange(resolvedChartPoints);
+
+        var charts = new List<ChartData>
+        {
+            new ChartData
+            {
+                Title = "Adviser Performance Comparison",
+                ChartType = "Column",
+                DataPoints = allChartPoints,
+                XAxisLabel = "Adviser",
+                YAxisLabel = "Tickets"
+            }
+        };
 
         return new ReportExportData
         {
@@ -282,7 +350,8 @@ public sealed class ReportsService
             PeriodEndUtc = periodEnd,
             Metrics = metrics,
             Headers = headers,
-            Rows = rows
+            Rows = rows,
+            Charts = charts
         };
     }
 
@@ -299,18 +368,33 @@ public sealed class ReportsService
         await using var command = new SqlCommand(sql, connection);
         command.Parameters.Add(new SqlParameter("@Start", System.Data.SqlDbType.DateTime2) { Value = periodStart });
         command.Parameters.Add(new SqlParameter("@End", System.Data.SqlDbType.DateTime2) { Value = periodEnd });
+        
+        var chartDataPoints = new List<ChartDataPoint>();
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
             var date = reader.GetDateTime(0);
             var total = reader.GetInt32(1);
             rows.Add(Row(date.ToString("MMM dd, yyyy", CultureInfo.InvariantCulture), FormatNumber(total)));
+            chartDataPoints.Add(new ChartDataPoint { Label = date.ToString("MMM dd", CultureInfo.InvariantCulture), Value = total });
         }
 
         if (rows.Count == 0)
         {
             rows.Add(Row("No messages recorded", "0"));
         }
+
+        var charts = new List<ChartData>
+        {
+            new ChartData
+            {
+                Title = "Message Volume Over Time",
+                ChartType = "Area",
+                DataPoints = chartDataPoints,
+                XAxisLabel = "Date",
+                YAxisLabel = "Messages"
+            }
+        };
 
         return new ReportExportData
         {
@@ -320,7 +404,8 @@ public sealed class ReportsService
             PeriodEndUtc = periodEnd,
             Metrics = metrics,
             Headers = headers,
-            Rows = rows
+            Rows = rows,
+            Charts = charts
         };
     }
 

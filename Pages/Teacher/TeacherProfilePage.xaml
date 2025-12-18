@@ -209,7 +209,7 @@
                            TextColor="#2C3E50"
                            VerticalOptions="Center"/>
                     <Button Grid.Column="1"
-                            Text="✏ Edit Profile"
+                            Text="Edit Profile"
                             FontFamily="Segoe UI"
                             BackgroundColor="#059669"
                             TextColor="White"
@@ -414,7 +414,7 @@
                     
                     <VerticalStackLayout Spacing="18">
                         <HorizontalStackLayout Spacing="8">
-                            <Label Text="🎓" FontSize="18"/>
+                            <Label Text="&#xe80c;" FontFamily="MaterialIcons" FontSize="20" WidthRequest="24" HorizontalTextAlignment="Center" TextColor="#6B7280" VerticalOptions="Center"/>
                             <Label Text="Academic Information" 
                                    FontSize="18" 
                                    FontAttributes="Bold"

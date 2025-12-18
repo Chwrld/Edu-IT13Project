@@ -17,10 +17,10 @@ public partial class TeacherHomePage : ContentPage
     private readonly TicketService _ticketService;
     private readonly MessageService _messageService;
     private readonly AuthManager _authManager;
-    private readonly DbConnection _dbConnection;
     private readonly SyncService _syncService;
     private readonly DeltaSyncService _deltaSyncService;
     private readonly TeacherDashboardService _dashboardService;
+    private readonly DbConnection _dbConnection;
     private bool _isLoading;
 
     public ObservableCollection<Conversation> RecentMessages { get; } = new();
@@ -96,13 +96,14 @@ public partial class TeacherHomePage : ContentPage
         _messageService = AppServiceProvider.GetService<MessageService>()
             ?? throw new InvalidOperationException("MessageService not found");
         _authManager = AppServiceProvider.GetService<AuthManager>() ?? new AuthManager();
-        _dbConnection = AppServiceProvider.GetService<DbConnection>()
-            ?? throw new InvalidOperationException("DbConnection not found");
         _syncService = AppServiceProvider.GetService<SyncService>()
             ?? throw new InvalidOperationException("SyncService is not registered.");
         _deltaSyncService = AppServiceProvider.GetService<DeltaSyncService>()
             ?? throw new InvalidOperationException("DeltaSyncService is not registered.");
-        _dashboardService = new TeacherDashboardService(_dbConnection);
+        _dashboardService = AppServiceProvider.GetService<TeacherDashboardService>()
+            ?? throw new InvalidOperationException("TeacherDashboardService is not registered.");
+        _dbConnection = AppServiceProvider.GetService<DbConnection>()
+            ?? throw new InvalidOperationException("DbConnection is not registered.");
 
         BindingContext = this;
     }

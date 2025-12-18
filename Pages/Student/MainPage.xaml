@@ -11,132 +11,172 @@
         <!-- Transparent Blue Overlay -->
         <BoxView BackgroundColor="#80094B5C"/>
         
-        <!-- Content -->
-        <ScrollView>
-            <VerticalStackLayout
-                Padding="20"
-                Spacing="0"
-                VerticalOptions="Center"
-                HorizontalOptions="Center">
-            
-            <!-- Login Card -->
-            <Border 
-                BackgroundColor="White"
-                Padding="40,35"
-                StrokeThickness="1"
-                Stroke="#E5E7EB"
-                WidthRequest="420"
-                MaximumWidthRequest="500"
-                Shadow="{Shadow Brush=Black, Opacity=0.08, Radius=20, Offset='0,4'}">
+        <!-- Content Container -->
+        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+            <Border BackgroundColor="White"
+                    WidthRequest="900"
+                    HeightRequest="600"
+                    StrokeThickness="0"
+                    Shadow="{Shadow Brush=Black, Opacity=0.15, Radius=30, Offset='0,10'}">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="8"/>
+                    <RoundRectangle CornerRadius="40"/>
                 </Border.StrokeShape>
                 
-                <VerticalStackLayout Spacing="25">
+                <Grid ColumnDefinitions="*,*">
+                    <!-- Left Panel - Branding (Light) -->
+                    <Border Grid.Column="0" 
+                            BackgroundColor="#F8F9FA"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="50,0,0,50"/>
+                        </Border.StrokeShape>
+                        
+                        <VerticalStackLayout Spacing="0" 
+                                           VerticalOptions="FillAndExpand"
+                                           Padding="40">
+                            
+                            <!-- Logo and Title at Top -->
+                            <HorizontalStackLayout Spacing="12" 
+                                                 HorizontalOptions="Center"
+                                                 Margin="0,20,0,0">
+                                <Image Source="educrm_log.png"
+                                       WidthRequest="50"
+                                       HeightRequest="50"
+                                       Aspect="AspectFit"/>
+                                <Label Text="EduCRM"
+                                       FontSize="32"
+                                       FontAttributes="Bold"
+                                       TextColor="#1F2937"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            
+                            <!-- Large Illustration in Center -->
+                            <Image Source="login_vector.png"
+                                   WidthRequest="320"
+                                   HeightRequest="320"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="CenterAndExpand"
+                                   Margin="0,30,0,30"/>
+                            
+                            <!-- Tagline and Description at Bottom -->
+                            <VerticalStackLayout Spacing="6" 
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="End"
+                                               Margin="0,0,0,20">
+                                <Label Text="Empowering Education"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="#1F2937"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="Manage students, track performance, and streamline communication."
+                                       FontSize="12"
+                                       TextColor="#6B7280"
+                                       HorizontalTextAlignment="Center"
+                                       LineBreakMode="WordWrap"
+                                       MaximumWidthRequest="320"
+                                       Margin="0,0,0,15"/>
+                                
+                                <!-- Copyright -->
+                                <Label Text="© 2025 EduCRM"
+                                       FontSize="11"
+                                       TextColor="#9CA3AF"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
                     
-                    <!-- Logo Icon -->
-                    <Image Source="educrm_log.png"
-                           WidthRequest="80"
-                           HeightRequest="80"
-                           HorizontalOptions="Center"
-                           Aspect="AspectFit"/>
-                    
-                    <!-- Logo and Title -->
-                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                        <Label 
-                            Text="EduCRM"
-                            FontSize="24"
-                            FontAttributes="Bold"
-                            TextColor="#111827"
-                            HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
-
-                    <!-- Subtitle -->
-                    <Label
-                        Text="Sign in to manage your campus services"
-                        FontSize="13"
-                        TextColor="#FF424242"
-                        HorizontalTextAlignment="Center"
-                        Margin="0,-5,0,0"/>
-
-                    <!-- Email Input -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label 
-                            Text="Email"
-                            FontSize="13"
-                            TextColor="#374151"
-                            FontAttributes="None"/>
-                        <Border
-                            BackgroundColor="#F9FAFB"
-                            Stroke="#E5E7EB"
-                            StrokeThickness="1"
-                            Padding="12,6">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Entry 
-                                x:Name="EmailEntry"
-                                Placeholder="email@gmail.com"
-                                PlaceholderColor="#9CA3AF"
-                                TextColor="#111827"
-                                FontSize="12"
-                                Keyboard="Email"
-                                BackgroundColor="Transparent"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Password Input -->
-                    <VerticalStackLayout Spacing="6">
-                        <Label 
-                            Text="Password"
-                            FontSize="13"
-                            TextColor="#374151"
-                            FontAttributes="None"/>
-                        <Border
-                            BackgroundColor="#F9FAFB"
-                            Stroke="#E5E7EB"
-                            StrokeThickness="1"
-                            Padding="12,6">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="6"/>
-                            </Border.StrokeShape>
-                            <Entry 
-                                x:Name="PasswordEntry"
-                                Placeholder="••••••••"
-                                PlaceholderColor="#9CA3AF"
-                                TextColor="#111827"
-                                FontSize="12"
-                                IsPassword="True"
-                                BackgroundColor="Transparent"/>
-                        </Border>
-                    </VerticalStackLayout>
-
-                    <!-- Sign In Button -->
-                    <Button 
-                        x:Name="SignInBtn"
-                        Text="Sign In"
-                        BackgroundColor="#0891B2"
-                        TextColor="White"
-                        FontSize="15"
-                        FontAttributes="Bold"
-                        CornerRadius="6"
-                        HeightRequest="44"
-                        Margin="0,5,0,0"
-                        Clicked="OnSignInClicked"/>
-
-                    <!-- Role-based note -->
-                    <Label 
-                        Text="Use your assigned credentials to access School Portal"
-                        FontSize="12"
-                        TextColor="#FF424242"
-                        HorizontalTextAlignment="Center"
-                        Margin="0,5,0,0"/>
-
-                </VerticalStackLayout>
+                    <!-- Right Panel - Login Form (Dark) -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="#1E3A5F"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="30,30,30,30"/>
+                        </Border.StrokeShape>
+                        
+                        <VerticalStackLayout Spacing="25"
+                                           Padding="60"
+                                           VerticalOptions="Center">
+                        
+                        <!-- Welcome Header -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Welcome Back"
+                                   FontSize="28"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="Sign in to continue to your account"
+                                   FontSize="14"
+                                   TextColor="#B0C4DE"/>
+                        </VerticalStackLayout>
+                        
+                        <!-- Email Input -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Email Address"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="EmailEntry"
+                                       Placeholder="Enter your email"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#111827"
+                                       FontSize="14"
+                                       Keyboard="Email"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                        
+                        <!-- Password Input -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Password"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Entry x:Name="PasswordEntry"
+                                       Placeholder="Enter your password"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#111827"
+                                       FontSize="14"
+                                       IsPassword="True"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                        
+                        <!-- Sign In Button -->
+                        <Button x:Name="SignInBtn"
+                                Text="Sign In"
+                                BackgroundColor="#0891B2"
+                                TextColor="White"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                CornerRadius="8"
+                                HeightRequest="50"
+                                Margin="0,10,0,0"
+                                Clicked="OnSignInClicked"/>
+                        
+                            <!-- Help Text -->
+                            <Label Text="Having trouble signing in? Contact your administrator."
+                                   FontSize="12"
+                                   TextColor="#B0C4DE"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,10,0,0"/>
+                            
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
             </Border>
-
-        </VerticalStackLayout>
-        </ScrollView>
+        </Grid>
     </Grid>
 
 </ContentPage>

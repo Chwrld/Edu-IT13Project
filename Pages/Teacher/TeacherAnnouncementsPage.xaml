@@ -428,7 +428,7 @@
                                            TextColor="#374151"
                                            LineBreakMode="WordWrap"/>
 
-                                    <!-- Actions -->
+                                    <!-- Actions: Always show Edit and Delete, but disable if not owned -->
                                     <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="12">
                                         <Button BackgroundColor="Transparent"
                                                 TextColor="#059669"
@@ -436,7 +436,7 @@
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
                                                 Clicked="OnEditAnnouncementClicked"
-                                                IsVisible="{Binding IsOwnedByCurrentUser}">
+                                                IsEnabled="{Binding IsOwnedByCurrentUser}">
                                             <Button.ImageSource>
                                                 <FontImageSource Glyph="&#xe3c9;" FontFamily="MaterialIcons" Color="#059669" Size="16"/>
                                             </Button.ImageSource>
@@ -447,7 +447,7 @@
                                                 Padding="0"
                                                 CommandParameter="{Binding .}"
                                                 Clicked="OnDeleteAnnouncementClicked"
-                                                IsVisible="{Binding IsOwnedByCurrentUser}">
+                                                IsEnabled="{Binding IsOwnedByCurrentUser}">
                                             <Button.ImageSource>
                                                 <FontImageSource Glyph="&#xe872;" FontFamily="MaterialIcons" Color="#EF4444" Size="16"/>
                                             </Button.ImageSource>
